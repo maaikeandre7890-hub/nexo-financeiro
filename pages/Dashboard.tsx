@@ -6,17 +6,10 @@ import { AddReceivableModal } from '../components/Modals';
 import { GoogleGenAI } from "@google/genai";
 
 const Dashboard: React.FC = () => {
-  const { totals, state, getChartData } = useApp();
+  const { totals, getChartData } = useApp();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [marketInsights, setMarketInsights] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Bom dia';
-    if (hour < 18) return 'Boa tarde';
-    return 'Boa noite';
-  };
 
   const fetchMarketTrends = async () => {
     setIsSearching(true);
@@ -24,78 +17,75 @@ const Dashboard: React.FC = () => {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: "Qual o valor do CDI e IPCA acumulado hoje no Brasil? Responda de forma curta para um empresário.",
+        contents: "Qual o valor do CDI e IPCA acumulado hoje no Brasil? Responda de forma curta.",
         config: { tools: [{ googleSearch: {} }] },
       });
       setMarketInsights(response.text);
     } catch (e) {
-      setMarketInsights("Falha ao sincronizar dados.");
+      setMarketInsights("Sync offline.");
     } finally {
       setIsSearching(false);
     }
   };
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-1000">
-      {/* Seção de Saudação Premium */}
-      <section className="flex flex-col md:flex-row justify-between items-center gap-8 py-6">
-        <div className="text-center md:text-left">
-          <h2 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-4">Command Center Operational Intelligence</h2>
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white tracking-tighter leading-tight">
-            {getGreeting()}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">empresário.</span>
+    <div className="space-y-16 py-4 animate-in fade-in duration-1000">
+      {/* Header Executive Simplified */}
+      <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+        <div>
+          <h1 className="text-5xl md:text-7xl heading-pro text-white leading-none tracking-tighter">
+            Boa noite<span className="text-emerald-500">.</span>
           </h1>
-          <p className="text-slate-500 font-medium text-base mt-4 flex items-center gap-3 justify-center md:justify-start">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_15px_rgba(16,185,129,1)]"></span>
-            Seu caixa está <span className="text-white font-bold">{totals.cashHealth}% saudável</span> no ciclo atual.
-          </p>
+          <div className="flex items-center gap-4 mt-8">
+            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Fluxo Saudável</span>
+            </div>
+            <p className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em]">Health Index: <span className="text-white">{totals.cashHealth}%</span></p>
+          </div>
         </div>
-        <div className="flex gap-4">
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="px-10 py-5 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(255,255,255,0.1)] flex items-center gap-4 group"
-          >
-            <i className="fa-solid fa-plus-circle text-lg group-hover:rotate-90 transition-transform"></i>
-            Launch Operation
-          </button>
-        </div>
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="px-10 py-5 bg-white text-black rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] transition-all hover:bg-emerald-400 hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+        >
+          Nova Operação
+        </button>
       </section>
 
-      {/* Grid KPI - Bento Style */}
+      {/* Bento Grid High-End */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Liquidez Pendente', val: totals.toReceive, suffix: 'BRL', icon: 'fa-wallet', color: 'emerald' },
-          { label: 'Risco de Inadimplência', val: totals.overdue, suffix: 'BRL', icon: 'fa-triangle-exclamation', color: 'rose' },
-          { label: 'Receita Recorrente', val: totals.monthlyRecurring, suffix: 'MRR', icon: 'fa-arrows-spin', color: 'blue' },
-          { label: 'Net Profit Real', val: totals.netBalance, suffix: 'LÍQ', icon: 'fa-chart-pie', color: 'amber' },
+          { label: 'Liquidez Pendente', val: totals.toReceive, suffix: 'BRL', color: 'emerald', icon: 'fa-vault' },
+          { label: 'Risco Ativo', val: totals.overdue, suffix: 'BRL', color: 'rose', icon: 'fa-shield-exclamation' },
+          { label: 'MRR / Recorrência', val: totals.monthlyRecurring, suffix: 'MRR', color: 'blue', icon: 'fa-arrows-spin' },
+          { label: 'Net Liquidity', val: totals.netBalance, suffix: 'LÍQ', color: 'slate', icon: 'fa-chart-network' },
         ].map((kpi, i) => (
-          <div key={i} className="glass-card p-8 rounded-[2.5rem] relative group overflow-hidden">
-            <div className={`absolute -right-10 -top-10 w-32 h-32 bg-${kpi.color}-500/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
-            <div className="flex justify-between items-start mb-8">
-              <span className="label-pro text-slate-500">{kpi.label}</span>
-              <div className={`w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-${kpi.color}-500 text-xs border border-white/[0.03]`}>
-                <i className={`fa-solid ${kpi.icon}`}></i>
-              </div>
+          <div key={i} className="glass-card p-8 rounded-[2rem] relative overflow-hidden group">
+            <div className="flex justify-between items-start mb-10">
+              <span className="label-pro opacity-40">{kpi.label}</span>
+              <i className={`fa-solid ${kpi.icon} text-slate-700 text-[10px] group-hover:text-emerald-500 transition-colors`}></i>
             </div>
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-3">
               <span className="text-3xl font-black text-white mono tracking-tighter">R$ {kpi.val.toLocaleString()}</span>
-              <span className="text-[9px] font-black text-slate-600 uppercase mono">{kpi.suffix}</span>
+              <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">{kpi.suffix}</span>
             </div>
+            <div className="absolute bottom-0 left-0 h-1 bg-emerald-500/20 w-0 group-hover:w-full transition-all duration-700"></div>
           </div>
         ))}
       </div>
 
-      {/* Main Analysis Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        <div className="lg:col-span-2 glass-card p-10 md:p-14 rounded-[3.5rem] relative overflow-hidden">
-           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 mb-14">
+      {/* Main Analysis Hub */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 glass-card p-10 md:p-14 rounded-[3rem]">
+           <div className="flex justify-between items-center mb-16">
               <div>
-                <h3 className="text-3xl font-black text-white tracking-tighter italic">Capital Flow Performance</h3>
-                <p className="label-pro mt-3 text-emerald-500/50">Data Engine V2.0 // Active Tracking System</p>
+                <h3 className="text-2xl font-black text-white heading-pro italic">Operational Yield</h3>
+                <p className="label-pro mt-3 text-slate-600">Period: Last 6 Months // Data: Real-time</p>
               </div>
-              <div className="flex gap-2 p-1.5 bg-black/40 rounded-2xl border border-white/[0.03]">
-                {['6M', '3M', '1M'].map(t => (
-                  <button key={t} className={`px-5 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${t === '6M' ? 'bg-white text-slate-950 shadow-xl' : 'text-slate-500 hover:text-white'}`}>{t}</button>
-                ))}
+              <div className="flex gap-2 p-1 bg-white/5 rounded-xl">
+                 {['6M', '3M', '1M'].map(t => (
+                   <button key={t} className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${t === '6M' ? 'bg-white text-black shadow-lg' : 'text-slate-500 hover:text-white'}`}>{t}</button>
+                 ))}
               </div>
            </div>
            
@@ -103,115 +93,73 @@ const Dashboard: React.FC = () => {
              <ResponsiveContainer width="100%" height="100%">
                <AreaChart data={getChartData()}>
                  <defs>
-                   <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                   <linearGradient id="proGradient" x1="0" y1="0" x2="0" y2="1">
                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.15}/>
                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                    </linearGradient>
                  </defs>
-                 <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="rgba(255,255,255,0.02)" />
-                 <XAxis 
-                    dataKey="name" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{fill: '#475569', fontSize: 10, fontWeight: 800, letterSpacing: '0.1em'}} 
-                    dy={25}
-                 />
-                 <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{fill: '#475569', fontSize: 10, fontWeight: 800}}
-                    dx={-15}
-                 />
-                 <Tooltip 
-                   cursor={{ stroke: 'rgba(16, 185, 129, 0.4)', strokeWidth: 1 }}
-                   contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', padding: '16px' }} 
-                 />
-                 <Area 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#10b981" 
-                    strokeWidth={5} 
-                    fill="url(#chartGradient)" 
-                    animationDuration={2500} 
-                    dot={{ r: 5, fill: '#10b981', strokeWidth: 3, stroke: '#020617' }}
-                    activeDot={{ r: 8, strokeWidth: 0, fill: '#34d399', shadow: '0 0 20px rgba(52, 211, 153, 0.5)' }}
-                 />
+                 <CartesianGrid strokeDasharray="5 5" vertical={false} stroke="rgba(255,255,255,0.02)" />
+                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 10, fontWeight: 800}} dy={20}/>
+                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 10, fontWeight: 800}} dx={-15}/>
+                 <Tooltip contentStyle={{ backgroundColor: '#02040a', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '15px' }} />
+                 <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={3} fill="url(#proGradient)" animationDuration={3000} dot={{ r: 4, fill: '#10b981', strokeWidth: 0 }} />
                </AreaChart>
              </ResponsiveContainer>
            </div>
         </div>
 
         <div className="space-y-8">
-           {/* AI Market Widget */}
-           <div className="glass-card p-10 rounded-[3rem] bg-gradient-to-br from-emerald-500/[0.04] to-transparent border-emerald-500/10 h-full flex flex-col justify-between">
+           {/* Market Terminal */}
+           <div className="glass-card p-10 rounded-[2.5rem] border-emerald-500/10 h-full flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-white/5 flex items-center justify-center text-blue-400 shadow-inner">
-                    <i className="fa-solid fa-microchip text-xl"></i>
-                  </div>
-                  <div>
-                    <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em]">External Feed</h3>
-                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest animate-pulse flex items-center gap-1.5 mt-1">
-                      <span className="w-1 h-1 rounded-full bg-blue-500"></span>
-                      Deep Search Syncing
-                    </span>
-                  </div>
+                   <div className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-blue-400">
+                     <i className="fa-solid fa-satellite-dish text-xl"></i>
+                   </div>
+                   <div>
+                     <h4 className="text-[10px] font-black text-white uppercase tracking-widest">Market Node</h4>
+                     <span className="text-[8px] font-bold text-slate-600 uppercase tracking-[0.3em] flex items-center gap-2 mt-1">
+                        <span className="w-1 h-1 bg-blue-500 rounded-full animate-ping"></span>
+                        Deep Search Active
+                     </span>
+                   </div>
                 </div>
 
                 {!marketInsights ? (
-                  <div className="space-y-8">
-                    <p className="text-[11px] text-slate-500 leading-relaxed italic font-medium">Monitore taxas do mercado financeiro e inflação em tempo real para tomada de decisão estratégica via Gemini Brain.</p>
-                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed font-medium italic">Sincronize com o cérebro central para insights macroeconômicos em tempo real via Gemini Brain.</p>
                 ) : (
-                  <div className="space-y-6">
-                    <div className="p-6 bg-white/[0.02] rounded-3xl border border-white/[0.05] relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                      <p className="text-xs text-slate-300 leading-relaxed font-bold italic line-clamp-[10]">{marketInsights}</p>
-                    </div>
+                  <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
+                    <p className="text-[11px] text-slate-300 font-bold leading-relaxed">{marketInsights}</p>
                   </div>
                 )}
               </div>
               
-              <div className="mt-8">
-                {!marketInsights ? (
-                  <button 
-                    onClick={fetchMarketTrends}
-                    disabled={isSearching}
-                    className="w-full py-5 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3"
-                  >
-                    {isSearching ? <i className="fa-solid fa-spinner animate-spin"></i> : <><i className="fa-solid fa-satellite"></i> Sincronizar Agora</>}
-                  </button>
-                ) : (
-                  <button onClick={() => setMarketInsights(null)} className="text-[9px] font-black text-slate-600 hover:text-white uppercase tracking-[0.2em] transition-colors flex items-center gap-2">
-                    <i className="fa-solid fa-rotate-left"></i> Refresh Insights
-                  </button>
-                )}
-              </div>
+              <button 
+                onClick={fetchMarketTrends}
+                disabled={isSearching}
+                className="w-full py-5 mt-8 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+              >
+                {isSearching ? <i className="fa-solid fa-spinner animate-spin"></i> : 'Sync External Data'}
+              </button>
            </div>
 
-           {/* Health Index - Circular */}
-           <div className="glass-card p-10 rounded-[3rem] flex flex-col items-center justify-center">
-              <div className="flex justify-between items-center w-full mb-10">
-                 <span className="label-pro">Health Index</span>
-                 <div className="px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 text-[9px] font-black text-emerald-500 uppercase">Estável</div>
-              </div>
-              
+           {/* Precision Health Index */}
+           <div className="glass-card p-10 rounded-[2.5rem] flex flex-col items-center justify-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full"></div>
               <div className="relative w-40 h-40 flex items-center justify-center">
-                <svg className="w-full h-full -rotate-90">
-                   <circle cx="80" cy="80" r="74" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-900" />
-                   <circle 
-                      cx="80" cy="80" r="74" stroke="currentColor" strokeWidth="12" fill="transparent" 
-                      strokeDasharray={465}
-                      strokeDashoffset={465 - (465 * totals.cashHealth / 100)}
-                      strokeLinecap="round"
-                      className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-all duration-1000" 
-                   />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                   <span className="text-4xl font-black text-white mono tracking-tighter">{totals.cashHealth}%</span>
-                </div>
+                 <svg className="w-full h-full -rotate-90">
+                    <circle cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-900" />
+                    <circle 
+                       cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                       strokeDasharray={452}
+                       strokeDashoffset={452 - (452 * totals.cashHealth / 100)}
+                       strokeLinecap="round"
+                       className="text-emerald-500 drop-shadow-[0_0_10px_#10b981]" 
+                    />
+                 </svg>
+                 <span className="absolute text-4xl font-black text-white mono">{totals.cashHealth}%</span>
               </div>
-              <p className="text-[10px] font-bold text-slate-500 mt-8 text-center uppercase tracking-widest">Capacidade de Operação</p>
+              <p className="label-pro mt-8 opacity-50">Operational Capacity</p>
            </div>
         </div>
       </div>
