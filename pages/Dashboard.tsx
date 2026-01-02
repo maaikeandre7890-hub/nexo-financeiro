@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useState } from 'react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useApp } from '../contexts/AppContext';
 import { AddReceivableModal } from '../components/Modals';
 import { GoogleGenAI } from "@google/genai";
@@ -11,135 +11,191 @@ const Dashboard: React.FC = () => {
   const [marketInsights, setMarketInsights] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Bom dia';
+    if (hour < 18) return 'Boa tarde';
+    return 'Boa noite';
+  };
+
   const fetchMarketTrends = async () => {
     setIsSearching(true);
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: "Qual a taxa Selic hoje e a tendência de inadimplência para PMEs no Brasil no último trimestre?",
+        contents: "Qual o valor do CDI e IPCA acumulado hoje no Brasil? Responda de forma curta para um empresário.",
         config: { tools: [{ googleSearch: {} }] },
       });
       setMarketInsights(response.text);
     } catch (e) {
-      setMarketInsights("Falha ao sincronizar dados de mercado. Tente novamente.");
+      setMarketInsights("Falha ao sincronizar dados.");
     } finally {
       setIsSearching(false);
     }
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-1000 pb-10">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="group">
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tighter italic group-hover:text-emerald-400 transition-colors">Centro de Comando</h1>
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 rounded border border-emerald-500/20">
-               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-               <span className="text-emerald-500 text-[9px] font-black uppercase tracking-widest">Live Operations</span>
-            </div>
-          </div>
-          <p className="text-slate-500 font-medium italic text-sm">Monitorando <span className="text-white font-bold">{state.clients.length} entidades</span> sob gestão direta.</p>
+    <div className="space-y-12 animate-in fade-in duration-1000">
+      {/* Seção de Saudação Premium */}
+      <section className="flex flex-col md:flex-row justify-between items-center gap-8 py-4">
+        <div className="text-center md:text-left">
+          <h2 className="text-sm font-black text-emerald-500 uppercase tracking-[0.3em] mb-3">Operational Intelligence</h2>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter">
+            {getGreeting()}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">empresário.</span>
+          </h1>
+          <p className="text-slate-500 font-medium text-sm mt-3 flex items-center gap-2 justify-center md:justify-start">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Seu caixa está <span className="text-white font-bold">{totals.cashHealth}% saudável</span> hoje.
+          </p>
         </div>
-        <div className="flex gap-4 w-full md:w-auto">
-          <div className="flex-1 md:flex-none px-6 py-3 rounded-2xl bg-slate-900/50 border border-slate-800 flex flex-col items-center md:items-start group hover:border-blue-500/30 transition-all cursor-default">
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-blue-400 transition-colors">Taxa de Liquidez</span>
-            <span className="text-xl font-bold text-white mono">{totals.cashHealth}%</span>
-          </div>
+        <div className="flex gap-4">
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-8 py-3 rounded-2xl transition-all shadow-2xl shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2"
+            className="px-8 py-4 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-emerald-500/10 flex items-center gap-3"
           >
-            <i className="fa-solid fa-bolt"></i>
-            Nova Operação
+            <i className="fa-solid fa-plus-circle text-lg"></i>
+            Launch Operation
           </button>
         </div>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      {/* Grid KPI - Bento Style */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Fluxo Pendente', val: `R$ ${(totals.toReceive / 1000).toFixed(1)}k`, trend: 'Ativo', icon: 'fa-money-bill-trend-up', color: 'text-emerald-500' },
-          { label: 'Exposição a Risco', val: `R$ ${(totals.overdue / 1000).toFixed(1)}k`, trend: 'Crítico', icon: 'fa-triangle-exclamation', color: 'text-rose-500' },
-          { label: 'Recorrência (MRR)', val: `R$ ${(totals.monthlyRecurring / 1000).toFixed(1)}k`, trend: 'Saudável', icon: 'fa-repeat', color: 'text-blue-500' },
-          { label: 'Saldo de Caixa', val: `R$ ${(totals.netBalance / 1000).toFixed(1)}k`, trend: 'Real', icon: 'fa-piggy-bank', color: 'text-amber-500' },
+          { label: 'Liquidez Pendente', val: totals.toReceive, suffix: 'BRL', icon: 'fa-wallet', color: 'emerald' },
+          { label: 'Risco de Inadimplência', val: totals.overdue, suffix: 'BRL', icon: 'fa-triangle-exclamation', color: 'rose' },
+          { label: 'Receita Recorrente', val: totals.monthlyRecurring, suffix: 'MRR', icon: 'fa-arrows-spin', color: 'blue' },
+          { label: 'Net Profit Real', val: totals.netBalance, suffix: 'LÍQ', icon: 'fa-chart-pie', color: 'amber' },
         ].map((kpi, i) => (
-          <div key={i} className="glass-card p-6 rounded-[2rem] border-white/5 group hover:border-emerald-500/20 transition-all hover:-translate-y-1 duration-300">
-            <div className="flex justify-between items-start mb-4">
-              <div className={`w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center ${kpi.color} text-xl shadow-inner border border-white/5`}>
+          <div key={i} className="glass-card p-6 rounded-[2rem] relative group">
+            <div className={`absolute -right-4 -top-4 w-20 h-20 bg-${kpi.color}-500/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+            <div className="flex justify-between items-start mb-6">
+              <span className="label-pro opacity-60">{kpi.label}</span>
+              <div className={`w-8 h-8 rounded-lg bg-${kpi.color}-500/10 flex items-center justify-center text-${kpi.color}-500 text-xs border border-${kpi.color}-500/20`}>
                 <i className={`fa-solid ${kpi.icon}`}></i>
               </div>
-              <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${i === 1 ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-400'}`}>{kpi.trend}</span>
             </div>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">{kpi.label}</p>
-            <h4 className="text-2xl font-extrabold text-white mono tracking-tighter">{kpi.val}</h4>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-black text-white mono">R$ {kpi.val.toLocaleString()}</span>
+              <span className="text-[10px] font-black text-slate-600 uppercase mono">{kpi.suffix}</span>
+            </div>
           </div>
         ))}
       </div>
 
+      {/* Main Analysis Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 glass-card p-6 md:p-10 rounded-[2.5rem] relative group">
-           <div className="flex justify-between items-center mb-10">
+        <div className="lg:col-span-2 glass-card p-8 md:p-12 rounded-[3rem] relative overflow-hidden">
+           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
               <div>
-                <h3 className="text-2xl font-extrabold text-white tracking-tight italic underline decoration-emerald-500/30 decoration-4">Fluxo Dinâmico</h3>
-                <p className="text-slate-500 text-sm italic font-medium">Histórico real de faturamento consolidado.</p>
+                <h3 className="text-2xl font-black text-white tracking-tight italic">Performance do Fluxo</h3>
+                <p className="label-pro mt-2">Data Engine V2.0 // Real-time Tracking</p>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => window.print()} className="p-3 bg-slate-900 rounded-xl border border-slate-800 text-slate-500 hover:text-white transition-all"><i className="fa-solid fa-download"></i></button>
+              <div className="flex gap-2 p-1 bg-white/5 rounded-xl border border-white/5">
+                {['6M', '3M', '1M'].map(t => (
+                  <button key={t} className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${t === '6M' ? 'bg-emerald-500 text-slate-950' : 'text-slate-500 hover:text-white'}`}>{t}</button>
+                ))}
               </div>
            </div>
-           <div className="h-[250px] md:h-[350px]">
+           
+           <div className="h-[340px] w-full">
              <ResponsiveContainer width="100%" height="100%">
                <AreaChart data={getChartData()}>
                  <defs>
-                   <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+                   <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                    </linearGradient>
                  </defs>
-                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 11, fontWeight: 700}} dy={10} />
-                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 11, fontWeight: 700}} />
-                 <Tooltip 
-                   cursor={{ stroke: '#10b981', strokeWidth: 1 }}
-                   contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', color: '#fff' }} 
-                   labelStyle={{ color: '#94a3b8', fontWeight: 'bold' }}
+                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                 <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#475569', fontSize: 10, fontWeight: 700}} 
+                    dy={20}
                  />
-                 <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={4} fill="url(#glow)" animationDuration={2000} />
+                 <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{fill: '#475569', fontSize: 10, fontWeight: 700}}
+                    dx={-10}
+                 />
+                 <Tooltip 
+                   cursor={{ stroke: 'rgba(16, 185, 129, 0.4)', strokeWidth: 1 }}
+                   contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }} 
+                 />
+                 <Area 
+                    type="monotone" 
+                    dataKey="value" 
+                    stroke="#10b981" 
+                    strokeWidth={4} 
+                    fill="url(#chartGradient)" 
+                    animationDuration={2000} 
+                    dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#020617' }}
+                    activeDot={{ r: 6, strokeWidth: 0, fill: '#34d399' }}
+                 />
                </AreaChart>
              </ResponsiveContainer>
            </div>
         </div>
 
         <div className="space-y-6">
-           <div className="glass-card p-8 rounded-[2.5rem] bg-gradient-to-br from-slate-900/50 to-black relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
-                <i className="fa-solid fa-earth-americas text-6xl text-blue-500"></i>
+           {/* AI Market Widget */}
+           <div className="glass-card p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-500/[0.03] to-transparent border-emerald-500/10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-blue-400">
+                  <i className="fa-solid fa-microchip"></i>
+                </div>
+                <div>
+                   <h3 className="text-xs font-black text-white uppercase tracking-widest">Market Feed</h3>
+                   <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest animate-pulse">Live Sync</span>
+                </div>
               </div>
-              <h3 className="text-sm font-black text-white mb-4 uppercase tracking-[0.2em]">Mercado & Tendências</h3>
-              
+
               {!marketInsights ? (
-                <button 
-                  onClick={fetchMarketTrends}
-                  disabled={isSearching}
-                  className="w-full py-4 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/30 rounded-2xl text-blue-400 text-xs font-black uppercase tracking-widest transition-all"
-                >
-                  {isSearching ? <i className="fa-solid fa-circle-notch animate-spin"></i> : 'Sincronizar Tendências'}
-                </button>
+                <div className="space-y-6">
+                  <p className="text-[11px] text-slate-500 leading-relaxed italic">Monitore taxas do mercado financeiro e inflação em tempo real via Gemini Brain.</p>
+                  <button 
+                    onClick={fetchMarketTrends}
+                    disabled={isSearching}
+                    className="w-full py-4 bg-white/5 hover:bg-emerald-500 hover:text-slate-950 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+                  >
+                    {isSearching ? <i className="fa-solid fa-spinner animate-spin"></i> : 'Sync Market Data'}
+                  </button>
+                </div>
               ) : (
                 <div className="space-y-4">
-                  <p className="text-[11px] text-slate-400 leading-relaxed italic">{marketInsights.slice(0, 200)}...</p>
-                  <button onClick={() => setMarketInsights(null)} className="text-[10px] font-black text-blue-500 uppercase">Atualizar</button>
+                  <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                    <p className="text-[11px] text-emerald-400 leading-relaxed font-bold italic">{marketInsights}</p>
+                  </div>
+                  <button onClick={() => setMarketInsights(null)} className="text-[9px] font-black text-slate-600 hover:text-white uppercase tracking-widest transition-colors">Clear Stream</button>
                 </div>
               )}
            </div>
 
-           <div className="glass-card p-8 rounded-[2.5rem] border-white/5 flex flex-col justify-center">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Eficiência Operacional</p>
-              <div className="flex items-end gap-3">
-                 <h4 className="text-4xl font-black text-white mono">{totals.cashHealth}%</h4>
-                 <span className="text-emerald-500 text-xs font-bold mb-1"><i className="fa-solid fa-caret-up"></i> Ótimo</span>
+           {/* Quick Status */}
+           <div className="glass-card p-8 rounded-[2.5rem]">
+              <div className="flex justify-between items-center mb-8">
+                 <span className="label-pro">Health Index</span>
+                 <span className="text-[10px] font-black text-emerald-500">+12% vs last month</span>
               </div>
-              <div className="w-full h-2 bg-slate-900 rounded-full mt-4 overflow-hidden">
-                 <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${totals.cashHealth}%` }}></div>
+              <div className="flex flex-col items-center justify-center py-4">
+                 <div className="relative w-32 h-32 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90">
+                       <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-900" />
+                       <circle 
+                          cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="12" fill="transparent" 
+                          strokeDasharray={364}
+                          strokeDashoffset={364 - (364 * totals.cashHealth / 100)}
+                          className="text-emerald-500 shadow-[0_0_10px_#10b981]" 
+                       />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                       <span className="text-3xl font-black text-white mono">{totals.cashHealth}%</span>
+                    </div>
+                 </div>
               </div>
            </div>
         </div>
