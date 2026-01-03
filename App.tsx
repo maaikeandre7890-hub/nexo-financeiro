@@ -19,8 +19,9 @@ import Cobranca from './pages/Cobranca';
 import Sistema from './pages/Sistema';
 import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
+import Branding from './pages/Branding';
 import NotFound from './pages/NotFound';
-import OracleIcon from './components/OracleIcon';
+import BrandLogo from './components/BrandLogo';
 import { useApp } from './contexts/AppContext';
 
 const App: React.FC = () => {
@@ -50,20 +51,17 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleGlobalKeys);
   }, []);
 
-  // SE O ONBOARDING NÃO FOI CONCLUÍDO, MOSTRA APENAS A TELA DE ONBOARDING
   if (!state.onboardingCompleted) {
     return <Onboarding />;
   }
 
   return (
     <div className="flex min-h-screen text-slate-300 selection:bg-emerald-500/30 overflow-x-hidden font-['Inter']">
-      {/* Drawer Overlay */}
       <div 
         className={`fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      {/* Sidebar / Mobile Drawer */}
       <div className={`fixed inset-y-0 left-0 z-[110] w-[280px] transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 md:w-72 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
@@ -84,6 +82,7 @@ const App: React.FC = () => {
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/recebiveis" element={<Recebiveis />} />
               <Route path="/parcelas-atraso" element={<Atraso />} />
+              <Route path="/branding" element={<Branding />} />
               <Route path="/historico" element={<Historico />} />
               <Route path="/relatorios" element={<Relatorios />} />
               <Route path="/faturamento-liquido" element={<FaturamentoLiquido />} />
@@ -102,17 +101,16 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      {/* Oracle NEXO — Botão Flutuante Premium */}
       <div className="fixed bottom-8 right-6 md:bottom-12 md:right-12 z-40 group flex flex-col items-end gap-3">
         <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 border border-emerald-500/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-emerald-500 backdrop-blur-xl shadow-2xl pointer-events-none mb-1">
-          Oracle NEXO — Análise Financeira em Tempo Real
+          Oracle NEXO — Análise Financeira
         </div>
         <button 
           onClick={() => setIsAIPanelOpen(true)}
           className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-3xl shadow-[0_20px_60px_-15px_rgba(16,185,129,0.4)] flex items-center justify-center text-slate-950 transition-all active:scale-90 border border-white/20 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-          <OracleIcon className="w-8 h-8 md:w-11 md:h-11 nexus-pulse" />
+          <BrandLogo className="w-8 h-8 md:w-11 md:h-11" />
         </button>
       </div>
     </div>

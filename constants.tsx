@@ -20,6 +20,7 @@ export const NAVIGATION: NavItem[] = [
   { label: 'Meus Clientes', path: '/clientes', icon: 'fa-users' },
   { label: 'Contas a Receber', path: '/recebiveis', icon: 'fa-arrow-up-to-line' },
   { label: 'Contas em Atraso', path: '/parcelas-atraso', icon: 'fa-triangle-exclamation' },
+  { label: 'Identidade Visual', path: '/branding', icon: 'fa-palette' },
   { label: 'Histórico de Ações', path: '/historico', icon: 'fa-clock-rotate-left' },
   { label: 'Resumo do Mês', path: '/relatorios', icon: 'fa-file-invoice-dollar' },
   { label: 'Lucro do Mês', path: '/faturamento-liquido', icon: 'fa-scale-balanced' },

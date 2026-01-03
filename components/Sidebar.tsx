@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { NAVIGATION } from '../constants';
-import OracleIcon from './OracleIcon';
+import BrandLogo from './BrandLogo';
 import { useApp } from '../contexts/AppContext';
 
 interface Props {
@@ -13,7 +13,7 @@ const NewNexoLogo = () => (
   <div className="relative group flex items-center gap-4">
     <div className="absolute -left-2 top-0 w-16 h-16 bg-emerald-500/10 blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
     <div className="relative z-10 w-14 h-14 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-500 group-hover:border-emerald-500/20 group-hover:bg-white/[0.05]">
-      <OracleIcon className="w-9 h-9 text-emerald-500" />
+      <BrandLogo className="w-9 h-9" />
     </div>
     <div className="flex flex-col">
       <h1 className="text-2xl font-black tracking-[-0.04em] text-white leading-none group-hover:text-emerald-500 transition-colors duration-500">
@@ -29,9 +29,9 @@ const NewNexoLogo = () => (
 const Sidebar: React.FC<Props> = ({ onClose }) => {
   const { state } = useApp();
   const sections = [
-    { title: 'Dia a Dia', items: NAVIGATION.slice(0, 4) },
-    { title: 'Relatórios', items: NAVIGATION.slice(4, 8) },
-    { title: 'Ajustes', items: NAVIGATION.slice(8) },
+    { title: 'Dia a Dia', items: NAVIGATION.slice(0, 5) },
+    { title: 'Relatórios', items: NAVIGATION.slice(5, 9) },
+    { title: 'Ajustes', items: NAVIGATION.slice(9) },
   ];
 
   const getInitials = (name: string) => {
