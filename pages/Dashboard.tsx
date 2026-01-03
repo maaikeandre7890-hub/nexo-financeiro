@@ -15,6 +15,16 @@ const Dashboard: React.FC = () => {
     return "Boa noite";
   }, []);
 
+  // Formatação da Data do Dia sempre atualizada
+  const currentFormattedDate = useMemo(() => {
+    return new Intl.DateTimeFormat('pt-BR', { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    }).format(new Date());
+  }, []);
+
   // Lógica de Frase Motivacional Estratégica
   const quoteOfTheDay = useMemo(() => {
     const quotes = [
@@ -39,6 +49,12 @@ const Dashboard: React.FC = () => {
       {/* Hero: Liquidez Atual */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="flex-1">
+          {/* Data Atualizada com Estética Minimalista */}
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"></div>
+            <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.25em]">{currentFormattedDate}</span>
+          </div>
+
           <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none">
             {greeting}<span className="text-emerald-500">.</span>
           </h1>
