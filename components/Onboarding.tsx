@@ -21,6 +21,9 @@ const Onboarding: React.FC = () => {
     completeOnboarding(formData);
   };
 
+  // Estilo do botão SaaS Enterprise refinado
+  const buttonClass = "w-full py-5 bg-gradient-to-r from-[#07252d] to-[#10b981] border border-white/10 backdrop-blur-md shadow-lg shadow-emerald-500/5 hover:brightness-110 hover:shadow-emerald-500/20 active:scale-[0.98] transition-all duration-300 text-white rounded-xl font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-2";
+
   return (
     <div className="fixed inset-0 z-[200] bg-[#071821] flex items-center justify-center p-6 overflow-hidden">
       {/* Background Decor */}
@@ -54,9 +57,9 @@ const Onboarding: React.FC = () => {
               </div>
               <button 
                 onClick={handleNext}
-                className="w-full py-5 bg-white text-slate-950 rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-emerald-400 transition-all active:scale-95 shadow-xl shadow-emerald-500/5"
+                className={buttonClass}
               >
-                Começar configuração ➡️
+                PROSSEGUIR
               </button>
             </div>
           )}
@@ -74,27 +77,27 @@ const Onboarding: React.FC = () => {
                   <input 
                     autoFocus
                     type="text" 
-                    placeholder="Ex: Alexandre Drex"
+                    placeholder="Ex: João Silva"
                     className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
                     value={formData.userName}
                     onChange={e => setFormData({...formData, userName: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">Qual o nome do seu negócio?</label>
+                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">Qual é o nome do seu negócio?</label>
                   <input 
                     type="text" 
-                    placeholder="Ex: Drex Capital SA"
+                    placeholder="Ex: Loja do João"
                     className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
                     value={formData.companyName}
                     onChange={e => setFormData({...formData, companyName: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">Setor de Atuação (Opcional)</label>
+                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">Tipo de negócio (opcional)</label>
                   <input 
                     type="text" 
-                    placeholder="Ex: SaaS, Varejo, Consultoria..."
+                    placeholder="Ex: Loja de roupas, mercado, oficina, salão de beleza"
                     className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
                     value={formData.businessType}
                     onChange={e => setFormData({...formData, businessType: e.target.value})}
@@ -103,13 +106,13 @@ const Onboarding: React.FC = () => {
               </div>
 
               <div className="flex gap-4">
-                <button onClick={handleBack} className="flex-1 py-5 bg-white/5 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all">Voltar</button>
+                <button onClick={handleBack} className="flex-1 py-5 bg-white/5 text-slate-500 rounded-xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all">Voltar</button>
                 <button 
                   disabled={!isStep2Valid}
                   onClick={handleNext}
-                  className="flex-[2] py-5 bg-emerald-500 text-slate-950 rounded-2xl font-black uppercase tracking-widest text-[10px] disabled:opacity-30 disabled:grayscale transition-all shadow-lg shadow-emerald-500/10 active:scale-95"
+                  className={`${buttonClass} flex-[2] disabled:opacity-30 disabled:grayscale`}
                 >
-                  Prosseguir
+                  PROSSEGUIR
                 </button>
               </div>
             </div>
@@ -145,9 +148,9 @@ const Onboarding: React.FC = () => {
 
               <button 
                 onClick={handleFinish}
-                className="w-full py-6 bg-emerald-500 text-slate-950 rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl shadow-emerald-500/20 active:scale-95 transition-all"
+                className={buttonClass}
               >
-                ✅ Finalizar e acessar painel
+                PROSSEGUIR
               </button>
             </div>
           )}
