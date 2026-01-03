@@ -3,7 +3,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>NEXO | Intelligence & Capital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -14,9 +14,9 @@
       :root {
         --bg-petroleum-base: #071821;
         --bg-petroleum-deep: #051118;
-        --bg-surface: rgba(17, 37, 50, 0.6);
+        --bg-surface: rgba(17, 37, 50, 0.55);
         --emerald-primary: #10b981;
-        --border-glass: rgba(255, 255, 255, 0.06);
+        --border-glass: rgba(255, 255, 255, 0.08);
       }
       
       body {
@@ -25,7 +25,7 @@
         margin: 0;
         font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
-        letter-spacing: -0.015em;
+        letter-spacing: -0.01em;
         min-height: 100vh;
         position: relative;
         overflow-x: hidden;
@@ -36,8 +36,8 @@
         position: fixed;
         inset: 0;
         background-image: 
-          radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.05) 0, transparent 40%),
-          radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.04) 0, transparent 40%),
+          radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0, transparent 40%),
+          radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.07) 0, transparent 40%),
           linear-gradient(180deg, var(--bg-petroleum-base) 0%, var(--bg-petroleum-deep) 100%);
         z-index: -2;
       }
@@ -47,28 +47,27 @@
         position: fixed;
         inset: 0;
         background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-        opacity: 0.02;
+        opacity: 0.03;
         pointer-events: none;
         z-index: -1;
       }
 
       .glass-card {
         background: var(--bg-surface);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
         border: 1px solid var(--border-glass);
-        box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
         transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .glass-card:hover {
-        border-color: rgba(16, 185, 129, 0.2);
-        background: rgba(20, 43, 58, 0.75);
+        border-color: rgba(16, 185, 129, 0.3);
+        background: rgba(20, 43, 58, 0.7);
         transform: translateY(-4px);
-        box-shadow: 0 20px 40px -15px rgba(0,0,0,0.4);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       }
 
-      /* Shimmer Effect para Elementos Premium */
       .shimmer {
         position: relative;
         overflow: hidden;
@@ -84,7 +83,7 @@
           rgba(255, 255, 255, 0) 100%
         );
         transform: translateX(-100%);
-        animation: shimmer 3s infinite;
+        animation: shimmer 4s infinite linear;
       }
 
       @keyframes shimmer {
@@ -95,26 +94,37 @@
 
       .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
       .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--emerald-primary); }
 
       .page-enter {
-        animation: premiumReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: premiumReveal 0.6s cubic-bezier(0.23, 1, 0.32, 1);
       }
 
       @keyframes premiumReveal {
-        from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+        from { opacity: 0; transform: translateY(12px); filter: blur(5px); }
         to { opacity: 1; transform: translateY(0); filter: blur(0); }
       }
 
-      h1, h2, h3, .font-black {
+      h1, h2, h3 {
         letter-spacing: -0.04em;
+        font-weight: 800;
       }
 
       .oracle-chip {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(56, 189, 248, 0.08) 100%);
-        border: 1px solid rgba(16, 185, 129, 0.25);
-        box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(56, 189, 248, 0.1) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
+      }
+
+      /* Ajuste de área segura para mobile */
+      @supports (padding-bottom: env(safe-area-inset-bottom)) {
+        .safe-pb {
+          padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        }
+        .safe-bottom {
+          bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        }
       }
     </style>
     <script type="importmap">
