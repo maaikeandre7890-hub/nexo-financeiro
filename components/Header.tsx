@@ -17,7 +17,7 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
         </button>
         <div onClick={onOpenSearch} className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.02] border border-white/[0.05] cursor-pointer group hover:border-emerald-500/20 transition-all">
           <i className="fa-solid fa-magnifying-glass text-[11px] text-slate-600 group-hover:text-emerald-500 transition-colors"></i>
-          <span className="text-[12px] font-medium text-slate-600 group-hover:text-slate-400 transition-colors">Buscar no sistema...</span>
+          <span className="text-[12px] font-medium text-slate-600 group-hover:text-slate-400 transition-colors">Pesquisar no sistema...</span>
           <kbd className="hidden sm:inline-block text-[9px] font-bold text-slate-700 bg-slate-900 px-1.5 py-0.5 rounded border border-white/5 ml-4">⌘K</kbd>
         </div>
       </div>
@@ -28,7 +28,7 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
           className="flex items-center gap-2.5 text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] hover:text-emerald-400 transition-all group"
         >
           <i className="fa-solid fa-sparkles animate-pulse"></i>
-          AI Oracle
+          Oráculo IA
         </button>
 
         <div className="w-[1px] h-4 bg-white/10"></div>

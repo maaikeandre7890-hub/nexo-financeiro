@@ -33,9 +33,9 @@ const LogoMillionDollar = () => (
 
 const Sidebar: React.FC<Props> = ({ onClose }) => {
   const sections = [
-    { title: 'Gestão Core', items: NAVIGATION.slice(0, 4) },
-    { title: 'Estratégico', items: NAVIGATION.slice(4, 8) },
-    { title: 'Sistema', items: NAVIGATION.slice(8) },
+    { title: 'Operações Core', items: NAVIGATION.slice(0, 4) },
+    { title: 'Inteligência e Dados', items: NAVIGATION.slice(4, 8) },
+    { title: 'Administração', items: NAVIGATION.slice(8) },
   ];
 
   return (
@@ -108,7 +108,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
           </div>
           <div className="flex flex-col min-w-0">
             <p className="text-[11px] font-bold text-white truncate tracking-tight">Drex Financial</p>
-            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">Corporate Tier</p>
+            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">Plano Corporativo</p>
           </div>
         </div>
       </div>

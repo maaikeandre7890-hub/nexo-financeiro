@@ -33,7 +33,6 @@ const App: React.FC = () => {
     setIsAIPanelOpen(false);
     setIsCommandBarOpen(false);
     setIsSidebarOpen(false);
-    // Scroll to top on navigation for mobile
     window.scrollTo(0, 0);
   }, [location]);
 
@@ -49,9 +48,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-[#010204] text-slate-300 selection:bg-emerald-500/30 overflow-x-hidden font-['Inter'] pb-20 md:pb-0">
+    <div className="flex min-h-screen text-slate-300 selection:bg-emerald-500/30 overflow-x-hidden font-['Inter'] pb-20 md:pb-0">
       <div 
-        className={`fixed inset-0 bg-black/80 backdrop-blur-md z-[45] transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[45] transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
@@ -68,7 +67,7 @@ const App: React.FC = () => {
         />
         
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:px-12 lg:py-10 scroll-smooth relative custom-scrollbar">
-          <div className="max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-2 duration-700">
+          <div className="max-w-[1600px] mx-auto page-enter">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -86,24 +85,26 @@ const App: React.FC = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
-          {/* Bottom padding spacer for mobile nav */}
           <div className="h-10 md:hidden"></div>
         </main>
 
         <NotificationPanel isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
         <AIInsightsPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
-        
-        {/* Mobile-only Bottom Navigation */}
         <BottomNav onOpenMore={() => setIsSidebarOpen(true)} />
       </div>
 
+      {/* FAB Premium - NEXO ORACLE ACCESS */}
       <button 
         onClick={() => setIsAIPanelOpen(true)}
-        className="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-2xl md:rounded-3xl shadow-[0_15px_40px_rgba(16,185,129,0.3)] flex items-center justify-center text-slate-950 text-xl md:text-3xl hover:scale-110 transition-all z-40 active:scale-95 group luxury-border"
+        title="Abrir NEXO ORACLE"
+        className="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-16 h-16 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-2xl md:rounded-3xl shadow-[0_20px_50px_rgba(16,185,129,0.3)] flex items-center justify-center text-slate-950 text-xl md:text-3xl hover:-translate-y-2 hover:scale-105 transition-all z-40 active:scale-95 group border border-white/20"
       >
         <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-emerald-400 animate-ping opacity-10 group-hover:opacity-30"></div>
-        <i className="fa-solid fa-sparkles"></i>
+        <div className="relative flex items-center justify-center">
+          <i className="fa-solid fa-robot scale-75 md:scale-90 opacity-40 absolute -top-1 -right-1"></i>
+          <i className="fa-solid fa-sparkles"></i>
+        </div>
       </button>
     </div>
   );

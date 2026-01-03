@@ -16,13 +16,13 @@ const Clientes: React.FC = () => {
     <div className="space-y-8 md:space-y-12 py-4 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
         <div>
-          <h2 className="text-[10px] md:label-pro text-emerald-500 mb-2 md:mb-4 tracking-[0.3em] font-black uppercase">Client Repository</h2>
+          <h2 className="text-[10px] md:label-pro text-emerald-500 mb-2 md:mb-4 tracking-[0.3em] font-black uppercase">Repositório de Clientes</h2>
           <h1 className="text-3xl md:text-5xl heading-pro text-white leading-none tracking-tighter">Entidades <span className="italic text-slate-500">Corporativas</span></h1>
         </div>
         <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
           <input 
             type="text" 
-            placeholder="Filtrar base..." 
+            placeholder="Filtrar base de dados..." 
             className="w-full md:w-80 bg-white/[0.02] border border-white/[0.05] rounded-xl py-3 md:py-4 px-6 text-xs font-bold text-white focus:outline-none focus:border-emerald-500/30 transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -41,10 +41,10 @@ const Clientes: React.FC = () => {
         <table className="w-full text-left">
           <thead>
             <tr className="bg-white/[0.01] border-b border-white/[0.03]">
-              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Corporate ID</th>
+              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">ID Corporativo</th>
               <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Status</th>
-              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Risk Analysis</th>
-              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">Contract Value</th>
+              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Análise de Risco</th>
+              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">Valor Mensal</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/[0.02]">
@@ -107,7 +107,7 @@ const Clientes: React.FC = () => {
             </div>
             <div className="flex justify-between items-end border-t border-white/5 pt-4">
               <div className="space-y-1">
-                <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Score de Risco</p>
+                <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Saúde do Cliente</p>
                 <div className="flex items-center gap-2">
                   <div className="w-16 h-1 bg-slate-900 rounded-full overflow-hidden">
                     <div className="h-full bg-emerald-500" style={{ width: `${client.score}%` }}></div>
@@ -116,7 +116,7 @@ const Clientes: React.FC = () => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Recorrência</p>
+                <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Assinatura</p>
                 <p className="text-base font-black text-white mono">R$ {client.monthlyValue.toLocaleString()}</p>
               </div>
             </div>
