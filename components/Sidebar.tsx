@@ -3,6 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { NAVIGATION } from '../constants';
 import OracleIcon from './OracleIcon';
+import { useApp } from '../contexts/AppContext';
 
 interface Props {
   onClose?: () => void;
@@ -10,13 +11,10 @@ interface Props {
 
 const NewNexoLogo = () => (
   <div className="relative group flex items-center gap-4">
-    {/* Glow de fundo para o ícone */}
     <div className="absolute -left-2 top-0 w-16 h-16 bg-emerald-500/10 blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-    
     <div className="relative z-10 w-14 h-14 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-500 group-hover:border-emerald-500/20 group-hover:bg-white/[0.05]">
       <OracleIcon className="w-9 h-9 text-emerald-500" />
     </div>
-
     <div className="flex flex-col">
       <h1 className="text-2xl font-black tracking-[-0.04em] text-white leading-none group-hover:text-emerald-500 transition-colors duration-500">
         NEXO<span className="text-emerald-500 group-hover:text-white transition-colors">.</span>
@@ -29,11 +27,21 @@ const NewNexoLogo = () => (
 );
 
 const Sidebar: React.FC<Props> = ({ onClose }) => {
+  const { state } = useApp();
   const sections = [
     { title: 'Operações Core', items: NAVIGATION.slice(0, 4) },
     { title: 'Inteligência e Dados', items: NAVIGATION.slice(4, 8) },
     { title: 'Administração', items: NAVIGATION.slice(8) },
   ];
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <aside className="w-full md:w-72 bg-[#051118] flex flex-col h-full z-20 relative border-r border-white/5 shadow-[20px_0_40px_rgba(0,0,0,0.4)] overflow-hidden">
@@ -89,11 +97,11 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
       <div className="p-8 mt-auto border-t border-white/5 bg-[#030a0e] relative z-10">
         <div className="flex items-center gap-4 group cursor-pointer">
           <div className="w-9 h-9 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-slate-400 group-hover:text-emerald-400 group-hover:border-emerald-500/30 transition-all font-black text-[9px]">
-            AD
+            {getInitials(state.userName || 'AD')}
           </div>
           <div className="flex flex-col min-w-0">
-            <p className="text-[11px] font-bold text-white truncate tracking-tight">Drex Financial</p>
-            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">Plano Corporativo</p>
+            <p className="text-[11px] font-bold text-white truncate tracking-tight">{state.companyName || 'Drex Financial'}</p>
+            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">{state.businessType || 'Plano Corporativo'}</p>
           </div>
         </div>
       </div>

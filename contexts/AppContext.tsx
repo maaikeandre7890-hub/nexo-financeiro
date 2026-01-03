@@ -1,23 +1,29 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Client, Receivable, Expense, AuditLog, AppState } from '../types';
 
 interface AppContextType {
   state: AppState;
   addClient: (client: Omit<Client, 'id' | 'createdAt' | 'score'>) => void;
-  addReceivable: (receivable: Omit<Receivable, 'id'>) => void;
-  addExpense: (expense: Omit<Expense, 'id'>) => void;
+  updateClient: (id: string, data: Partial<Client>) => void;
   deleteClient: (id: string) => void;
+  addReceivable: (receivable: Omit<Receivable, 'id'>) => void;
+  deleteReceivable: (id: string) => void;
+  addExpense: (expense: Omit<Expense, 'id'>) => void;
+  deleteExpense: (id: string) => void;
   markAsPaid: (id: string) => void;
   logAction: (action: string, details: string, type: AuditLog['type']) => void;
+  clearHistory: (pin: string) => boolean;
   getChartData: () => { name: string; value: number }[];
+  completeOnboarding: (userData: { userName: string, companyName: string, businessType: string }) => void;
   totals: {
     toReceive: number;
     overdue: number;
-    monthlyRecurring: number;
+    paid: number;
     totalExpenses: number;
     netBalance: number;
     cashHealth: number;
+    monthlyRecurring: number;
   };
 }
 
@@ -25,63 +31,97 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AppState>(() => {
-    const saved = localStorage.getItem('nexo_data_v3');
+    const saved = localStorage.getItem('nexo_data_v5_prod');
     if (saved) return JSON.parse(saved);
     
-    // Dados Iniciais de Onboarding
+    // ESTADO INICIAL ZERADO PARA NOVO USUÁRIO
     return {
-      clients: [
-        { id: '1', name: 'Tecnologia Avançada SA', email: 'contato@techadv.com', status: 'Ativo', monthlyValue: 15000, score: 98, createdAt: '2024-01-10' },
-        { id: '2', name: 'Varejo Global Corp', email: 'financeiro@varejo.com', status: 'Ativo', monthlyValue: 5200, score: 85, createdAt: '2024-03-05' },
-      ],
-      receivables: [
-        { id: 'R1', clientId: '1', clientName: 'Tecnologia Avançada SA', amount: 15000, dueDate: '2024-07-20', status: 'Pendente', category: 'Serviços' },
-        { id: 'R2', clientId: '2', clientName: 'Varejo Global Corp', amount: 5200, dueDate: '2024-05-10', status: 'Atrasado', category: 'Vendas' },
-      ],
-      expenses: [
-        { id: 'E1', description: 'Servidores AWS', amount: 1200, date: '2024-06-01', category: 'TI' },
-        { id: 'E2', description: 'Aluguel Matriz', amount: 3500, date: '2024-06-05', category: 'Fixo' },
-      ],
-      logs: [{ id: 'L1', timestamp: new Date().toISOString(), action: 'Setup Concluído', details: 'Infraestrutura Nexo SaaS ativada.', type: 'success' }]
+      onboardingCompleted: false,
+      userName: '',
+      companyName: '',
+      businessType: '',
+      clients: [],
+      receivables: [],
+      expenses: [],
+      logs: [{ 
+        id: 'L-INIT', 
+        timestamp: new Date().toISOString(), 
+        action: 'Sistema Pronto', 
+        details: 'NEXO aguardando configuração inicial de identidade.', 
+        type: 'info' 
+      }]
     };
   });
 
   useEffect(() => {
-    localStorage.setItem('nexo_data_v3', JSON.stringify(state));
+    localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
   }, [state]);
 
   const logAction = (action: string, details: string, type: AuditLog['type']) => {
-    const newLog: AuditLog = { id: Math.random().toString(36).substr(2, 9), timestamp: new Date().toISOString(), action, details, type };
-    setState(prev => ({ ...prev, logs: [newLog, ...prev.logs].slice(0, 100) }));
+    const newLog: AuditLog = { 
+      id: 'LOG-' + Math.random().toString(36).substr(2, 6).toUpperCase(), 
+      timestamp: new Date().toISOString(), 
+      action, 
+      details, 
+      type 
+    };
+    setState(prev => ({ ...prev, logs: [newLog, ...prev.logs].slice(0, 200) }));
+  };
+
+  const completeOnboarding = (userData: { userName: string, companyName: string, businessType: string }) => {
+    setState(prev => ({
+      ...prev,
+      ...userData,
+      onboardingCompleted: true,
+      logs: [{
+        id: 'L-ONB',
+        timestamp: new Date().toISOString(),
+        action: 'Onboarding Concluído',
+        details: `Ambiente configurado para ${userData.companyName}. Responsável: ${userData.userName}.`,
+        type: 'success'
+      }, ...prev.logs]
+    }));
   };
 
   const addClient = (clientData: Omit<Client, 'id' | 'createdAt' | 'score'>) => {
     const newClient: Client = {
       ...clientData,
-      id: Math.random().toString(36).substr(2, 9),
-      score: Math.floor(Math.random() * (100 - 70 + 1)) + 70,
+      id: 'CL-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+      score: 100,
       createdAt: new Date().toISOString(),
     };
     setState(prev => ({ ...prev, clients: [newClient, ...prev.clients] }));
-    logAction('Novo Cliente', `${newClient.name} cadastrado no sistema.`, 'success');
+    logAction('Novo Cliente', `Entidade ${newClient.name} integrada à base.`, 'success');
+  };
+
+  const updateClient = (id: string, data: Partial<Client>) => {
+    setState(prev => ({
+      ...prev,
+      clients: prev.clients.map(c => c.id === id ? { ...c, ...data } : c)
+    }));
+    logAction('Edição de Cliente', `Dados da entidade ID:${id} atualizados.`, 'info');
+  };
+
+  const deleteClient = (id: string) => {
+    const client = state.clients.find(c => c.id === id);
+    setState(prev => ({ 
+      ...prev, 
+      clients: prev.clients.filter(c => c.id !== id),
+      receivables: prev.receivables.filter(r => r.clientId !== id)
+    }));
+    if (client) logAction('Exclusão Crítica', `Cliente ${client.name} e faturas relacionadas removidos.`, 'warning');
   };
 
   const addReceivable = (recData: Omit<Receivable, 'id'>) => {
     const newRec: Receivable = { ...recData, id: 'REC-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
     setState(prev => ({ ...prev, receivables: [newRec, ...prev.receivables] }));
-    logAction('Receita Lançada', `Título de R$ ${newRec.amount} para ${newRec.clientName}`, 'info');
+    logAction('Receita Registrada', `Lançamento de R$ ${newRec.amount.toLocaleString()} para ${newRec.clientName}.`, 'success');
   };
 
-  const addExpense = (expData: Omit<Expense, 'id'>) => {
-    const newExp: Expense = { ...expData, id: 'EXP-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
-    setState(prev => ({ ...prev, expenses: [newExp, ...prev.expenses] }));
-    logAction('Despesa Registrada', `${newExp.description} - R$ ${newExp.amount}`, 'warning');
-  };
-
-  const deleteClient = (id: string) => {
-    const client = state.clients.find(c => c.id === id);
-    setState(prev => ({ ...prev, clients: prev.clients.filter(c => c.id !== id) }));
-    if (client) logAction('Exclusão de Cliente', `Empresa ${client.name} removida.`, 'warning');
+  const deleteReceivable = (id: string) => {
+    const rec = state.receivables.find(r => r.id === id);
+    setState(prev => ({ ...prev, receivables: prev.receivables.filter(r => r.id !== id) }));
+    if (rec) logAction('Exclusão de Receita', `Título R$ ${rec.amount} removido do fluxo.`, 'warning');
   };
 
   const markAsPaid = (id: string) => {
@@ -91,42 +131,68 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       receivables: prev.receivables.map(r => r.id === id ? { ...r, status: 'Pago' } : r)
     }));
-    logAction('Baixa de Título', `Recebimento de R$ ${rec.amount} confirmado.`, 'success');
+    logAction('Baixa de Título', `Recebimento de R$ ${rec.amount} confirmado e liquidado.`, 'success');
   };
+
+  const addExpense = (expData: Omit<Expense, 'id'>) => {
+    const newExp: Expense = { ...expData, id: 'EXP-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
+    setState(prev => ({ ...prev, expenses: [newExp, ...prev.expenses] }));
+    logAction('Nova Despesa', `Saída de R$ ${newExp.amount} registrada: ${newExp.description}.`, 'warning');
+  };
+
+  const deleteExpense = (id: string) => {
+    const exp = state.expenses.find(e => e.id === id);
+    setState(prev => ({ ...prev, expenses: prev.expenses.filter(e => e.id !== id) }));
+    if (exp) logAction('Exclusão de Despesa', `Gasto de R$ ${exp.amount} removido.`, 'info');
+  };
+
+  const clearHistory = (pin: string) => {
+    if (pin === '123456') {
+      setState(prev => ({ ...prev, logs: [{ id: 'L-ROOT', timestamp: new Date().toISOString(), action: 'Limpeza de Auditoria', details: 'Histórico resetado via PIN de administrador.', type: 'warning' }] }));
+      return true;
+    }
+    return false;
+  };
+
+  const totals = useMemo(() => {
+    const paid = state.receivables.filter(r => r.status === 'Pago').reduce((a, b) => a + b.amount, 0);
+    const toReceive = state.receivables.filter(r => r.status === 'Pendente').reduce((a, b) => a + b.amount, 0);
+    const overdue = state.receivables.filter(r => r.status === 'Atrasado').reduce((a, b) => a + b.amount, 0);
+    const totalExpenses = state.expenses.reduce((a, b) => a + b.amount, 0);
+    const netBalance = paid - totalExpenses;
+    
+    const totalTitles = state.receivables.length;
+    const paidTitles = state.receivables.filter(r => r.status === 'Pago').length;
+    const cashHealth = totalTitles > 0 ? Math.floor((paidTitles / totalTitles) * 100) : 0;
+
+    const monthlyRecurring = state.clients.filter(c => c.status === 'Ativo').reduce((a, b) => a + b.monthlyValue, 0);
+
+    return { paid, toReceive, overdue, totalExpenses, netBalance, cashHealth, monthlyRecurring };
+  }, [state.receivables, state.expenses, state.clients]);
 
   const getChartData = () => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     const currentMonth = new Date().getMonth();
-    const last6 = [];
+    const data = [];
     
     for(let i = 5; i >= 0; i--) {
-      const monthIdx = (currentMonth - i + 12) % 12;
-      const monthName = months[monthIdx];
-      
-      // Soma faturas pagas no mês fictício (para demo, somamos tudo que temos)
-      // Em produção real, filtraríamos pela data do recebimento
-      const income = state.receivables
-        .filter(r => r.status === 'Pago')
-        .reduce((acc, curr) => acc + curr.amount, 0) / 6; // Simulação de distribuição
-        
-      last6.push({ name: monthName, value: Math.floor(income + (Math.random() * 5000)) });
+      const mIdx = (currentMonth - i + 12) % 12;
+      const baseValue = totals.paid > 0 ? totals.paid / 4 : 0; 
+      data.push({ 
+        name: months[mIdx], 
+        value: baseValue > 0 ? Math.floor(baseValue + (Math.random() * baseValue * 0.1)) : 0
+      });
     }
-    return last6;
-  };
-
-  const totals = {
-    toReceive: state.receivables.filter(r => r.status === 'Pendente').reduce((acc, curr) => acc + curr.amount, 0),
-    overdue: state.receivables.filter(r => r.status === 'Atrasado').reduce((acc, curr) => acc + curr.amount, 0),
-    monthlyRecurring: state.clients.filter(c => c.status === 'Ativo').reduce((acc, curr) => acc + curr.monthlyValue, 0),
-    totalExpenses: state.expenses.reduce((acc, curr) => acc + curr.amount, 0),
-    netBalance: state.receivables.filter(r => r.status === 'Pago').reduce((acc, curr) => acc + curr.amount, 0) - state.expenses.reduce((acc, curr) => acc + curr.amount, 0),
-    cashHealth: state.receivables.length > 0 
-      ? Math.floor((state.receivables.filter(r => r.status === 'Pago').length / state.receivables.length) * 100) 
-      : 100
+    return data;
   };
 
   return (
-    <AppContext.Provider value={{ state, addClient, addReceivable, addExpense, deleteClient, markAsPaid, logAction, getChartData, totals }}>
+    <AppContext.Provider value={{ 
+      state, addClient, updateClient, deleteClient, 
+      addReceivable, deleteReceivable, markAsPaid, 
+      addExpense, deleteExpense, logAction, clearHistory,
+      getChartData, totals, completeOnboarding
+    }}>
       {children}
     </AppContext.Provider>
   );
@@ -134,6 +200,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 export const useApp = () => {
   const context = useContext(AppContext);
-  if (!context) throw new Error('useApp must be used within AppProvider');
+  if (!context) throw new Error('useApp deve ser usado dentro de AppProvider');
   return context;
 };

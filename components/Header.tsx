@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useApp } from '../contexts/AppContext';
 
 interface Props {
   onOpenNotifications: () => void;
@@ -9,6 +10,17 @@ interface Props {
 }
 
 const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, onToggleSidebar }) => {
+  const { state } = useApp();
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
     <header className="h-16 md:h-20 px-5 md:px-10 flex items-center justify-between sticky top-0 z-[90] bg-[#071821]/95 backdrop-blur-2xl border-b border-white/[0.06]">
       <div className="flex items-center gap-4">
@@ -48,7 +60,7 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
         </button>
 
         <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[11px] font-black text-emerald-500 shadow-inner group cursor-pointer hover:bg-emerald-500 hover:text-slate-950 transition-all">
-          AD
+          {getInitials(state.userName || 'AD')}
         </div>
       </div>
     </header>

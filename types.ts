@@ -42,6 +42,10 @@ export interface AuditLog {
 }
 
 export interface AppState {
+  onboardingCompleted: boolean;
+  userName: string;
+  companyName: string;
+  businessType: string;
   clients: Client[];
   receivables: Receivable[];
   expenses: Expense[];

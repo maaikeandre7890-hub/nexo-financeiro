@@ -6,6 +6,7 @@ import Header from './components/Header';
 import NotificationPanel from './components/NotificationPanel';
 import AIInsightsPanel from './components/AIInsightsPanel';
 import CommandBar from './components/CommandBar';
+import Onboarding from './components/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
 import Recebiveis from './pages/Recebiveis';
@@ -20,8 +21,10 @@ import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
 import NotFound from './pages/NotFound';
 import OracleIcon from './components/OracleIcon';
+import { useApp } from './contexts/AppContext';
 
 const App: React.FC = () => {
+  const { state } = useApp();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
   const [isCommandBarOpen, setIsCommandBarOpen] = useState(false);
@@ -46,6 +49,11 @@ const App: React.FC = () => {
     window.addEventListener('keydown', handleGlobalKeys);
     return () => window.removeEventListener('keydown', handleGlobalKeys);
   }, []);
+
+  // SE O ONBOARDING NÃO FOI CONCLUÍDO, MOSTRA APENAS A TELA DE ONBOARDING
+  if (!state.onboardingCompleted) {
+    return <Onboarding />;
+  }
 
   return (
     <div className="flex min-h-screen text-slate-300 selection:bg-emerald-500/30 overflow-x-hidden font-['Inter']">
@@ -103,7 +111,6 @@ const App: React.FC = () => {
           onClick={() => setIsAIPanelOpen(true)}
           className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-3xl shadow-[0_20px_60px_-15px_rgba(16,185,129,0.4)] flex items-center justify-center text-slate-950 transition-all active:scale-90 border border-white/20 relative overflow-hidden"
         >
-          {/* Efeito de brilho rotativo no fundo do botão */}
           <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
           <OracleIcon className="w-8 h-8 md:w-11 md:h-11 nexus-pulse" />
         </button>
