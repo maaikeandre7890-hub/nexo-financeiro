@@ -13,109 +13,112 @@ const Clientes: React.FC = () => {
   );
 
   return (
-    <div className="space-y-8 md:space-y-12 py-4 animate-in fade-in duration-700">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
-        <div>
-          <h2 className="text-[10px] md:label-pro text-emerald-500 mb-2 md:mb-4 tracking-[0.3em] font-black uppercase">Meus Clientes</h2>
-          <h1 className="text-3xl md:text-5xl heading-pro text-white leading-none tracking-tighter">Lista de <span className="italic text-slate-500">Clientes</span></h1>
+    <div className="space-y-12 py-6 page-enter">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+             <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.5em]">Diretório de Parceiros</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic uppercase leading-none">Meus <br/><span className="text-slate-600">Clientes.</span></h1>
         </div>
-        <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-          <input 
-            type="text" 
-            placeholder="Procurar cliente..." 
-            className="w-full md:w-80 bg-white/[0.02] border border-white/[0.05] rounded-xl py-3 md:py-4 px-6 text-xs font-bold text-white focus:outline-none focus:border-emerald-500/30 transition-all"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+          <div className="relative group w-full sm:w-80">
+            <i className="fa-solid fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors"></i>
+            <input 
+              type="text" 
+              placeholder="Buscar por nome..." 
+              className="w-full bg-white/[0.02] border border-white/[0.05] rounded-[2rem] py-5 pl-14 pr-8 text-xs font-black text-white focus:outline-none focus:border-emerald-500/30 transition-all shadow-inner"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="w-full md:w-auto px-8 py-4 bg-white text-black rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95"
+            className="w-full sm:w-auto px-10 py-5 bg-white text-black rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-xl"
           >
-            Adicionar Cliente
+            Adicionar Novo
           </button>
         </div>
       </div>
 
-      <div className="hidden md:block glass-card rounded-[2.5rem] overflow-hidden">
+      {/* Tabela Desktop Premium */}
+      <div className="hidden md:block glass-card rounded-[4rem] overflow-hidden">
         <table className="w-full text-left">
           <thead>
             <tr className="bg-white/[0.01] border-b border-white/[0.03]">
-              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Nome do Cliente ou Empresa</th>
-              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Status</th>
-              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Situação</th>
-              <th className="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">Valor por Mês</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Identidade</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Status</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Saúde</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] text-right">Faturamento /mês</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/[0.02]">
             {filteredClients.map((client) => (
-              <tr key={client.id} className="hover:bg-white/[0.01] transition-all group">
-                <td className="px-10 py-8">
+              <tr key={client.id} className="hover:bg-white/[0.01] transition-all group cursor-default">
+                <td className="px-12 py-10">
                   <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 font-black group-hover:text-emerald-500 transition-all shadow-inner">
+                    <div className="w-14 h-14 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 font-black group-hover:text-emerald-500 group-hover:border-emerald-500/20 transition-all shadow-inner text-xl">
                       {client.name.substring(0, 1).toUpperCase()}
                     </div>
-                    <div>
-                      <p className="font-black text-white text-base tracking-tight">{client.name}</p>
-                      <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-1">CLIENTE ATIVO</p>
+                    <div className="space-y-1">
+                      <p className="font-black text-white text-lg tracking-tight group-hover:translate-x-1 transition-transform">{client.name}</p>
+                      <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest">{client.email}</p>
                     </div>
                   </div>
                 </td>
-                <td className="px-10 py-8">
-                  <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                    client.status === 'Ativo' ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' : 'bg-slate-800 text-slate-500 border-slate-700'
+                <td className="px-12 py-10">
+                  <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${
+                    client.status === 'Ativo' ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' : 'bg-slate-900 text-slate-600 border-white/5'
                   }`}>
                     {client.status}
                   </span>
                 </td>
-                <td className="px-10 py-8">
-                   <div className="flex items-center gap-4">
-                      <div className="w-32 h-1 bg-slate-900 rounded-full overflow-hidden border border-white/[0.03]">
-                        <div className="h-full bg-emerald-500 shadow-[0_0_8px_#10b981]" style={{ width: `${client.score}%` }}></div>
+                <td className="px-12 py-10">
+                   <div className="flex items-center gap-5">
+                      <div className="w-40 h-1.5 bg-white/[0.02] rounded-full overflow-hidden border border-white/[0.05]">
+                        <div className="h-full bg-emerald-500 shadow-[0_0_12px_#10b981]" style={{ width: `${client.score}%` }}></div>
                       </div>
-                      <span className="text-[10px] font-black text-slate-500 mono">{client.score}%</span>
+                      <span className="text-[11px] font-black text-slate-500 mono">{client.score}%</span>
                    </div>
                 </td>
-                <td className="px-10 py-8 text-right">
-                  <span className="text-lg font-black text-white mono">R$ {client.monthlyValue.toLocaleString()}</span>
+                <td className="px-12 py-10 text-right">
+                  <span className="text-xl font-black text-white mono">R$ {client.monthlyValue.toLocaleString()}</span>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {filteredClients.length === 0 && (
+          <div className="py-24 text-center">
+            <p className="text-xs font-black text-slate-700 uppercase tracking-[0.6em] italic">Base de dados vazia</p>
+          </div>
+        )}
       </div>
 
-      <div className="md:hidden space-y-4">
+      {/* Cards Mobile de Alta Performance */}
+      <div className="md:hidden space-y-6">
         {filteredClients.map((client) => (
-          <div key={client.id} className="glass-card p-6 rounded-2xl border-white/5">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-slate-900 border border-white/5 rounded-xl flex items-center justify-center text-slate-500 font-black">
+          <div key={client.id} className="glass-card p-8 rounded-[3rem] border-white/5 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-5">
+                <div className="w-12 h-12 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 font-black text-lg">
                   {client.name.substring(0, 1).toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-black text-white text-sm tracking-tight">{client.name}</p>
-                  <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">CLIENTE</p>
+                  <p className="font-black text-white text-base tracking-tight">{client.name}</p>
+                  <p className="text-[8px] text-slate-600 font-black uppercase tracking-[0.3em]">{client.status}</p>
                 </div>
               </div>
-              <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${
-                client.status === 'Ativo' ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' : 'bg-slate-800 text-slate-500 border-slate-700'
-              }`}>
-                {client.status}
-              </span>
+              <button className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-full text-slate-500"><i className="fa-solid fa-ellipsis-vertical"></i></button>
             </div>
-            <div className="flex justify-between items-end border-t border-white/5 pt-4">
+            <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-6">
               <div className="space-y-1">
-                <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Situação</p>
-                <div className="flex items-center gap-2">
-                  <div className="w-16 h-1 bg-slate-900 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500" style={{ width: `${client.score}%` }}></div>
-                  </div>
-                  <span className="text-[9px] font-black text-zinc-400 mono">{client.score}%</span>
-                </div>
+                <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Score Fiscal</p>
+                <p className="text-sm font-black text-emerald-500 mono">{client.score}%</p>
               </div>
-              <div className="text-right">
-                <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Por Mês</p>
-                <p className="text-base font-black text-white mono">R$ {client.monthlyValue.toLocaleString()}</p>
+              <div className="text-right space-y-1">
+                <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Mensalidade</p>
+                <p className="text-sm font-black text-white mono">R$ {client.monthlyValue.toLocaleString()}</p>
               </div>
             </div>
           </div>

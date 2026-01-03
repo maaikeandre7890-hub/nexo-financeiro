@@ -13,53 +13,48 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
   const { state } = useApp();
 
   const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
   return (
-    <header className="h-16 md:h-20 px-5 md:px-10 flex items-center justify-between sticky top-0 z-[90] bg-[#071821]/95 backdrop-blur-2xl border-b border-white/[0.06]">
-      <div className="flex items-center gap-4">
+    <header className="h-24 px-8 md:px-14 flex items-center justify-between sticky top-0 z-[90] bg-[#020608]/90 backdrop-blur-3xl border-b border-white/[0.03]">
+      <div className="flex items-center gap-6">
         <button 
           onClick={onToggleSidebar} 
-          className="w-10 h-10 flex items-center justify-center bg-white/[0.04] rounded-xl text-slate-300 hover:text-white transition-colors border border-white/5 active:scale-95"
-          aria-label="Menu"
+          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-400 hover:text-white transition-all border border-white/[0.05] hover:border-emerald-500/20 active:scale-90"
         >
           <i className="fa-solid fa-bars-staggered text-sm"></i>
         </button>
         
         <div 
           onClick={onOpenSearch} 
-          className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] cursor-pointer group hover:border-emerald-500/30 transition-all"
+          className="hidden md:flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/[0.01] border border-white/[0.05] cursor-pointer group hover:border-emerald-500/30 transition-all w-80 shadow-inner"
         >
-          <i className="fa-solid fa-magnifying-glass text-[11px] text-slate-500 group-hover:text-emerald-500"></i>
-          <span className="text-[11px] font-bold text-slate-500 hidden sm:inline">Pesquisar registros...</span>
+          <i className="fa-solid fa-magnifying-glass text-[12px] text-slate-600 group-hover:text-emerald-500 transition-colors"></i>
+          <span className="text-[11px] font-black text-slate-600 group-hover:text-slate-400 uppercase tracking-widest transition-colors">Pesquisar Operações</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 md:gap-8">
+      <div className="flex items-center gap-6">
         <button 
           onClick={onOpenAI} 
-          className="hidden md:flex items-center gap-2.5 text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] hover:text-emerald-400 transition-all"
+          className="hidden lg:flex items-center gap-3 text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] hover:text-white transition-all group"
         >
-          <i className="fa-solid fa-sparkles"></i>
-          Oracle Concierge
+          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full group-hover:animate-ping"></div>
+          Oracle Assistant
         </button>
+
+        <div className="h-8 w-px bg-white/[0.05] hidden md:block"></div>
 
         <button 
           onClick={onOpenNotifications} 
-          className="w-10 h-10 flex items-center justify-center bg-white/[0.04] rounded-xl text-slate-400 border border-white/5 relative active:scale-95 hover:text-white transition-colors"
-          aria-label="Notificações"
+          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-500 border border-white/[0.05] relative hover:text-white transition-all group"
         >
-          <i className="fa-solid fa-bell text-xs"></i>
-          <span className="absolute top-3 right-3 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-[#071821]"></span>
+          <i className="fa-solid fa-bell text-sm"></i>
+          <span className="absolute top-4 right-4 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[#020608] shadow-[0_0_10px_#10b981]"></span>
         </button>
 
-        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[11px] font-black text-emerald-500 shadow-inner group cursor-pointer hover:bg-emerald-500 hover:text-slate-950 transition-all">
+        <div className="w-12 h-12 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-[12px] font-black text-emerald-500 shadow-xl cursor-pointer hover:bg-emerald-500 hover:text-black transition-all duration-500">
           {getInitials(state.userName || 'AD')}
         </div>
       </div>
