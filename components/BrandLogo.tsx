@@ -6,51 +6,70 @@ interface Props {
   showText?: boolean;
 }
 
+/**
+ * NEXO BRAND IDENTITY v6.1 - "THE COMPLETE CINEMATIC N"
+ * Correção de geometria: A fita diagonal agora possui a mesma espessura dos pilares,
+ * eliminando a sensação de "pedaço faltando".
+ */
 const BrandLogo: React.FC<Props> = ({ className = "w-12 h-12", showText = false }) => {
   return (
-    <div className={`flex items-center gap-4 ${className.includes('w-') ? '' : 'w-auto'}`}>
+    <div className={`flex items-center gap-6 ${className.includes('w-') ? '' : 'w-auto'}`}>
       <svg 
         viewBox="0 0 100 100" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg" 
-        className={className}
-        style={{ filter: 'drop-shadow(0 4px 12px rgba(16, 185, 129, 0.2))' }}
+        className={`${className} transition-all duration-700 ease-out`}
       >
         <defs>
-          <linearGradient id="nexo_lux_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Gradiente principal vibrante (Nexo Emerald) */}
+          <linearGradient id="main_ribbon" x1="0" y1="0" x2="0" y2="100%">
             <stop offset="0%" stopColor="#10b981" />
-            <stop offset="50%" stopColor="#34d399" />
             <stop offset="100%" stopColor="#059669" />
           </linearGradient>
-          <linearGradient id="nexo_accent_grad" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
-          </linearGradient>
+
+          {/* Sombra para profundidade tátil na dobra */}
+          <filter id="ribbon_shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feOffset dx="2" dy="0" result="offsetBlur" />
+            <feComposite in="SourceGraphic" in2="offsetBlur" operator="over" />
+          </filter>
         </defs>
 
-        {/* Estrutura Principal do N (Design Arquitetural) */}
+        {/* Pilar Esquerdo (Base) */}
         <path 
-          d="M30 25C30 22.2386 32.2386 20 35 20H45C47.7614 20 50 22.2386 50 25V55L70 30H80C82.7614 30 85 32.2386 85 35V75C85 77.7614 82.7614 80 80 80H70C67.2386 80 65 77.7614 65 75V45L45 70H35C32.2386 70 30 67.7614 30 65V25Z" 
-          fill="url(#nexo_lux_grad)" 
+          d="M22 15 Q30 17 38 16 V84 Q30 83 22 85 V15Z" 
+          fill="#064e3b" 
         />
         
-        {/* Reflexo de Vidro/Brilho Superior */}
+        {/* Pilar Direito (Base) */}
         <path 
-          d="M30 25C30 22.2386 32.2386 20 35 20H45C47.7614 20 50 22.2386 50 25V35L30 25Z" 
-          fill="url(#nexo_accent_grad)" 
+          d="M62 16 Q70 17 78 15 V85 Q70 83 62 84 V16Z" 
+          fill="#064e3b" 
         />
 
-        {/* Ponto de Equilíbrio Central */}
-        <rect x="47" y="47" width="6" height="6" rx="1" fill="white" />
+        {/* A Fita Diagonal (O elemento de destaque que "dobra" por cima) */}
+        {/* Agora com espessura completa conectando os cantos corretamente */}
+        <path 
+          d="M22 15 L38 15 L78 85 L62 85 Z" 
+          fill="url(#main_ribbon)" 
+          style={{ filter: 'drop-shadow(4px 0 8px rgba(0,0,0,0.6))' }}
+        />
+        
+        {/* Brilho sutil na borda superior para realçar o acabamento premium */}
+        <path 
+          d="M22 15 L38 15 L42 22 L26 22 Z" 
+          fill="white" 
+          fillOpacity="0.08" 
+        />
       </svg>
       
       {showText && (
-        <div className="flex flex-col leading-none">
-          <span className="text-3xl font-black tracking-[-0.06em] text-white">
+        <div className="flex flex-col">
+          <span className="text-4xl font-black tracking-[-0.08em] text-white uppercase leading-[0.8] italic">
             NEXO<span className="text-emerald-500">.</span>
           </span>
-          <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.5em] mt-1 ml-0.5">
-            Intelligence
+          <span className="text-[7px] font-black text-slate-600 uppercase tracking-[0.8em] mt-2 ml-1">
+            Capital Management
           </span>
         </div>
       )}
