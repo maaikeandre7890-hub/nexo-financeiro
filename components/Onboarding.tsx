@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import OracleIcon from './OracleIcon';
+import BrandLogo from './BrandLogo';
 import { useApp } from '../contexts/AppContext';
 
 const Onboarding: React.FC = () => {
@@ -32,79 +32,84 @@ const Onboarding: React.FC = () => {
 
       <div className="max-w-xl w-full relative z-10">
         <div className="flex flex-col items-center text-center mb-12">
-          <div className="w-20 h-20 oracle-chip rounded-[2rem] flex items-center justify-center text-emerald-500 mb-8 shadow-2xl">
-            <OracleIcon className="w-12 h-12 nexus-pulse" />
+          {/* Logo Premium "The Infinite Link" */}
+          <div className="w-28 h-28 bg-white/[0.03] border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)] relative group overflow-hidden">
+            <div className="absolute inset-0 bg-emerald-500/[0.03] blur-3xl group-hover:bg-emerald-500/10 transition-colors"></div>
+            <BrandLogo className="w-16 h-16 relative z-10" />
           </div>
+          
           <div className="flex gap-2 mb-4">
             {[1, 2, 3].map(s => (
-              <div key={s} className={`h-1 rounded-full transition-all duration-500 ${step >= s ? 'w-8 bg-emerald-500' : 'w-4 bg-white/10'}`}></div>
+              <div key={s} className={`h-1 rounded-full transition-all duration-500 ${step >= s ? 'w-10 bg-emerald-500' : 'w-4 bg-white/10'}`}></div>
             ))}
           </div>
         </div>
 
-        <div className="glass-card p-8 md:p-12 rounded-[3rem] border-white/5 relative overflow-hidden">
+        <div className="glass-card p-8 md:p-14 rounded-[4rem] border-white/5 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+          
           {step === 1 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-1000">
               <div className="space-y-4">
-                <h1 className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-tight italic">
-                  Bem-vindo ao <span className="text-emerald-500">NEXO.</span>
+                <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-[0.9] italic">
+                  Controle <br/><span className="text-emerald-500 underline decoration-white/10 underline-offset-8">Absoluto.</span>
                 </h1>
-                <p className="text-slate-400 font-medium leading-relaxed">
-                  Vamos organizar seu dinheiro em menos de 1 minuto. Simples, rápido e sem complicações.
+                <p className="text-slate-500 font-medium leading-relaxed text-sm md:text-base italic">
+                  Bem-vindo à nova era da gestão financeira. O NEXO organiza seu capital com clareza matemática e design de elite.
                 </p>
               </div>
               <button 
                 onClick={handleNext}
                 className={buttonClass}
               >
-                PROSSEGUIR
+                CONFIGURAR AMBIENTE
               </button>
             </div>
           )}
 
           {step === 2 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="space-y-2 text-center md:text-left">
-                <h2 className="text-2xl font-black text-white tracking-tight italic">Sobre seu Negócio</h2>
-                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Só precisamos saber quem você é</p>
+              <div className="space-y-2 text-center md:text-left border-b border-white/5 pb-6">
+                <h2 className="text-2xl font-black text-white tracking-tight italic">Identidade de Gestão</h2>
+                <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.3em]">Dados do Proprietário e Negócio</p>
               </div>
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">Como devemos te chamar?</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Seu Nome Completo</label>
                   <input 
                     autoFocus
                     type="text" 
                     placeholder="Ex: João Silva"
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
                     value={formData.userName}
                     onChange={e => setFormData({...formData, userName: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">Qual é o nome do seu negócio?</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Empresa ou Razão Social</label>
                   <input 
                     type="text" 
-                    placeholder="Ex: Loja do João"
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
+                    placeholder="Ex: NEXO Capital Ltda"
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
                     value={formData.companyName}
                     onChange={e => setFormData({...formData, companyName: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">Tipo de negócio (opcional)</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Setor de Atuação</label>
                   <input 
                     type="text" 
-                    placeholder="Ex: Loja de roupas, mercado, oficina, salão de beleza"
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
+                    placeholder="Ex: Consultoria, Varejo, Tecnologia"
+                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/40 transition-all h-16"
                     value={formData.businessType}
                     onChange={e => setFormData({...formData, businessType: e.target.value})}
                   />
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <button onClick={handleBack} className="flex-1 py-5 bg-white/5 text-slate-500 rounded-xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all">Voltar</button>
+              <div className="flex gap-4 pt-4">
+                <button onClick={handleBack} className="flex-1 py-5 bg-white/[0.02] border border-white/5 text-slate-500 rounded-xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all">Voltar</button>
                 <button 
                   disabled={!isStep2Valid}
                   onClick={handleNext}
@@ -117,30 +122,29 @@ const Onboarding: React.FC = () => {
           )}
 
           {step === 3 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="space-y-4 text-center">
-                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto text-emerald-500 mb-6 border border-emerald-500/30">
-                  <i className="fa-solid fa-check text-2xl"></i>
+                <div className="w-20 h-20 bg-emerald-500/10 rounded-[2rem] flex items-center justify-center mx-auto text-emerald-500 mb-8 border border-emerald-500/20 shadow-2xl">
+                  <i className="fa-solid fa-bolt-lightning text-2xl"></i>
                 </div>
-                <h2 className="text-2xl font-black text-white tracking-tight italic">Tudo pronto, {formData.userName.split(' ')[0]}!</h2>
-                <p className="text-slate-400 leading-relaxed font-medium">
-                  O NEXO está pronto para cuidar das contas da <span className="text-white font-bold">{formData.companyName}</span>. 
-                  Comece adicionando seus clientes e o dinheiro que você tem para receber.
+                <h2 className="text-3xl font-black text-white tracking-tighter italic leading-none">Acesso Autorizado, <br/>{formData.userName.split(' ')[0]}<span className="text-emerald-500">.</span></h2>
+                <p className="text-slate-500 leading-relaxed font-medium text-sm italic">
+                  O ecossistema da <span className="text-white font-bold">{formData.companyName}</span> foi provisionado e está pronto para o seu comando.
                 </p>
               </div>
 
-              <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 space-y-3">
-                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">Negócio</span>
-                    <span className="text-emerald-500">{formData.companyName}</span>
+              <div className="bg-slate-950/40 border border-white/5 rounded-[2rem] p-8 space-y-4 shadow-inner">
+                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em]">
+                    <span className="text-slate-600">Ambiente</span>
+                    <span className="text-emerald-500">PRODUÇÃO</span>
                  </div>
-                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">Moeda</span>
-                    <span className="text-white">Real (R$)</span>
+                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em]">
+                    <span className="text-slate-600">Criptografia</span>
+                    <span className="text-white">AES-256</span>
                  </div>
-                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">Saldo Inicial</span>
-                    <span className="text-rose-500">R$ 0,00</span>
+                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em]">
+                    <span className="text-slate-600">Base Fiscal</span>
+                    <span className="text-white">BRL (R$)</span>
                  </div>
               </div>
 
@@ -148,10 +152,14 @@ const Onboarding: React.FC = () => {
                 onClick={handleFinish}
                 className={buttonClass}
               >
-                COMEÇAR AGORA
+                ENTRAR NO TERMINAL
               </button>
             </div>
           )}
+        </div>
+        
+        <div className="mt-12 text-center">
+           <p className="text-[8px] font-black text-slate-700 uppercase tracking-[0.6em]">NEXO INTELLIGENCE SYSTEMS — ALL RIGHTS RESERVED</p>
         </div>
       </div>
     </div>
