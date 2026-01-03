@@ -12,8 +12,10 @@ import Recebiveis from './pages/Recebiveis';
 import Atraso from './pages/Atraso';
 import Historico from './pages/Historico';
 import Relatorios from './pages/Relatorios';
-import Faturamento from './pages/Faturamento';
-import Despesas from './pages/Despesas';
+import FaturamentoLiquido from './pages/FaturamentoLiquido';
+import DespesasExtras from './pages/DespesasExtras';
+import Cobranca from './pages/Cobranca';
+import Sistema from './pages/Sistema';
 import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
 import NotFound from './pages/NotFound';
@@ -45,7 +47,6 @@ const App: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-[#010204] text-slate-300 selection:bg-emerald-500/30 overflow-hidden font-['Inter']">
-      {/* Sidebar Mobile Overlay */}
       <div 
         className={`fixed inset-0 bg-black/80 backdrop-blur-md z-[45] md:hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
@@ -73,8 +74,10 @@ const App: React.FC = () => {
               <Route path="/parcelas-atraso" element={<Atraso />} />
               <Route path="/historico" element={<Historico />} />
               <Route path="/relatorios" element={<Relatorios />} />
-              <Route path="/faturamento" element={<Faturamento />} />
-              <Route path="/despesas" element={<Despesas />} />
+              <Route path="/faturamento-liquido" element={<FaturamentoLiquido />} />
+              <Route path="/despesas-extras" element={<DespesasExtras />} />
+              <Route path="/cobranca-automatica" element={<Cobranca />} />
+              <Route path="/sistema" element={<Sistema />} />
               <Route path="/configuracoes" element={<Configuracoes />} />
               <Route path="/tutorial" element={<Tutorial />} />
               <Route path="*" element={<NotFound />} />

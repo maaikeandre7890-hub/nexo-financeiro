@@ -13,10 +13,16 @@ export const COLORS = {
 };
 
 export const NAVIGATION: NavItem[] = [
-  { label: 'Visão Geral', path: '/dashboard', icon: 'fa-chart-pie' },
-  { label: 'Entradas / Receitas', path: '/recebiveis', icon: 'fa-arrow-up-to-line' },
-  { label: 'Saídas / Despesas', path: '/despesas', icon: 'fa-arrow-down-from-line' },
-  { label: 'Base de Clientes', path: '/clientes', icon: 'fa-users' },
-  { label: 'Resultado (DRE)', path: '/relatorios', icon: 'fa-file-invoice-dollar' },
+  { label: 'Dashboard', path: '/dashboard', icon: 'fa-chart-pie' },
+  { label: 'Clientes', path: '/clientes', icon: 'fa-users' },
+  { label: 'Recebíveis', path: '/recebiveis', icon: 'fa-arrow-up-to-line' },
+  { label: 'Parcelas em Atraso', path: '/parcelas-atraso', icon: 'fa-triangle-exclamation' },
+  { label: 'Histórico', path: '/historico', icon: 'fa-clock-rotate-left' },
+  { label: 'Relatórios', path: '/relatorios', icon: 'fa-file-invoice-dollar' },
+  { label: 'Faturamento Líquido', path: '/faturamento-liquido', icon: 'fa-scale-balanced' },
+  { label: 'Despesas Extras', path: '/despesas-extras', icon: 'fa-receipt' },
+  { label: 'Cobrança Automática', path: '/cobranca-automatica', icon: 'fa-robot' }, // Premium
+  { label: 'Sistema', path: '/sistema', icon: 'fa-microchip' },
   { label: 'Configurações', path: '/configuracoes', icon: 'fa-gear' },
+  { label: 'Tutorial', path: '/tutorial', icon: 'fa-book-open' },
 ];
