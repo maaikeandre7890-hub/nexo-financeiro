@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useApp } from '../contexts/AppContext';
 import { AddReceivableModal } from '../components/Modals';
@@ -10,6 +10,14 @@ const Dashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [marketInsights, setMarketInsights] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+
+  // Saudação Dinâmica baseada no horário
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) return "Bom dia";
+    if (hour >= 12 && hour < 18) return "Boa tarde";
+    return "Boa noite";
+  }, []);
 
   const fetchMarketTrends = async () => {
     setIsSearching(true);
@@ -30,11 +38,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-12 py-4 page-enter">
-      {/* Header Executive - Sério & Minimalista */}
+      {/* Header Executive - Dinâmico & Minimalista */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-4xl md:text-6xl font-black text-white tracking-[-0.04em] leading-none">
-            Boa noite<span className="text-emerald-500">.</span>
+            {greeting}<span className="text-emerald-500">.</span>
           </h1>
           <div className="flex items-center gap-3 mt-4">
             <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Saúde Operacional</span>
