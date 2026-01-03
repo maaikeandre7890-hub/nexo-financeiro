@@ -1,6 +1,7 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import App from './App';
 import { AppProvider } from './contexts/AppContext';
 
@@ -10,13 +11,12 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
-
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <AppProvider>
         <App />
       </AppProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
