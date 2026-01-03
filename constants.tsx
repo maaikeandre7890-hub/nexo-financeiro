@@ -2,9 +2,9 @@
 import { NavItem } from './types';
 
 export const COLORS = {
-  background: '#071821',
-  sidebar: '#051118',
-  card: 'rgba(17, 37, 50, 0.6)',
+  background: '#020608',
+  sidebar: '#000000',
+  card: 'rgba(2, 12, 16, 0.7)',
   primary: '#10b981',
   primaryDark: '#059669',
   secondary: '#3b82f6',
@@ -12,7 +12,7 @@ export const COLORS = {
   danger: '#ef4444',
   textMain: '#F8FAFC',
   textMuted: '#94A3B8',
-  border: 'rgba(255, 255, 255, 0.08)'
+  border: 'rgba(255, 255, 255, 0.04)'
 };
 
 export const NAVIGATION: NavItem[] = [
@@ -20,7 +20,6 @@ export const NAVIGATION: NavItem[] = [
   { label: 'Meus Clientes', path: '/clientes', icon: 'fa-users' },
   { label: 'Contas a Receber', path: '/recebiveis', icon: 'fa-arrow-up-to-line' },
   { label: 'Contas em Atraso', path: '/parcelas-atraso', icon: 'fa-triangle-exclamation' },
-  { label: 'Identidade Visual', path: '/branding', icon: 'fa-palette' },
   { label: 'Histórico de Ações', path: '/historico', icon: 'fa-clock-rotate-left' },
   { label: 'Resumo do Mês', path: '/relatorios', icon: 'fa-file-invoice-dollar' },
   { label: 'Lucro do Mês', path: '/faturamento-liquido', icon: 'fa-scale-balanced' },

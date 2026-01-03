@@ -13,30 +13,31 @@ const Recebiveis: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-2 italic">Contas a Receber</h1>
-          <p className="text-slate-500 text-sm md:text-base font-medium italic">Veja aqui todo o dinheiro que tem para entrar.</p>
+    <div className="space-y-12 py-6 page-enter">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+             <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.5em]">Fluxo de Entrada</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic uppercase leading-none">Meus <br/><span className="text-slate-600">Recebíveis.</span></h1>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="w-full md:w-auto bg-emerald-500 text-slate-950 font-black py-4 px-8 rounded-xl transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/10 active:scale-95"
+          className="w-full md:w-auto px-10 py-5 bg-white text-black rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-xl"
         >
-          <i className="fa-solid fa-plus"></i>
           Novo Recebimento
         </button>
       </div>
       
-      <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+      <div className="flex gap-3 overflow-x-auto pb-4 custom-scrollbar">
         {['Todos', 'Pendente', 'Pago', 'Atrasado'].map((f) => (
           <button 
             key={f} 
             onClick={() => setFilter(f as any)}
-            className={`whitespace-nowrap py-3 md:py-4 px-6 md:px-10 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+            className={`whitespace-nowrap px-8 py-4 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-all ${
               filter === f 
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-lg' 
-                : 'bg-transparent text-slate-500 border-white/5 hover:border-white/10'
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-lg' 
+                : 'bg-white/[0.01] text-slate-500 border-white/[0.03] hover:border-white/10'
             }`}
           >
             {f === 'Todos' ? 'Tudo' : f}
@@ -44,81 +45,89 @@ const Recebiveis: React.FC = () => {
         ))}
       </div>
 
-      <div className="hidden md:block glass-card rounded-[2.5rem] overflow-hidden border-white/5">
+      <div className="hidden md:block glass-card rounded-[4rem] overflow-hidden">
         <table className="w-full text-left">
           <thead>
-            <tr className="bg-slate-900/50 border-b border-white/[0.03]">
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Cliente</th>
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor</th>
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Data</th>
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</th>
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Ações</th>
+            <tr className="bg-white/[0.01] border-b border-white/[0.03]">
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Cliente / Categoria</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Vencimento</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Status</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] text-right">Valor</th>
+              <th className="px-12 py-8 text-right"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/[0.02]">
             {filteredItems.map((rec) => (
-              <tr key={rec.id} className="hover:bg-white/[0.01] transition-colors group">
-                <td className="px-8 py-6">
-                  <p className="font-bold text-white group-hover:text-emerald-500 transition-colors">{rec.clientName}</p>
-                  <p className="text-[10px] text-slate-600 font-bold uppercase">{rec.category}</p>
+              <tr key={rec.id} className="hover:bg-white/[0.01] transition-all group">
+                <td className="px-12 py-10">
+                  <p className="font-black text-white text-lg tracking-tight group-hover:translate-x-1 transition-transform">{rec.clientName}</p>
+                  <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest mt-1">{rec.category}</p>
                 </td>
-                <td className="px-8 py-6">
-                  <span className="text-sm font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+                <td className="px-12 py-10">
+                  <span className="text-sm font-black text-slate-400 mono">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
                 </td>
-                <td className="px-8 py-6 text-xs font-bold text-slate-400">
-                  {new Date(rec.dueDate).toLocaleDateString('pt-BR')}
-                </td>
-                <td className="px-8 py-6">
-                  <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                    rec.status === 'Pago' ? 'bg-emerald-500/10 text-emerald-400' : 
-                    rec.status === 'Atrasado' ? 'bg-rose-500/10 text-rose-400' : 'bg-amber-500/10 text-amber-400'
+                <td className="px-12 py-10">
+                  <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${
+                    rec.status === 'Pago' ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' : 
+                    rec.status === 'Atrasado' ? 'bg-rose-500/5 text-rose-400 border-rose-500/20' : 
+                    'bg-amber-500/5 text-amber-400 border-amber-500/20'
                   }`}>
                     {rec.status}
                   </span>
                 </td>
-                <td className="px-8 py-6 text-right flex justify-end gap-3">
-                  {rec.status !== 'Pago' && (
-                    <button 
-                      onClick={() => markAsPaid(rec.id)}
-                      className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-slate-950 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border border-emerald-500/20"
-                    >
-                      Já Recebi
-                    </button>
-                  )}
-                  <button 
-                    onClick={() => { if(confirm('Apagar este registro para sempre?')) deleteReceivable(rec.id)}}
-                    className="w-8 h-8 flex items-center justify-center text-slate-700 hover:text-rose-500 transition-colors"
-                  >
-                    <i className="fa-solid fa-trash-can text-sm"></i>
-                  </button>
+                <td className="px-12 py-10 text-right">
+                  <span className="text-xl font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+                </td>
+                <td className="px-12 py-10 text-right">
+                   <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
+                      {rec.status !== 'Pago' && (
+                        <button 
+                          onClick={() => markAsPaid(rec.id)}
+                          className="px-6 py-2 bg-emerald-500 text-black text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-emerald-400 transition-all"
+                        >
+                          Baixar
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => { if(confirm('Apagar permanentemente?')) deleteReceivable(rec.id)}}
+                        className="w-10 h-10 flex items-center justify-center text-slate-700 hover:text-rose-500 transition-colors"
+                      >
+                        <i className="fa-solid fa-trash-can"></i>
+                      </button>
+                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {filteredItems.length === 0 && (
+          <div className="py-24 text-center opacity-30 italic">Nenhum registro encontrado.</div>
+        )}
       </div>
 
-      <div className="md:hidden space-y-4">
+      <div className="md:hidden space-y-6">
         {filteredItems.map((rec) => (
-          <div key={rec.id} className="glass-card p-6 rounded-2xl border-white/5 space-y-4">
+          <div key={rec.id} className="glass-card p-8 rounded-[3rem] border-white/5 space-y-6">
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="font-black text-white text-sm">{rec.clientName}</h4>
-                <p className="text-[9px] text-zinc-500 uppercase">{rec.category}</p>
+                <h4 className="font-black text-white text-base tracking-tight">{rec.clientName}</h4>
+                <p className="text-[9px] text-slate-600 font-black uppercase tracking-[0.3em]">{rec.category}</p>
               </div>
-              <div className="flex gap-2">
-                <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${
-                  rec.status === 'Pago' ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/5'
-                }`}>{rec.status}</span>
-                <button onClick={() => deleteReceivable(rec.id)} className="text-slate-700"><i className="fa-solid fa-trash-can"></i></button>
-              </div>
+              <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${
+                rec.status === 'Pago' ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/5'
+              }`}>{rec.status}</span>
             </div>
-            <div className="flex justify-between items-center bg-zinc-950/50 p-3 rounded-xl">
-              <span className="text-xs font-black text-zinc-400">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
-              <span className="text-base font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+            <div className="flex justify-between items-center bg-white/[0.02] p-6 rounded-[2rem] border border-white/[0.05]">
+              <span className="text-xs font-black text-slate-500 mono">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
+              <span className="text-lg font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
             </div>
             {rec.status !== 'Pago' && (
-              <button onClick={() => markAsPaid(rec.id)} className="w-full py-4 bg-emerald-500 text-black font-black rounded-xl">Marcar como Pago</button>
+              <button 
+                onClick={() => markAsPaid(rec.id)}
+                className="w-full py-5 bg-emerald-500 text-black font-black rounded-[2rem] text-[10px] uppercase tracking-widest"
+              >
+                Confirmar Recebimento
+              </button>
             )}
           </div>
         ))}

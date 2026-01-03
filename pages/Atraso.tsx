@@ -7,92 +7,86 @@ const Atraso: React.FC = () => {
   const overdueItems = state.receivables.filter(r => r.status === 'Atrasado');
 
   return (
-    <div className="space-y-8 md:space-y-10 animate-in fade-in duration-700">
-      <div className="flex items-center gap-4 md:gap-6">
-        <div className="w-14 h-14 md:w-16 md:h-16 bg-rose-500/10 rounded-2xl flex items-center justify-center border border-rose-500/20 shadow-xl shadow-rose-500/5">
-          <i className="fa-solid fa-triangle-exclamation text-rose-500 text-2xl md:text-3xl"></i>
-        </div>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight italic">Contas em Atraso</h1>
-          <p className="text-slate-500 text-sm md:text-base font-medium italic">Clientes que ainda não pagaram e precisam de atenção.</p>
+    <div className="space-y-12 py-6 page-enter">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+             <div className="w-2 h-2 bg-rose-500 rounded-full animate-ping"></div>
+             <span className="text-[10px] font-black text-rose-500 uppercase tracking-[0.5em]">Alerta de Inadimplência</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic uppercase leading-none">Em <br/><span className="text-rose-600">Atraso.</span></h1>
         </div>
       </div>
 
-      <div className="glass-card rounded-[2rem] md:rounded-[2.5rem] border-rose-500/20 p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10 bg-gradient-to-br from-rose-500/5 to-transparent relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-rose-500/5 rounded-full blur-3xl -mr-10 -mt-10 md:-mr-20 md:-mt-20"></div>
-        <div className="relative z-10 text-center md:text-left">
-           <p className="text-[10px] font-black text-rose-400 uppercase tracking-[0.3em] mb-2">Total que Falta Entrar</p>
-           <div className="text-4xl md:text-6xl font-black text-white mono tracking-tighter">R$ {totals.overdue.toLocaleString()}</div>
-           <p className="text-slate-500 mt-3 md:mt-4 font-bold text-xs md:text-sm italic">São <span className="text-rose-400">{overdueItems.length} contas</span> que passaram da data de vencimento.</p>
+      <div className="glass-card rounded-[4rem] border-rose-500/10 p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 bg-gradient-to-br from-rose-500/[0.03] to-transparent relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-[100px] -mr-32 -mt-32"></div>
+        <div className="relative z-10 space-y-4">
+           <p className="text-[10px] font-black text-rose-400 uppercase tracking-[0.4em]">Montante Exposto ao Risco</p>
+           <div className="text-6xl md:text-8xl font-black text-white mono tracking-tighter italic">R$ {totals.overdue.toLocaleString()}</div>
+           <p className="text-slate-500 font-bold text-sm uppercase tracking-widest">
+             <span className="text-rose-400">{overdueItems.length}</span> títulos com vencimento expirado
+           </p>
         </div>
-        <button className="relative z-10 w-full md:w-auto bg-rose-500 hover:bg-rose-400 text-white font-black py-4 px-10 rounded-2xl transition-all shadow-2xl shadow-rose-500/30 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest text-[10px]">
+        <button className="relative z-10 w-full md:w-auto px-12 py-6 bg-rose-500 text-white rounded-[2.5rem] font-black text-[11px] uppercase tracking-widest hover:bg-rose-400 transition-all shadow-2xl active:scale-95 flex items-center justify-center gap-4">
           <i className="fa-solid fa-comments-dollar"></i>
-          Cobrar Clientes
+          Iniciar Cobrança Ativa
         </button>
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest px-4">Lista de Devedores</h3>
-        
-        <div className="hidden md:block glass-card rounded-[2rem] overflow-hidden border-white/5">
-           {overdueItems.length > 0 ? (
-             <div className="overflow-x-auto">
-               <table className="w-full text-left">
-                 <thead>
-                   <tr className="bg-slate-900/50 border-b border-slate-800/50">
-                     <th className="px-8 py-4 text-[9px] font-black text-slate-500 uppercase tracking-widest">Nome do Cliente</th>
-                     <th className="px-8 py-4 text-[9px] font-black text-slate-500 uppercase tracking-widest">Venceu em</th>
-                     <th className="px-8 py-4 text-[9px] font-black text-slate-500 uppercase tracking-widest">Valor</th>
-                     <th className="px-8 py-4 text-[9px] font-black text-slate-500 uppercase tracking-widest text-right">Ações</th>
-                   </tr>
-                 </thead>
-                 <tbody className="divide-y divide-slate-800/30">
-                   {overdueItems.map(rec => (
-                     <tr key={rec.id} className="hover:bg-rose-500/[0.02] transition-colors">
-                       <td className="px-8 py-6 font-bold text-white">{rec.clientName}</td>
-                       <td className="px-8 py-6 text-rose-400 text-xs font-black">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</td>
-                       <td className="px-8 py-6 text-white font-black mono">R$ {rec.amount.toLocaleString()}</td>
-                       <td className="px-8 py-6 text-right">
-                         <button onClick={() => markAsPaid(rec.id)} className="text-[10px] font-black text-emerald-500 uppercase tracking-widest hover:underline">Já recebi</button>
-                       </td>
-                     </tr>
-                   ))}
-                 </tbody>
-               </table>
-             </div>
-           ) : (
-             <div className="p-20 text-center text-slate-600 italic">Ótima notícia! Ninguém está devendo hoje.</div>
-           )}
-        </div>
+      <div className="hidden md:block glass-card rounded-[4rem] overflow-hidden border-rose-500/5">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-white/[0.01] border-b border-white/[0.03]">
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Identidade</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Data de Vencimento</th>
+              <th className="px-12 py-8 text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Valor Principal</th>
+              <th className="px-12 py-8 text-right"></th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/[0.02]">
+            {overdueItems.map(rec => (
+              <tr key={rec.id} className="hover:bg-rose-500/[0.01] transition-all group">
+                <td className="px-12 py-10">
+                   <p className="font-black text-white text-lg tracking-tight group-hover:translate-x-1 transition-transform">{rec.clientName}</p>
+                   <p className="text-[9px] text-rose-500 font-black uppercase tracking-widest mt-1">Nível de Risco: Alto</p>
+                </td>
+                <td className="px-12 py-10">
+                  <span className="text-sm font-black text-rose-400 mono italic">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
+                </td>
+                <td className="px-12 py-10">
+                  <span className="text-xl font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+                </td>
+                <td className="px-12 py-10 text-right">
+                  <button onClick={() => markAsPaid(rec.id)} className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] hover:text-white transition-colors">Marcar como Pago</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {overdueItems.length === 0 && (
+          <div className="py-24 text-center opacity-30 italic">Nenhum título em atraso. Excelente gestão.</div>
+        )}
+      </div>
 
-        <div className="md:hidden space-y-3">
-          {overdueItems.length > 0 ? (
-            overdueItems.map(rec => (
-              <div key={rec.id} className="glass-card p-5 rounded-2xl border-rose-500/10 space-y-4">
-                <div className="flex justify-between items-start">
-                  <h4 className="font-black text-white text-sm tracking-tight">{rec.clientName}</h4>
-                  <span className="text-[9px] text-rose-500 font-black uppercase tracking-tighter">Atrasado</span>
-                </div>
-                <div className="flex justify-between items-center bg-zinc-950/50 p-3 rounded-xl">
-                  <div className="space-y-0.5">
-                    <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Vencimento</p>
-                    <p className="text-xs font-black text-rose-400">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Dívida</p>
-                    <p className="text-base font-black text-white mono">R$ {rec.amount.toLocaleString()}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="py-3 bg-zinc-900 border border-white/5 text-[9px] font-black text-white uppercase tracking-widest rounded-xl active:scale-95">Cobrar</button>
-                  <button onClick={() => markAsPaid(rec.id)} className="py-3 bg-emerald-500 text-black text-[9px] font-black uppercase tracking-widest rounded-xl active:scale-95">Marcar Pago</button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="p-10 text-center opacity-30 text-xs font-bold uppercase tracking-widest">Tudo em dia</div>
-          )}
-        </div>
+      <div className="md:hidden space-y-6">
+        {overdueItems.map(rec => (
+          <div key={rec.id} className="glass-card p-8 rounded-[3rem] border-rose-500/10 space-y-6">
+            <div className="flex justify-between items-center">
+               <h4 className="font-black text-white text-base tracking-tight">{rec.clientName}</h4>
+               <span className="text-[9px] text-rose-500 font-black uppercase">Vencido</span>
+            </div>
+            <div className="flex justify-between items-center bg-rose-500/5 p-6 rounded-[2rem] border border-rose-500/10">
+               <span className="text-xs font-black text-rose-400 mono">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
+               <span className="text-lg font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+            </div>
+            <button 
+              onClick={() => markAsPaid(rec.id)} 
+              className="w-full py-5 bg-white text-black font-black rounded-[2rem] text-[10px] uppercase tracking-widest shadow-lg"
+            >
+              Baixar Título
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

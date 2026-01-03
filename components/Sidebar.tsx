@@ -12,9 +12,9 @@ interface Props {
 const Sidebar: React.FC<Props> = ({ onClose }) => {
   const { state } = useApp();
   const sections = [
-    { title: 'Operacional', items: NAVIGATION.slice(0, 5) },
-    { title: 'Inteligência', items: NAVIGATION.slice(5, 9) },
-    { title: 'Configurações', items: NAVIGATION.slice(9) },
+    { title: 'Operacional', items: NAVIGATION.slice(0, 4) },
+    { title: 'Inteligência', items: NAVIGATION.slice(4, 9) },
+    { title: 'Sistema', items: NAVIGATION.slice(9) },
   ];
 
   const getInitials = (name: string) => {
@@ -22,12 +22,12 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <aside className="w-full md:w-72 bg-[#000508] flex flex-col h-full z-20 relative border-r border-white/5 shadow-2xl overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+    <aside className="w-full md:w-72 bg-[#000000] flex flex-col h-full z-20 relative border-r border-white/[0.03] shadow-2xl overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
       <div className="pt-14 pb-12 px-8">
-        <div className="flex items-center gap-4">
-           <BrandLogo className="w-12 h-12" />
+        <div className="flex items-center gap-4 group cursor-pointer">
+           <BrandLogo className="w-12 h-12 transition-transform duration-700 group-hover:scale-110" />
            <div className="flex flex-col">
               <span className="text-xl font-black text-white italic tracking-tighter leading-none">NEXO.</span>
               <span className="text-[7px] font-black text-emerald-500 uppercase tracking-[0.6em] mt-1.5 opacity-60">Strategic Unit</span>
@@ -41,7 +41,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
             <h3 className="px-5 text-[9px] font-black text-slate-600 uppercase tracking-[0.4em]">
               {section.title}
             </h3>
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               {section.items.map((item) => (
                 <NavLink
                   key={item.path}
@@ -73,7 +73,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
         ))}
       </nav>
 
-      <div className="p-8 border-t border-white/5 bg-black/40">
+      <div className="p-8 border-t border-white/[0.03] bg-black/40">
         <div className="flex items-center gap-4 group cursor-pointer p-1">
           <div className="w-10 h-10 rounded-2xl bg-emerald-500 text-black flex items-center justify-center font-black text-[10px] shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform duration-500">
             {getInitials(state.userName || 'AD')}
