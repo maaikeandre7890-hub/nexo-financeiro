@@ -16,15 +16,15 @@ const Recebiveis: React.FC = () => {
     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-2 italic">Fluxo de Recebíveis</h1>
-          <p className="text-slate-500 text-sm md:text-base font-medium italic">Gestão centralizada de faturamento e entradas.</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-2 italic">Contas a Receber</h1>
+          <p className="text-slate-500 text-sm md:text-base font-medium italic">Veja aqui todo o dinheiro que tem para entrar.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
           className="w-full md:w-auto bg-emerald-500 text-slate-950 font-black py-4 px-8 rounded-xl transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/10 active:scale-95"
         >
           <i className="fa-solid fa-plus"></i>
-          Lançar Receita
+          Novo Recebimento
         </button>
       </div>
       
@@ -39,7 +39,7 @@ const Recebiveis: React.FC = () => {
                 : 'bg-transparent text-slate-500 border-white/5 hover:border-white/10'
             }`}
           >
-            {f === 'Todos' ? 'Geral' : f}
+            {f === 'Todos' ? 'Tudo' : f}
           </button>
         ))}
       </div>
@@ -48,9 +48,9 @@ const Recebiveis: React.FC = () => {
         <table className="w-full text-left">
           <thead>
             <tr className="bg-slate-900/50 border-b border-white/[0.03]">
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Entidade</th>
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor Bruto</th>
-              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Vencimento</th>
+              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Cliente</th>
+              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor</th>
+              <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Data</th>
               <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</th>
               <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Ações</th>
             </tr>
@@ -82,11 +82,11 @@ const Recebiveis: React.FC = () => {
                       onClick={() => markAsPaid(rec.id)}
                       className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-slate-950 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border border-emerald-500/20"
                     >
-                      Liquidar
+                      Já Recebi
                     </button>
                   )}
                   <button 
-                    onClick={() => { if(confirm('Excluir este título permanentemente?')) deleteReceivable(rec.id)}}
+                    onClick={() => { if(confirm('Apagar este registro para sempre?')) deleteReceivable(rec.id)}}
                     className="w-8 h-8 flex items-center justify-center text-slate-700 hover:text-rose-500 transition-colors"
                   >
                     <i className="fa-solid fa-trash-can text-sm"></i>
@@ -98,7 +98,6 @@ const Recebiveis: React.FC = () => {
         </table>
       </div>
 
-      {/* Mobile Cards */}
       <div className="md:hidden space-y-4">
         {filteredItems.map((rec) => (
           <div key={rec.id} className="glass-card p-6 rounded-2xl border-white/5 space-y-4">
@@ -119,7 +118,7 @@ const Recebiveis: React.FC = () => {
               <span className="text-base font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
             </div>
             {rec.status !== 'Pago' && (
-              <button onClick={() => markAsPaid(rec.id)} className="w-full py-4 bg-emerald-500 text-black font-black rounded-xl">Registrar Baixa</button>
+              <button onClick={() => markAsPaid(rec.id)} className="w-full py-4 bg-emerald-500 text-black font-black rounded-xl">Marcar como Pago</button>
             )}
           </div>
         ))}

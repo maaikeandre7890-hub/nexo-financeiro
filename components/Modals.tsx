@@ -17,7 +17,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
       <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl" onClick={onClose} />
       <div className="relative w-full max-w-lg bg-[#071821] border-t md:border border-white/10 rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in slide-in-from-bottom-10 md:zoom-in-95 duration-500">
         
-        {/* Barra de arraste mobile */}
         <div className="md:hidden flex justify-center py-4" onClick={onClose}>
           <div className="w-12 h-1.5 bg-white/10 rounded-full"></div>
         </div>
@@ -57,30 +56,30 @@ export const AddClientModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
     <Modal isOpen={isOpen} onClose={onClose} title="Novo Cliente">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Razão Social</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nome do Cliente ou Empresa</label>
           <input 
             autoFocus
             required
             type="text" 
             className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/50 transition-all h-14"
-            placeholder="Ex: Nexus Corp LTDA"
+            placeholder="Ex: João da Silva ou Loja do João"
             value={formData.name}
             onChange={e => setFormData({...formData, name: e.target.value})}
           />
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">E-mail Financeiro</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">E-mail de Contato</label>
           <input 
             required
             type="email" 
             className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/50 transition-all h-14"
-            placeholder="financeiro@empresa.com"
+            placeholder="Ex: joao@email.com"
             value={formData.email}
             onChange={e => setFormData({...formData, email: e.target.value})}
           />
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Contrato Mensal</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor Mensal (O que ele paga)</label>
           <div className="relative">
             <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 font-bold">R$</span>
             <input 
@@ -93,7 +92,7 @@ export const AddClientModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
           </div>
         </div>
         <button type="submit" className="w-full bg-emerald-500 text-slate-950 font-black h-16 rounded-2xl transition-all shadow-xl shadow-emerald-500/10 uppercase tracking-widest text-xs">
-          Salvar Entidade
+          Salvar Cliente
         </button>
       </form>
     </Modal>
@@ -102,7 +101,7 @@ export const AddClientModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
 
 export const AddReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const { state, addReceivable } = useApp();
-  const [formData, setFormData] = useState({ clientId: '', amount: '', dueDate: '', category: 'Serviços' });
+  const [formData, setFormData] = useState({ clientId: '', amount: '', dueDate: '', category: 'Venda' });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,23 +120,23 @@ export const AddReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Lançar Receita">
+    <Modal isOpen={isOpen} onClose={onClose} title="Novo Recebimento">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Cliente Destino</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Qual cliente vai pagar?</label>
           <select 
             required
             className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/50 transition-all appearance-none h-14"
             value={formData.clientId}
             onChange={e => setFormData({...formData, clientId: e.target.value})}
           >
-            <option value="" className="bg-slate-900">Selecionar...</option>
+            <option value="" className="bg-slate-900">Escolha o cliente...</option>
             {state.clients.map(c => <option key={c.id} value={c.id} className="bg-slate-900">{c.name}</option>)}
           </select>
         </div>
         <div className="grid grid-cols-1 gap-4">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor do Título</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor a Receber</label>
             <input 
               required
               type="number" 
@@ -148,7 +147,7 @@ export const AddReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Vencimento</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Data de Vencimento</label>
             <input 
               required
               type="date" 
@@ -159,7 +158,7 @@ export const AddReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void
           </div>
         </div>
         <button type="submit" className="w-full bg-emerald-500 text-slate-950 font-black h-16 rounded-2xl transition-all shadow-xl shadow-emerald-500/10 uppercase tracking-widest text-xs">
-          Confirmar Lançamento
+          Confirmar
         </button>
       </form>
     </Modal>
@@ -168,7 +167,7 @@ export const AddReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void
 
 export const AddExpenseModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const { addExpense } = useApp();
-  const [formData, setFormData] = useState({ description: '', amount: '', date: '', category: 'Fixo' });
+  const [formData, setFormData] = useState({ description: '', amount: '', date: '', category: 'Outros' });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,19 +185,19 @@ export const AddExpenseModal: React.FC<{ isOpen: boolean; onClose: () => void }>
     <Modal isOpen={isOpen} onClose={onClose} title="Nova Despesa">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Descrição</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">O que foi pago?</label>
           <input 
             required
             type="text" 
             className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-5 text-sm font-bold text-white focus:outline-none h-14"
-            placeholder="Ex: Aluguel, AWS..."
+            placeholder="Ex: Aluguel, Luz, Mercadoria..."
             value={formData.description}
             onChange={e => setFormData({...formData, description: e.target.value})}
           />
         </div>
         <div className="grid grid-cols-1 gap-4">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Valor Pago</label>
             <input 
               required
               type="number" 
@@ -208,7 +207,7 @@ export const AddExpenseModal: React.FC<{ isOpen: boolean; onClose: () => void }>
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Data</label>
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Data do Pagamento</label>
             <input 
               required
               type="date" 
@@ -219,7 +218,7 @@ export const AddExpenseModal: React.FC<{ isOpen: boolean; onClose: () => void }>
           </div>
         </div>
         <button type="submit" className="w-full bg-rose-500 text-white font-black h-16 rounded-2xl transition-all shadow-xl shadow-rose-500/20 uppercase tracking-widest text-xs">
-          Lançar Saída
+          Salvar Despesa
         </button>
       </form>
     </Modal>

@@ -21,12 +21,10 @@ const Onboarding: React.FC = () => {
     completeOnboarding(formData);
   };
 
-  // Estilo do botão SaaS Enterprise refinado
   const buttonClass = "w-full py-5 bg-gradient-to-r from-[#07252d] to-[#10b981] border border-white/10 backdrop-blur-md shadow-lg shadow-emerald-500/5 hover:brightness-110 hover:shadow-emerald-500/20 active:scale-[0.98] transition-all duration-300 text-white rounded-xl font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-2";
 
   return (
     <div className="fixed inset-0 z-[200] bg-[#071821] flex items-center justify-center p-6 overflow-hidden">
-      {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-emerald-500/20 blur-[120px] rounded-full"></div>
         <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-blue-500/10 blur-[120px] rounded-full"></div>
@@ -52,7 +50,7 @@ const Onboarding: React.FC = () => {
                   Bem-vindo ao <span className="text-emerald-500">NEXO.</span>
                 </h1>
                 <p className="text-slate-400 font-medium leading-relaxed">
-                  Sua nova inteligência financeira está pronta. Vamos configurar seu ambiente de decisão estratégica em menos de 1 minuto.
+                  Vamos organizar seu dinheiro em menos de 1 minuto. Simples, rápido e sem complicações.
                 </p>
               </div>
               <button 
@@ -67,8 +65,8 @@ const Onboarding: React.FC = () => {
           {step === 2 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="space-y-2 text-center md:text-left">
-                <h2 className="text-2xl font-black text-white tracking-tight italic">Identidade Corporativa</h2>
-                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Preencha os dados fundamentais</p>
+                <h2 className="text-2xl font-black text-white tracking-tight italic">Sobre seu Negócio</h2>
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Só precisamos saber quem você é</p>
               </div>
 
               <div className="space-y-6">
@@ -126,23 +124,23 @@ const Onboarding: React.FC = () => {
                 </div>
                 <h2 className="text-2xl font-black text-white tracking-tight italic">Tudo pronto, {formData.userName.split(' ')[0]}!</h2>
                 <p className="text-slate-400 leading-relaxed font-medium">
-                  O NEXO está pronto para organizar as finanças da <span className="text-white font-bold">{formData.companyName}</span>. 
-                  Seu painel inicia zerado para que você tenha controle total sobre cada centavo registrado.
+                  O NEXO está pronto para cuidar das contas da <span className="text-white font-bold">{formData.companyName}</span>. 
+                  Comece adicionando seus clientes e o dinheiro que você tem para receber.
                 </p>
               </div>
 
               <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 space-y-3">
                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">Empresa</span>
+                    <span className="text-slate-500">Negócio</span>
                     <span className="text-emerald-500">{formData.companyName}</span>
                  </div>
                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">Moeda Padrão</span>
-                    <span className="text-white">BRL (R$)</span>
+                    <span className="text-slate-500">Moeda</span>
+                    <span className="text-white">Real (R$)</span>
                  </div>
                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">Status dos Dados</span>
-                    <span className="text-rose-500">Aguardando Lançamentos</span>
+                    <span className="text-slate-500">Saldo Inicial</span>
+                    <span className="text-rose-500">R$ 0,00</span>
                  </div>
               </div>
 
@@ -150,7 +148,7 @@ const Onboarding: React.FC = () => {
                 onClick={handleFinish}
                 className={buttonClass}
               >
-                PROSSEGUIR
+                COMEÇAR AGORA
               </button>
             </div>
           )}

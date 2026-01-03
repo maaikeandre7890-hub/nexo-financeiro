@@ -13,7 +13,7 @@ const Historico: React.FC = () => {
       setShowPinInput(false);
       setPin('');
     } else {
-      alert('PIN Mestre Incorreto. Tentativa registrada.');
+      alert('Código incorreto. A tentativa foi registrada por segurança.');
     }
   };
 
@@ -21,14 +21,14 @@ const Historico: React.FC = () => {
     <div className="space-y-8 py-2 page-enter">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight italic">Registros de Auditoria</h1>
-          <p className="text-slate-500 text-sm mt-2 font-medium">Log imutável de transações e alterações estruturais.</p>
+          <h1 className="text-3xl font-black text-white tracking-tight italic">Histórico de Ações</h1>
+          <p className="text-slate-500 text-sm mt-2 font-medium">Veja tudo o que aconteceu no sistema passo a passo.</p>
         </div>
         <button 
           onClick={() => setShowPinInput(true)}
           className="px-6 py-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-rose-500 hover:text-white transition-all"
         >
-          Resetar Histórico
+          Limpar Tudo
         </button>
       </div>
 
@@ -37,8 +37,8 @@ const Historico: React.FC = () => {
           <div className="flex items-center gap-6">
              <i className="fa-solid fa-shield-halved text-2xl text-rose-500"></i>
              <div>
-                <p className="text-[10px] font-black text-rose-500 uppercase mb-1">Acesso à Chave Mestra</p>
-                <p className="text-xs text-slate-400 font-medium">O reset é uma ação destrutiva. Insira o PIN mestre.</p>
+                <p className="text-[10px] font-black text-rose-500 uppercase mb-1">Acesso de Segurança</p>
+                <p className="text-xs text-slate-400 font-medium">A limpeza apaga todo o histórico. Digite seu código de 6 dígitos.</p>
              </div>
           </div>
           <div className="flex gap-4 w-full md:w-auto">
@@ -51,7 +51,7 @@ const Historico: React.FC = () => {
                onChange={(e) => setPin(e.target.value)}
              />
              <button onClick={handleClear} className="px-6 py-2 bg-rose-500 text-white font-black text-[10px] uppercase rounded-xl">Confirmar</button>
-             <button onClick={() => setShowPinInput(false)} className="text-slate-500 px-2 text-xs font-bold">Sair</button>
+             <button onClick={() => setShowPinInput(false)} className="text-slate-500 px-2 text-xs font-bold">Cancelar</button>
           </div>
         </div>
       )}
@@ -75,7 +75,7 @@ const Historico: React.FC = () => {
                 </div>
              </div>
              <div className="text-right hidden md:block">
-                <p className="text-[10px] font-black text-slate-700 uppercase mb-1">TIMESTAMP</p>
+                <p className="text-[10px] font-black text-slate-700 uppercase mb-1">HORÁRIO</p>
                 <p className="text-[11px] font-bold text-slate-500 mono">{new Date(log.timestamp).toLocaleTimeString()}</p>
              </div>
           </div>

@@ -11,8 +11,8 @@ const DespesasExtras: React.FC = () => {
     <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight italic">Registro de Saídas</h1>
-          <p className="text-slate-500 font-medium italic">Monitoramento de custos operacionais e reinvestimentos.</p>
+          <h1 className="text-3xl font-black text-white tracking-tight italic">Minhas Despesas</h1>
+          <p className="text-slate-500 font-medium italic">Controle tudo o que você pagou ou tem para pagar.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -25,13 +25,13 @@ const DespesasExtras: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="glass-card p-8 rounded-[2rem] border-rose-500/10 bg-rose-500/[0.02]">
-           <p className="text-[10px] font-black text-rose-400 uppercase mb-2">Total Consumido (Ciclo Atual)</p>
+           <p className="text-[10px] font-black text-rose-400 uppercase mb-2">Total Pago este Mês</p>
            <h2 className="text-4xl font-black text-white mono">R$ {totals.totalExpenses.toLocaleString()}</h2>
         </div>
         <div className="glass-card p-8 rounded-[2rem] border-white/5 flex items-center justify-between">
            <div>
-              <p className="text-[10px] font-black text-zinc-500 uppercase mb-2">Nodes de Saída</p>
-              <p className="text-xl font-black text-white">{state.expenses.length} Transações</p>
+              <p className="text-[10px] font-black text-zinc-500 uppercase mb-2">Total de Pagamentos</p>
+              <p className="text-xl font-black text-white">{state.expenses.length} Contas</p>
            </div>
            <i className="fa-solid fa-receipt text-3xl text-slate-800"></i>
         </div>
@@ -41,8 +41,8 @@ const DespesasExtras: React.FC = () => {
         <table className="w-full text-left">
           <thead className="bg-zinc-900/50 border-b border-zinc-800/50">
             <tr>
-              <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-left">Natureza do Gasto</th>
-              <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-left">Categoria</th>
+              <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-left">O que foi pago?</th>
+              <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-left">Tipo</th>
               <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-left">Data</th>
               <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">Valor</th>
             </tr>
@@ -60,7 +60,7 @@ const DespesasExtras: React.FC = () => {
                     <div className="flex items-center justify-end gap-6">
                       <span className="font-black text-rose-400 mono">R$ {exp.amount.toLocaleString()}</span>
                       <button 
-                        onClick={() => { if(confirm('Remover esta despesa permanentemente?')) deleteExpense(exp.id)}}
+                        onClick={() => { if(confirm('Remover esta despesa para sempre?')) deleteExpense(exp.id)}}
                         className="text-slate-800 hover:text-rose-500 transition-colors"
                       >
                         <i className="fa-solid fa-trash-can"></i>
@@ -71,7 +71,7 @@ const DespesasExtras: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={4} className="px-8 py-20 text-center text-zinc-600 italic">Nenhuma saída registrada no período.</td>
+                <td colSpan={4} className="px-8 py-20 text-center text-zinc-600 italic">Você ainda não registrou nenhuma conta paga.</td>
               </tr>
             )}
           </tbody>

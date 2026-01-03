@@ -16,14 +16,14 @@ const Dashboard: React.FC = () => {
     return "Boa noite";
   }, []);
 
-  const firstName = state.userName ? state.userName.split(' ')[0] : 'Alexandre';
+  const firstName = state.userName ? state.userName.split(' ')[0] : 'Empreendedor';
 
   return (
     <div className="space-y-8 py-2 page-enter">
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">LIVE INTELLIGENCE</span>
+            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">RESUMO DE HOJE</span>
           </div>
           <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-none">
             {greeting}, {firstName}<span className="text-emerald-500">.</span>
@@ -33,34 +33,34 @@ const Dashboard: React.FC = () => {
           onClick={() => setIsModalOpen(true)}
           className="w-full md:w-auto px-10 py-4 bg-white text-slate-950 text-[11px] font-black uppercase rounded-2xl active:scale-95 shadow-xl"
         >
-          Lançamento Rápido
+          Novo Lançamento
         </button>
       </section>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="glass-card p-8 rounded-[2rem] flex flex-col justify-between h-44">
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Expectativa de Recebimento</p>
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total para Receber</p>
           <div>
             <p className="text-3xl font-black text-white mono">R$ {totals.toReceive.toLocaleString()}</p>
-            <p className="text-[10px] text-emerald-500 font-bold uppercase mt-2">Ativo Projetado</p>
+            <p className="text-[10px] text-emerald-500 font-bold uppercase mt-2">Contas Pendentes</p>
           </div>
         </div>
 
         <div className="glass-card p-8 rounded-[2rem] flex flex-col justify-between h-44 border-rose-500/10">
-          <p className="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Vencido e não Liquidado</p>
+          <p className="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Vencidos (Atrasado)</p>
           <div>
             <p className="text-3xl font-black text-rose-500 mono">R$ {totals.overdue.toLocaleString()}</p>
-            <p className="text-[10px] text-rose-700 font-bold uppercase mt-2">Risco de Inadimplência</p>
+            <p className="text-[10px] text-rose-700 font-bold uppercase mt-2">Cobranças Pendentes</p>
           </div>
         </div>
 
         <div className="glass-card p-8 rounded-[2rem] flex flex-col justify-between h-44">
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Saldo Líquido Real</p>
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Dinheiro em Caixa</p>
           <div>
             <p className={`text-3xl font-black mono ${totals.netBalance >= 0 ? 'text-white' : 'text-rose-500'}`}>
               R$ {totals.netBalance.toLocaleString()}
             </p>
-            <p className="text-[10px] text-emerald-500 font-bold uppercase mt-2">Fluxo Consolidado</p>
+            <p className="text-[10px] text-emerald-500 font-bold uppercase mt-2">Saldo Real</p>
           </div>
         </div>
       </div>
@@ -70,23 +70,23 @@ const Dashboard: React.FC = () => {
           <OracleIcon className="w-10 h-10 nexus-pulse" />
         </div>
         <div className="flex-1 text-center md:text-left">
-          <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-2">Parecer Oracle Finance</h4>
+          <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-2">Dica do Oráculo</h4>
           {state.receivables.length === 0 ? (
             <p className="text-sm text-slate-400 leading-relaxed italic">
-              "Bem-vindo, <span className="text-white font-bold">{firstName}</span>. O ambiente da <span className="text-white font-bold">{state.companyName}</span> está pronto. Realize seu primeiro lançamento para que eu possa iniciar as análises preditivas de fluxo de caixa."
+              "Bem-vindo, <span className="text-white font-bold">{firstName}</span>. O painel da <span className="text-white font-bold">{state.companyName}</span> está pronto. Adicione sua primeira conta para que eu possa te ajudar a organizar seu dinheiro."
             </p>
           ) : (
             <p className="text-sm text-slate-400 leading-relaxed italic">
-              "Sua saúde de caixa está em <span className="text-white font-bold">{totals.cashHealth}%</span>. 
-              Baseado nos <span className="text-white">R$ {totals.paid.toLocaleString()}</span> liquidados este mês, 
-              você pode operar com margem de segurança para novos investimentos estruturais."
+              "Suas contas estão <span className="text-white font-bold">{totals.cashHealth}%</span> organizadas. 
+              Com os <span className="text-white">R$ {totals.paid.toLocaleString()}</span> que já entraram este mês, 
+              seu negócio está com saldo positivo para os próximos dias."
             </p>
           )}
         </div>
       </div>
 
       <div className="glass-card p-8 rounded-[2.5rem] relative overflow-hidden h-[400px]">
-        <h3 className="text-xs font-black text-white uppercase tracking-widest mb-8">Evolução do Faturamento Real</h3>
+        <h3 className="text-xs font-black text-white uppercase tracking-widest mb-8">Gráfico de Dinheiro Recebido</h3>
         {state.receivables.length > 0 ? (
           <ResponsiveContainer width="100%" height="80%">
             <AreaChart data={getChartData()}>
@@ -109,7 +109,7 @@ const Dashboard: React.FC = () => {
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-slate-700 opacity-20">
             <i className="fa-solid fa-chart-line text-6xl mb-4"></i>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em]">Dados insuficientes para projeção</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em]">Ainda não há dados para mostrar</p>
           </div>
         )}
       </div>

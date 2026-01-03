@@ -20,7 +20,7 @@ const NewNexoLogo = () => (
         NEXO<span className="text-emerald-500 group-hover:text-white transition-colors">.</span>
       </h1>
       <span className="text-[7px] font-black text-slate-500 uppercase tracking-[0.4em] mt-1.5 transition-all duration-500 group-hover:text-emerald-500/50">
-        Inteligência Financeira
+        Gestão de Contas
       </span>
     </div>
   </div>
@@ -29,9 +29,9 @@ const NewNexoLogo = () => (
 const Sidebar: React.FC<Props> = ({ onClose }) => {
   const { state } = useApp();
   const sections = [
-    { title: 'Operações Core', items: NAVIGATION.slice(0, 4) },
-    { title: 'Inteligência e Dados', items: NAVIGATION.slice(4, 8) },
-    { title: 'Administração', items: NAVIGATION.slice(8) },
+    { title: 'Dia a Dia', items: NAVIGATION.slice(0, 4) },
+    { title: 'Relatórios', items: NAVIGATION.slice(4, 8) },
+    { title: 'Ajustes', items: NAVIGATION.slice(8) },
   ];
 
   const getInitials = (name: string) => {
@@ -100,8 +100,8 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
             {getInitials(state.userName || 'AD')}
           </div>
           <div className="flex flex-col min-w-0">
-            <p className="text-[11px] font-bold text-white truncate tracking-tight">{state.companyName || 'Drex Financial'}</p>
-            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">{state.businessType || 'Plano Corporativo'}</p>
+            <p className="text-[11px] font-bold text-white truncate tracking-tight">{state.companyName || 'Meu Negócio'}</p>
+            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">{state.businessType || 'Dono do Negócio'}</p>
           </div>
         </div>
       </div>
