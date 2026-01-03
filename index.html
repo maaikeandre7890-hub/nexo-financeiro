@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>NEXO | High-End Financial Intelligence</title>
+    <title>NEXO | Intelligence & Capital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,69 +12,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        --bg-obsidian: #000000;
-        --surface-deep: #030303;
+        --bg-petroleum: #0B1C26;
+        --bg-sidebar: #07131A;
+        --bg-surface: #112532;
         --emerald-primary: #10b981;
+        --border-subtle: rgba(255, 255, 255, 0.06);
       }
       
       body {
-        background-color: var(--bg-obsidian);
-        color: #4b4b4b;
+        background-color: var(--bg-petroleum);
+        color: #94A3B8;
         margin: 0;
         font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.015em;
         overscroll-behavior-y: contain;
       }
 
-      /* Ruído de Luxo em toda a tela */
+      /* Ruído Premium Suave */
       body::after {
         content: "";
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-        opacity: 0.015;
+        opacity: 0.012;
         pointer-events: none;
         z-index: 9999;
       }
 
       .glass-card {
-        background: #050505;
-        border: 1px solid rgba(255, 255, 255, 0.02);
-        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .glass-card:hover {
-        border-color: rgba(16, 185, 129, 0.15);
-        background: #080808;
-        transform: translateY(-5px);
-        box-shadow: 0 50px 100px -20px rgba(0,0,0,1);
+        border-color: rgba(16, 185, 129, 0.2);
+        background: #142B3A;
+        transform: translateY(-2px);
+        box-shadow: 0 20px 40px -15px rgba(0,0,0,0.4);
       }
 
       .mono { font-family: 'JetBrains Mono', monospace; }
 
-      /* Scrollbar Invisível mas funcional */
-      .custom-scrollbar::-webkit-scrollbar { width: 1px; }
+      /* Custom Scrollbar Enterprise */
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
       .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: #111; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--emerald-primary); }
 
       .page-enter {
-        animation: premiumReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: premiumReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       @keyframes premiumReveal {
-        from { opacity: 0; transform: translateY(12px) scale(0.98); filter: blur(10px); }
-        to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       h1, h2, h3, .font-black {
-        letter-spacing: -0.07em;
+        letter-spacing: -0.04em;
       }
 
       ::selection {
-        background-color: rgba(16, 185, 129, 0.4);
+        background-color: rgba(16, 185, 129, 0.3);
         color: white;
+      }
+
+      .luxury-border-glow {
+        border-color: rgba(16, 185, 129, 0.3);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.05);
       }
     </style>
     <script type="importmap">

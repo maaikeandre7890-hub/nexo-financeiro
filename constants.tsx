@@ -2,14 +2,17 @@
 import { NavItem } from './types';
 
 export const COLORS = {
-  background: '#000000',
-  card: '#080808',
+  background: '#0B1C26',
+  sidebar: '#07131A',
+  card: '#112532',
   primary: '#10b981',
   primaryDark: '#059669',
   secondary: '#3b82f6',
   warning: '#f59e0b',
-  danger: '#f43f5e',
-  textMuted: '#71717a'
+  danger: '#ef4444',
+  textMain: '#F8FAFC',
+  textMuted: '#94A3B8',
+  border: 'rgba(255, 255, 255, 0.06)'
 };
 
 export const NAVIGATION: NavItem[] = [
@@ -21,7 +24,7 @@ export const NAVIGATION: NavItem[] = [
   { label: 'Relatórios', path: '/relatorios', icon: 'fa-file-invoice-dollar' },
   { label: 'Faturamento Líquido', path: '/faturamento-liquido', icon: 'fa-scale-balanced' },
   { label: 'Despesas Extras', path: '/despesas-extras', icon: 'fa-receipt' },
-  { label: 'Cobrança Automática', path: '/cobranca-automatica', icon: 'fa-robot' }, // Premium
+  { label: 'Cobrança Automática', path: '/cobranca-automatica', icon: 'fa-robot' },
   { label: 'Sistema', path: '/sistema', icon: 'fa-microchip' },
   { label: 'Configurações', path: '/configuracoes', icon: 'fa-gear' },
   { label: 'Tutorial', path: '/tutorial', icon: 'fa-book-open' },
