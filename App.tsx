@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -18,12 +17,19 @@ import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
 import NotFound from './pages/NotFound';
 
+const BUILD_VERSION = new Date().toISOString();
+
 const App: React.FC = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
   const [isCommandBarOpen, setIsCommandBarOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+
+  // 🔥 PROVA DEFINITIVA DE DEPLOY
+  useEffect(() => {
+    console.log('🚀 NEXO DEPLOY ATIVO — BUILD:', BUILD_VERSION);
+  }, []);
 
   useEffect(() => {
     setIsNotificationsOpen(false);
@@ -45,16 +51,26 @@ const App: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-[#020617] text-slate-200 selection:bg-emerald-500/30 overflow-hidden font-['Inter']">
+
+      {/* 🔍 BUILD VERSION FIXA NA TELA */}
+      <div className="fixed bottom-2 left-2 z-[9999] text-[10px] text-slate-400 opacity-70">
+        BUILD: {BUILD_VERSION}
+      </div>
+
       {/* Sidebar Mobile Overlay */}
       <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[45] md:hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[45] md:hidden transition-opacity duration-300 ${
+          isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`} 
         onClick={() => setIsSidebarOpen(false)}
       />
-      
-      <div className={`fixed inset-y-0 left-0 z-[50] w-72 transform transition-transform duration-500 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+
+      <div className={`fixed inset-y-0 left-0 z-[50] w-72 transform transition-transform duration-500 md:relative md:translate-x-0 ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
-      
+
       <div className="flex-1 flex flex-col min-w-0 h-screen relative overflow-hidden">
         <Header 
           onOpenNotifications={() => setIsNotificationsOpen(true)} 
@@ -62,7 +78,7 @@ const App: React.FC = () => {
           onOpenSearch={() => setIsCommandBarOpen(true)}
           onToggleSidebar={() => setIsSidebarOpen(true)}
         />
-        
+
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:px-12 lg:py-10 scroll-smooth relative">
           <div className="max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-2 duration-500">
             <Routes>
