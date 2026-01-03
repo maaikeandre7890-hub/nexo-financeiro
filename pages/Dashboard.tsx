@@ -15,21 +15,6 @@ const Dashboard: React.FC = () => {
     return "Boa noite";
   }, []);
 
-  // Lógica de Frase Motivacional Estratégica
-  const quoteOfTheDay = useMemo(() => {
-    const quotes = [
-      "Estratégia sem tática é o caminho mais lento para a vitória.",
-      "A melhor forma de prever o futuro é criá-lo.",
-      "No meio da dificuldade encontra-se a oportunidade.",
-      "Gestão é fazer as coisas bem; liderança é fazer as coisas certas.",
-      "Inovação distingue um líder de um seguidor.",
-      "O que não pode ser medido, não pode ser gerenciado.",
-      "A disciplina é a alma de um exército; torna grandes as pequenas forças."
-    ];
-    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    return quotes[dayOfYear % quotes.length];
-  }, []);
-
   const criticalOverdue = useMemo(() => {
     return state.receivables.filter(r => r.status === 'Atrasado').slice(0, 3);
   }, [state.receivables]);
@@ -43,22 +28,7 @@ const Dashboard: React.FC = () => {
             {greeting}<span className="text-emerald-500">.</span>
           </h1>
           
-          {/* Frase Motivacional com Borda em Degradê e Glow */}
-          <div className="mt-6 relative inline-block group">
-            {/* Background com degradê sutil e borda simulada */}
-            <div className="relative z-10 p-5 rounded-2xl bg-zinc-950/50 border border-emerald-500/10 luxury-border-glow overflow-hidden">
-               {/* Shine effect no hover */}
-               <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/[0.03] to-emerald-500/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-               
-               <p className="text-[12px] md:text-[13px] text-zinc-400 font-medium italic leading-relaxed max-w-sm relative z-20">
-                 "{quoteOfTheDay}"
-               </p>
-            </div>
-            {/* Sombra Glow Degradê Externa */}
-            <div className="absolute -inset-px bg-gradient-to-r from-emerald-500/20 to-transparent rounded-2xl blur-md opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none"></div>
-          </div>
-
-          <p className="text-zinc-600 font-bold mt-8 text-[10px] uppercase tracking-[0.3em] flex items-center gap-2">
+          <p className="text-zinc-600 font-bold mt-6 text-[10px] uppercase tracking-[0.3em] flex items-center gap-2">
             Status do caixa: 
             <span className={`font-black ${totals.netBalance >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
               {totals.netBalance >= 0 ? 'SUPERAVITÁRIO' : 'DÉFICIT ATIVO'}
