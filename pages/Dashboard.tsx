@@ -8,6 +8,7 @@ const Dashboard: React.FC = () => {
   const { totals, state, markAsPaid, getChartData } = useApp();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // 1. Top Executivo: Saudação e Data
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 12) return "Bom dia";
@@ -15,153 +16,171 @@ const Dashboard: React.FC = () => {
     return "Boa noite";
   }, []);
 
-  // Formatação da Data do Dia sempre atualizada
   const currentFormattedDate = useMemo(() => {
-    return new Intl.DateTimeFormat('pt-BR', { 
+    const date = new Intl.DateTimeFormat('pt-BR', { 
       weekday: 'long', 
       day: 'numeric', 
       month: 'long', 
       year: 'numeric' 
     }).format(new Date());
+    return date.charAt(0).toUpperCase() + date.slice(1);
   }, []);
 
-  // Lógica de Frase Motivacional Estratégica
-  const quoteOfTheDay = useMemo(() => {
-    const quotes = [
-      "Estratégia sem tática é o caminho mais lento para a vitória.",
-      "A melhor forma de prever o futuro é criá-lo.",
-      "No meio da dificuldade encontra-se a oportunidade.",
-      "Gestão é fazer as coisas bem; liderança é fazer as coisas certas.",
-      "Inovação distingue um líder de um seguidor.",
-      "O que não pode ser medido, não pode ser gerenciado.",
-      "A disciplina é a alma de um exército; torna grandes as pequenas forças."
-    ];
-    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    return quotes[dayOfYear % quotes.length];
-  }, []);
+  // 2. Status Financeiro
+  const isSuperavit = totals.netBalance >= 0;
 
-  const criticalOverdue = useMemo(() => {
-    return state.receivables.filter(r => r.status === 'Atrasado').slice(0, 3);
+  // 3. KPIs Estratégicos: Cálculo do maior atraso
+  const maxOverdueDays = useMemo(() => {
+    const overdueItems = state.receivables.filter(r => r.status === 'Atrasado');
+    if (overdueItems.length === 0) return 0;
+    
+    const now = new Date();
+    const delays = overdueItems.map(item => {
+      const dueDate = new Date(item.dueDate);
+      const diffTime = Math.abs(now.getTime() - dueDate.getTime());
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    });
+    return Math.max(...delays);
+  }, [state.receivables]);
+
+  // 5. Ações Prioritárias (Max 3)
+  const priorityActions = useMemo(() => {
+    return state.receivables
+      .filter(r => r.status === 'Atrasado')
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+      .slice(0, 3);
   }, [state.receivables]);
 
   return (
     <div className="space-y-10 py-2 page-enter">
-      {/* Hero: Liquidez Atual */}
-      <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div className="flex-1">
-          {/* Data Atualizada com Estética Minimalista */}
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"></div>
-            <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.25em]">{currentFormattedDate}</span>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none">
+      {/* 1 & 2. Topo Executivo e Status */}
+      <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.25em] block mb-2">
+            {currentFormattedDate}
+          </span>
+          <h1 className="text-4xl font-black text-white tracking-tight leading-none">
             {greeting}<span className="text-emerald-500">.</span>
           </h1>
-          
-          {/* Contêiner da Frase com Borda Degradê e Glow */}
-          <div className="mt-8 relative inline-block group">
-            <div className="relative z-10 p-5 rounded-2xl bg-zinc-950/40 border border-emerald-500/10 luxury-border-glow overflow-hidden backdrop-blur-sm">
-               {/* Shine effect animado */}
-               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/[0.05] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-               
-               <p className="text-[12px] md:text-[13px] text-zinc-400 font-medium italic leading-relaxed max-w-sm relative z-20">
-                 "{quoteOfTheDay}"
-               </p>
-            </div>
-            {/* Sombra de brilho sutil (Ambient Glow) */}
-            <div className="absolute -inset-0.5 bg-gradient-to-br from-emerald-500/15 to-transparent rounded-2xl blur-md opacity-40 pointer-events-none"></div>
-          </div>
-
-          <p className="text-zinc-600 font-bold mt-10 text-[10px] uppercase tracking-[0.3em] flex items-center gap-2">
-            Status do caixa: 
-            <span className={`font-black ${totals.netBalance >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-              {totals.netBalance >= 0 ? 'SUPERAVITÁRIO' : 'DÉFICIT ATIVO'}
+          <div className="mt-4 flex items-center gap-3">
+            <div className={`w-2 h-2 rounded-full animate-pulse ${isSuperavit ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
+            <span className={`text-[11px] font-black uppercase tracking-[0.3em] ${isSuperavit ? 'text-emerald-500' : 'text-rose-500'}`}>
+              {isSuperavit ? 'SUPERAVITÁRIO' : 'DÉFICIT ATIVO'}
             </span>
-          </p>
+          </div>
         </div>
 
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-start md:items-end">
           <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] mb-1">Disponibilidade Líquida</span>
-          <div className="text-4xl font-black text-white mono tracking-tighter">
+          <div className="text-5xl font-black text-white mono tracking-tighter">
             R$ {totals.netBalance.toLocaleString()}
           </div>
         </div>
       </section>
 
-      {/* KPIs de Operação Real */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="glass-card p-8 rounded-2xl luxury-border-glow">
-          <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-4">A Receber (30 dias)</p>
-          <p className="text-2xl font-black text-white mono">R$ {totals.toReceive.toLocaleString()}</p>
+      {/* 3. Cards Executivos (KPIs) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="glass-card p-6 rounded-2xl luxury-border-glow">
+          <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-3">Total a Receber</p>
+          <p className="text-xl font-black text-white mono">R$ {totals.toReceive.toLocaleString()}</p>
         </div>
-        <div className="glass-card p-8 rounded-2xl border-rose-500/20">
-          <p className="text-[9px] font-bold text-rose-500/60 uppercase tracking-widest mb-4">Inadimplência Atual</p>
-          <p className="text-2xl font-black text-rose-500 mono">R$ {totals.overdue.toLocaleString()}</p>
+        <div className="glass-card p-6 rounded-2xl border-rose-500/10">
+          <p className="text-[9px] font-bold text-rose-500/60 uppercase tracking-widest mb-3">Parcelas em Atraso</p>
+          <p className="text-xl font-black text-rose-500 mono">R$ {totals.overdue.toLocaleString()}</p>
         </div>
-        <div className="glass-card p-8 rounded-2xl">
-          <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Receita Recorrente (MRR)</p>
-          <p className="text-2xl font-black text-emerald-500 mono">R$ {totals.monthlyRecurring.toLocaleString()}</p>
+        <div className="glass-card p-6 rounded-2xl border-amber-500/10">
+          <p className="text-[9px] font-bold text-amber-500/60 uppercase tracking-widest mb-3">Maior Atraso</p>
+          <p className="text-xl font-black text-amber-500 mono">{maxOverdueDays} <span className="text-[10px] uppercase">Dias</span></p>
+        </div>
+        <div className="glass-card p-6 rounded-2xl border-emerald-500/10">
+          <p className="text-[9px] font-bold text-emerald-500/60 uppercase tracking-widest mb-3">Recorrência (MRR)</p>
+          <p className="text-xl font-black text-emerald-500 mono">R$ {totals.monthlyRecurring.toLocaleString()}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Gráfico de Performance */}
+        {/* 4. Gráfico de Fluxo de Caixa */}
         <div className="lg:col-span-2 glass-card p-8 rounded-2xl">
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Fluxo de Caixa Mensal</h3>
-            <span className="text-[10px] font-bold text-zinc-600 bg-zinc-900 px-3 py-1 rounded-full uppercase">Real vs Projetado</span>
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Tendência de Fluxo de Caixa</h3>
+            <span className="text-[9px] font-bold text-zinc-600 bg-zinc-900 px-3 py-1 rounded-full uppercase">Últimos 6 meses</span>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[280px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={getChartData()}>
                 <defs>
                   <linearGradient id="emeraldGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.15}/>
                     <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.02)" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#3f3f46', fontSize: 10}} dy={10} />
                 <YAxis hide />
-                <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #111', borderRadius: '8px' }} />
-                <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2} fill="url(#emeraldGrad)" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#080808', border: '1px solid #111', borderRadius: '12px', fontSize: '10px' }}
+                  itemStyle={{ color: '#10b981' }}
+                />
+                <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2.5} fill="url(#emeraldGrad)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Action Items: Pendências Críticas */}
+        {/* 5. Ações Prioritárias */}
         <div className="glass-card p-8 rounded-2xl border-white/5 flex flex-col">
           <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Ações Prioritárias</h3>
-          <div className="space-y-4 flex-1">
-            {criticalOverdue.length > 0 ? (
-              criticalOverdue.map(rec => (
-                <div key={rec.id} className="p-4 rounded-xl bg-zinc-900/50 border border-rose-500/10 flex justify-between items-center">
-                  <div>
-                    <p className="text-[11px] font-bold text-white truncate w-32">{rec.clientName}</p>
-                    <p className="text-[9px] text-rose-500 font-bold mt-1">Vencido em {new Date(rec.dueDate).toLocaleDateString('pt-BR')}</p>
+          <div className="space-y-3 flex-1">
+            {priorityActions.length > 0 ? (
+              priorityActions.map(rec => (
+                <div key={rec.id} className="p-4 rounded-xl bg-zinc-950/50 border border-rose-500/10 group flex justify-between items-center hover:bg-zinc-900/50 transition-colors">
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-black text-white truncate uppercase tracking-tight">{rec.clientName}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <p className="text-[10px] text-rose-500 font-bold mono">R$ {rec.amount.toLocaleString()}</p>
+                      <span className="text-[8px] text-zinc-600 font-black uppercase">• {new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
+                    </div>
                   </div>
                   <button 
                     onClick={() => markAsPaid(rec.id)}
-                    className="p-2 hover:text-emerald-500 transition-colors"
+                    className="w-8 h-8 rounded-lg bg-emerald-500/5 text-emerald-500 flex items-center justify-center hover:bg-emerald-500 hover:text-black transition-all"
+                    title="Marcar como Pago"
                   >
-                    <i className="fa-solid fa-circle-check"></i>
+                    <i className="fa-solid fa-check text-[10px]"></i>
                   </button>
                 </div>
               ))
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center opacity-40">
-                <i className="fa-solid fa-shield-check text-2xl mb-3"></i>
-                <p className="text-[10px] font-bold uppercase tracking-widest">Sem pendências críticas</p>
+              <div className="flex flex-col items-center justify-center h-full text-center opacity-30 py-10">
+                <i className="fa-solid fa-circle-check text-2xl mb-3 text-emerald-500"></i>
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em]">Fluxo em conformidade</p>
               </div>
             )}
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="w-full py-4 mt-6 bg-white text-black rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-emerald-400 transition-all"
+            className="w-full py-4 mt-6 bg-white text-black rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-lg"
           >
-            Lançar Receita
+            Novo Lançamento
+          </button>
+        </div>
+      </div>
+
+      {/* 6. Bloco de IA (Consultor) */}
+      <div className="glass-card p-1 rounded-2xl luxury-border-glow">
+        <div className="bg-zinc-950/80 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
+              <i className="fa-solid fa-sparkles"></i>
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-0.5">NEXO AI INSIGHT</p>
+              <p className="text-[12px] text-zinc-400 font-medium">Análise estratégica baseada no seu MRR e inadimplência atual.</p>
+            </div>
+          </div>
+          <button className="whitespace-nowrap px-6 py-3 bg-zinc-900 border border-white/5 rounded-xl text-[10px] font-black text-white uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center gap-2">
+            Gerar Insight Estratégico
+            <i className="fa-solid fa-arrow-right-long text-[8px]"></i>
           </button>
         </div>
       </div>
