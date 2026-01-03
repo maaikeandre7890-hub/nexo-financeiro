@@ -37,8 +37,12 @@
         inset: 0;
         background-image: 
           radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0, transparent 50%),
-          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.03) 0, transparent 50%);
+          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.03) 0, transparent 50%),
+          url('https://grainy-gradients.vercel.app/noise.svg');
+        filter: contrast(150%) brightness(100%);
+        opacity: 0.15;
         z-index: -2;
+        pointer-events: none;
       }
 
       .glass-card {
@@ -59,13 +63,11 @@
 
       .mono { font-family: 'JetBrains Mono', monospace; }
 
-      /* Melhoria na barra de rolagem para discrição premium */
       .custom-scrollbar::-webkit-scrollbar { width: 3px; }
       .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
       .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.05); border-radius: 20px; }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--emerald-primary); }
 
-      /* Transições de página suaves */
       .page-enter {
         animation: revealPage 0.8s cubic-bezier(0.16, 1, 0.3, 1);
       }
@@ -77,7 +79,6 @@
 
       .heading-xl { font-size: clamp(2.5rem, 8vw, 6rem); line-height: 0.85; font-weight: 900; letter-spacing: -0.05em; }
       
-      /* Inputs de Luxo */
       input, select {
         transition: all 0.3s ease;
       }
@@ -85,7 +86,6 @@
         box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
       }
 
-      /* Botões táteis mobile */
       @media (max-width: 768px) {
         .tap-target { min-height: 54px; }
       }

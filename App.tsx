@@ -19,7 +19,6 @@ import Cobranca from './pages/Cobranca';
 import Sistema from './pages/Sistema';
 import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
-import Branding from './pages/Branding';
 import NotFound from './pages/NotFound';
 import BrandLogo from './components/BrandLogo';
 import { useApp } from './contexts/AppContext';
@@ -82,7 +81,6 @@ const App: React.FC = () => {
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/recebiveis" element={<Recebiveis />} />
               <Route path="/parcelas-atraso" element={<Atraso />} />
-              <Route path="/branding" element={<Branding />} />
               <Route path="/historico" element={<Historico />} />
               <Route path="/relatorios" element={<Relatorios />} />
               <Route path="/faturamento-liquido" element={<FaturamentoLiquido />} />
