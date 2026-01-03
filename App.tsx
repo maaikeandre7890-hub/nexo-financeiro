@@ -6,6 +6,7 @@ import Header from './components/Header';
 import NotificationPanel from './components/NotificationPanel';
 import AIInsightsPanel from './components/AIInsightsPanel';
 import CommandBar from './components/CommandBar';
+import BottomNav from './components/BottomNav';
 import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
 import Recebiveis from './pages/Recebiveis';
@@ -32,6 +33,8 @@ const App: React.FC = () => {
     setIsAIPanelOpen(false);
     setIsCommandBarOpen(false);
     setIsSidebarOpen(false);
+    // Scroll to top on navigation for mobile
+    window.scrollTo(0, 0);
   }, [location]);
 
   useEffect(() => {
@@ -46,9 +49,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-[#010204] text-slate-300 selection:bg-emerald-500/30 overflow-hidden font-['Inter']">
+    <div className="flex min-h-screen bg-[#010204] text-slate-300 selection:bg-emerald-500/30 overflow-x-hidden font-['Inter'] pb-20 md:pb-0">
       <div 
-        className={`fixed inset-0 bg-black/80 backdrop-blur-md z-[45] md:hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-black/80 backdrop-blur-md z-[45] transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
@@ -64,7 +67,7 @@ const App: React.FC = () => {
           onToggleSidebar={() => setIsSidebarOpen(true)}
         />
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:px-12 lg:py-10 scroll-smooth relative">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:px-12 lg:py-10 scroll-smooth relative custom-scrollbar">
           <div className="max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-2 duration-700">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -83,18 +86,23 @@ const App: React.FC = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
+          {/* Bottom padding spacer for mobile nav */}
+          <div className="h-10 md:hidden"></div>
         </main>
 
         <NotificationPanel isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
         <AIInsightsPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
+        
+        {/* Mobile-only Bottom Navigation */}
+        <BottomNav onOpenMore={() => setIsSidebarOpen(true)} />
       </div>
 
       <button 
         onClick={() => setIsAIPanelOpen(true)}
-        className="fixed bottom-6 right-6 md:bottom-10 md:right-10 w-16 h-16 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-3xl shadow-[0_25px_60px_rgba(16,185,129,0.3)] flex items-center justify-center text-slate-950 text-2xl md:text-3xl hover:scale-110 hover:rotate-12 transition-all z-40 active:scale-95 group luxury-border"
+        className="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-2xl md:rounded-3xl shadow-[0_15px_40px_rgba(16,185,129,0.3)] flex items-center justify-center text-slate-950 text-xl md:text-3xl hover:scale-110 transition-all z-40 active:scale-95 group luxury-border"
       >
-        <div className="absolute inset-0 rounded-3xl bg-emerald-400 animate-ping opacity-10 group-hover:opacity-30"></div>
+        <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-emerald-400 animate-ping opacity-10 group-hover:opacity-30"></div>
         <i className="fa-solid fa-sparkles"></i>
       </button>
     </div>
