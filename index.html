@@ -4,86 +4,98 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NEXO | Intelligence System</title>
+    <title>NEXO | Financial Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        --bg-absolute: #02040a;
-        --surface-glass: rgba(10, 15, 30, 0.4);
-        --border-pro: rgba(255, 255, 255, 0.05);
+        --bg-obsidian: #000000;
+        --surface-deep: #080808;
+        --emerald-primary: #10b981;
       }
       
       body {
-        background-color: var(--bg-absolute);
-        color: #e2e8f0;
+        background-color: var(--bg-obsidian);
+        color: #a1a1aa;
         margin: 0;
         font-family: 'Inter', sans-serif;
         -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
+        letter-spacing: -0.01em;
       }
 
-      /* Textura de Fibra Digital */
+      /* Textura de Grão Suave */
       body::after {
         content: "";
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-        opacity: 0.03;
+        opacity: 0.02;
         pointer-events: none;
-        z-index: 100;
-        filter: contrast(120%) brightness(100%);
+        z-index: 999;
       }
 
-      /* Mesh Gradients Atmosféricos */
-      .bg-mesh {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: 
-          radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 40%),
-          radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 40%),
-          radial-gradient(at 50% 50%, rgba(2, 4, 10, 1) 0px, transparent 100%);
-        z-index: -1;
+      /* Borda Hairline de Luxo */
+      .luxury-border {
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .luxury-border-glow {
+        position: relative;
+      }
+
+      .luxury-border-glow::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(16, 185, 129, 0.05) 50%, rgba(16, 185, 129, 0.2) 100%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.5;
+        pointer-events: none;
       }
 
       .glass-card {
-        background: var(--surface-glass);
-        backdrop-filter: blur(25px) saturate(150%);
-        border: 1px solid var(--border-pro);
-        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        background: var(--surface-deep);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .glass-card:hover {
-        background: rgba(15, 23, 42, 0.6);
-        border-color: rgba(16, 185, 129, 0.2);
-        transform: translateY(-4px);
+        border-color: rgba(16, 185, 129, 0.3);
+        background: #0a0a0a;
       }
 
       .mono { font-family: 'JetBrains Mono', monospace; }
 
-      .label-pro {
-        font-size: 9px;
+      .heading-industrial {
         font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        color: #475569;
-      }
-
-      .heading-pro {
         letter-spacing: -0.05em;
-        font-weight: 900;
+        text-transform: uppercase;
       }
 
+      /* Scrollbar Minimalista */
       ::-webkit-scrollbar { width: 3px; }
-      ::-webkit-scrollbar-thumb { 
-        background: rgba(255, 255, 255, 0.05); 
-        border-radius: 20px;
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #18181b; border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--emerald-primary); }
+
+      /* Animação suave de entrada */
+      .page-enter {
+        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(16, 185, 129, 0.5); }
+
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
     </style>
     <script type="importmap">
 {
@@ -104,7 +116,6 @@
     <script type="module" src="./index.tsx"></script>
   </head>
   <body>
-    <div class="bg-mesh"></div>
     <div id="root"></div>
   </body>
 </html>
