@@ -2,9 +2,9 @@
 import { NavItem } from './types';
 
 export const COLORS = {
-  background: '#0B1C26',
-  sidebar: '#07131A',
-  card: '#112532',
+  background: '#071821',
+  sidebar: '#051118',
+  card: 'rgba(17, 37, 50, 0.6)',
   primary: '#10b981',
   primaryDark: '#059669',
   secondary: '#3b82f6',
@@ -12,7 +12,7 @@ export const COLORS = {
   danger: '#ef4444',
   textMain: '#F8FAFC',
   textMuted: '#94A3B8',
-  border: 'rgba(255, 255, 255, 0.06)'
+  border: 'rgba(255, 255, 255, 0.08)'
 };
 
 export const NAVIGATION: NavItem[] = [

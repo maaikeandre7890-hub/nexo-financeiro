@@ -2,32 +2,29 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { NAVIGATION } from '../constants';
+import OracleIcon from './OracleIcon';
 
 interface Props {
   onClose?: () => void;
 }
 
-const LogoMillionDollar = () => (
-  <div className="relative group flex items-center justify-center w-14 h-14">
-    <div className="absolute inset-0 bg-emerald-500/10 blur-[30px] rounded-full scale-125 group-hover:bg-emerald-500/20 transition-all duration-1000"></div>
+const NewNexoLogo = () => (
+  <div className="relative group flex items-center gap-4">
+    {/* Glow de fundo para o ícone */}
+    <div className="absolute -left-2 top-0 w-16 h-16 bg-emerald-500/10 blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
     
-    <svg width="48" height="48" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10">
-      <path d="M60 15L100 40V80L60 105L20 80V40L60 15Z" fill="#07131A" stroke="url(#border_luxury)" strokeWidth="0.8" />
-      <path d="M42 42V78L60 60L78 78V42" stroke="url(#emerald_gradient_pro)" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="60" cy="60" r="3" fill="#10b981">
-        <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" />
-      </circle>
-      <defs>
-        <linearGradient id="emerald_gradient_pro" x1="42" y1="42" x2="78" y2="78" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#10b981" />
-          <stop offset="1" stopColor="#34d399" />
-        </linearGradient>
-        <linearGradient id="border_luxury" x1="20" y1="15" x2="100" y2="105" gradientUnits="userSpaceOnUse">
-          <stop stopColor="white" stopOpacity="0.3" />
-          <stop offset="1" stopColor="white" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-    </svg>
+    <div className="relative z-10 w-14 h-14 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-500 group-hover:border-emerald-500/20 group-hover:bg-white/[0.05]">
+      <OracleIcon className="w-9 h-9 text-emerald-500" />
+    </div>
+
+    <div className="flex flex-col">
+      <h1 className="text-2xl font-black tracking-[-0.04em] text-white leading-none group-hover:text-emerald-500 transition-colors duration-500">
+        NEXO<span className="text-emerald-500 group-hover:text-white transition-colors">.</span>
+      </h1>
+      <span className="text-[7px] font-black text-slate-500 uppercase tracking-[0.4em] mt-1.5 transition-all duration-500 group-hover:text-emerald-500/50">
+        Inteligência Financeira
+      </span>
+    </div>
   </div>
 );
 
@@ -39,23 +36,11 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
   ];
 
   return (
-    <aside className="w-full md:w-72 bg-[#07131A] flex flex-col h-full z-20 relative border-r border-white/5 shadow-[20px_0_40px_rgba(0,0,0,0.3)] overflow-hidden">
+    <aside className="w-full md:w-72 bg-[#051118] flex flex-col h-full z-20 relative border-r border-white/5 shadow-[20px_0_40px_rgba(0,0,0,0.4)] overflow-hidden">
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
-      <div className="pt-12 pb-10 px-8 flex flex-col items-start relative z-10">
-        <div className="flex flex-col items-start w-full group">
-          <LogoMillionDollar />
-          <div className="mt-6 flex flex-col items-start w-full">
-            <h1 className="text-3xl font-black tracking-[-0.06em] text-white leading-none">
-              NEXO
-            </h1>
-            <div className="h-[1px] w-[60px] bg-emerald-500/40 mt-3 mb-2"></div>
-            <span className="text-[7px] font-bold text-emerald-500/70 uppercase tracking-[0.45em] leading-none block whitespace-nowrap">
-              Inteligência Financeira
-            </span>
-          </div>
-        </div>
-        
+      <div className="pt-12 pb-10 px-8 relative z-10">
+        <NewNexoLogo />
         <button onClick={onClose} className="md:hidden absolute top-10 right-6 text-slate-500 p-2 hover:text-white transition-colors">
           <i className="fa-solid fa-chevron-left text-xl"></i>
         </button>
@@ -101,7 +86,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
         ))}
       </nav>
 
-      <div className="p-8 mt-auto border-t border-white/5 bg-[#050D12] relative z-10">
+      <div className="p-8 mt-auto border-t border-white/5 bg-[#030a0e] relative z-10">
         <div className="flex items-center gap-4 group cursor-pointer">
           <div className="w-9 h-9 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-slate-400 group-hover:text-emerald-400 group-hover:border-emerald-500/30 transition-all font-black text-[9px]">
             AD

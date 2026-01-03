@@ -6,7 +6,6 @@ import Header from './components/Header';
 import NotificationPanel from './components/NotificationPanel';
 import AIInsightsPanel from './components/AIInsightsPanel';
 import CommandBar from './components/CommandBar';
-import BottomNav from './components/BottomNav';
 import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
 import Recebiveis from './pages/Recebiveis';
@@ -20,6 +19,7 @@ import Sistema from './pages/Sistema';
 import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
 import NotFound from './pages/NotFound';
+import OracleIcon from './components/OracleIcon';
 
 const App: React.FC = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -49,13 +49,14 @@ const App: React.FC = () => {
 
   return (
     <div className="flex min-h-screen text-slate-300 selection:bg-emerald-500/30 overflow-x-hidden font-['Inter']">
-      {/* Overlay mobile melhorado */}
+      {/* Drawer Overlay */}
       <div 
-        className={`fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[45] transition-opacity duration-500 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      <div className={`fixed inset-y-0 left-0 z-[50] w-72 transform transition-transform duration-500 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      {/* Sidebar / Mobile Drawer */}
+      <div className={`fixed inset-y-0 left-0 z-[110] w-[280px] transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 md:w-72 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
       
@@ -67,7 +68,7 @@ const App: React.FC = () => {
           onToggleSidebar={() => setIsSidebarOpen(true)}
         />
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:px-12 lg:py-10 scroll-smooth relative custom-scrollbar pb-32 md:pb-10">
+        <main className="flex-1 overflow-y-auto p-5 md:p-8 lg:px-14 lg:py-12 scroll-smooth relative custom-scrollbar pb-10">
           <div className="max-w-[1600px] mx-auto page-enter">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -91,18 +92,22 @@ const App: React.FC = () => {
         <NotificationPanel isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
         <AIInsightsPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
-        <BottomNav onOpenMore={() => setIsSidebarOpen(true)} />
       </div>
 
-      {/* FAB Premium - Reposicionado para 100% Alinhamento Tátil */}
-      <button 
-        onClick={() => setIsAIPanelOpen(true)}
-        aria-label="Assistente IA Oracle"
-        className="fixed bottom-28 right-5 md:bottom-12 md:right-12 w-14 h-14 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-2xl md:rounded-[2.5rem] shadow-[0_20px_60px_-10px_rgba(16,185,129,0.5)] flex items-center justify-center text-slate-950 text-xl md:text-3xl transition-all z-40 active:scale-90 group border border-white/20 backdrop-blur-lg"
-      >
-        <div className="absolute inset-0 rounded-2xl md:rounded-[2.5rem] bg-emerald-400 animate-ping opacity-[0.03]"></div>
-        <i className="fa-solid fa-sparkles scale-90 md:scale-100"></i>
-      </button>
+      {/* Oracle NEXO — Botão Flutuante Premium */}
+      <div className="fixed bottom-8 right-6 md:bottom-12 md:right-12 z-40 group flex flex-col items-end gap-3">
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 border border-emerald-500/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-emerald-500 backdrop-blur-xl shadow-2xl pointer-events-none mb-1">
+          Oracle NEXO — Análise Financeira em Tempo Real
+        </div>
+        <button 
+          onClick={() => setIsAIPanelOpen(true)}
+          className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-3xl shadow-[0_20px_60px_-15px_rgba(16,185,129,0.4)] flex items-center justify-center text-slate-950 transition-all active:scale-90 border border-white/20 relative overflow-hidden"
+        >
+          {/* Efeito de brilho rotativo no fundo do botão */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+          <OracleIcon className="w-8 h-8 md:w-11 md:h-11 nexus-pulse" />
+        </button>
+      </div>
     </div>
   );
 };
