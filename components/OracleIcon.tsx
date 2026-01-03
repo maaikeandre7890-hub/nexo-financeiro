@@ -14,62 +14,77 @@ const OracleIcon: React.FC<Props> = ({ className = "w-6 h-6" }) => {
       className={className}
     >
       <defs>
-        <linearGradient id="nexus_glow" x1="0%" y1="0%" x2="100%" y2="100%">
+        {/* Gradiente de metal da marca */}
+        <linearGradient id="oracle_ribbon" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#10b981" />
-          <stop offset="100%" stopColor="#34d399" />
+          <stop offset="45%" stopColor="#059669" />
+          <stop offset="55%" stopColor="#064e3b" />
+          <stop offset="100%" stopColor="#10b981" />
         </linearGradient>
-        <filter id="aura" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+
+        {/* Efeito de brilho externo (Aura) */}
+        <filter id="oracle_glow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
-      </defs>
-      
-      {/* Símbolo Neural Nexus */}
-      <g filter="url(#aura)">
-        {/* Linhas de Fluxo Externas */}
-        <path 
-          d="M50 12 L85 32 V68 L50 88 L15 68 V32 L50 12Z" 
-          stroke="url(#nexus_glow)" 
-          strokeWidth="2.5" 
-          strokeDasharray="4 2"
-          strokeLinecap="round"
-          opacity="0.4"
-        >
-          <animate attributeName="stroke-dashoffset" from="0" to="24" dur="3s" repeatCount="indefinite" />
-        </path>
 
-        {/* O Nexo Central (Abstract N / Connection) */}
+        {/* Luz de varredura (Scanning) */}
+        <linearGradient id="scan_light" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="white" stopOpacity="0" />
+          <stop offset="50%" stopColor="white" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="white" stopOpacity="0" />
+          <animateTransform 
+            attributeName="gradientTransform" 
+            type="translate" 
+            from="0 -1" 
+            to="0 1" 
+            dur="2s" 
+            repeatCount="indefinite" 
+          />
+        </linearGradient>
+      </defs>
+
+      <g filter="url(#oracle_glow)">
+        {/* Pernas Laterais Estáticas */}
+        <path d="M22 15 Q28 16 38 15 V85 Q28 84 22 85 V15Z" fill="#064e3b" opacity="0.6" />
+        <path d="M62 15 Q72 16 78 15 V85 Q72 84 62 85 V15Z" fill="#064e3b" opacity="0.6" />
+
+        {/* Fita Central Ativa (O 'N' Digital) */}
         <path 
-          d="M35 40 L50 25 L65 40 V60 L50 75 L35 60 V40Z" 
-          fill="url(#nexus_glow)" 
-          fillOpacity="0.15"
-          stroke="url(#nexus_glow)"
-          strokeWidth="5"
-          strokeLinejoin="round"
+          d="M22 15 L38 15 L78 85 L62 85 Z" 
+          fill="url(#oracle_ribbon)" 
         />
-        
-        {/* O Núcleo (Core Intelligence) */}
-        <circle cx="50" cy="50" r="6" fill="#10b981">
+
+        {/* Overlay de Varredura (Indica Processamento) */}
+        <path 
+          d="M22 15 L38 15 L78 85 L62 85 Z" 
+          fill="url(#scan_light)" 
+          style={{ mixMode: 'overlay' }}
+        />
+
+        {/* Núcleo de Inteligência Central (Pulsante) */}
+        <circle cx="50" cy="50" r="4" fill="white">
           <animate 
             attributeName="r" 
-            values="5;7;5" 
-            dur="2s" 
+            values="3;6;3" 
+            dur="1.5s" 
             repeatCount="indefinite" 
           />
           <animate 
             attributeName="opacity" 
-            values="0.6;1;0.6" 
-            dur="2s" 
+            values="0.4;1;0.4" 
+            dur="1.5s" 
             repeatCount="indefinite" 
           />
         </circle>
 
-        {/* Pontos de Conexão Críticos */}
-        <circle cx="50" cy="25" r="2" fill="white">
-           <animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="35" cy="60" r="2" fill="white" opacity="0.5" />
-        <circle cx="65" cy="60" r="2" fill="white" opacity="0.5" />
+        {/* Rim Light de Contorno Fino */}
+        <path 
+          d="M22 15 L38 15 L78 85 L62 85 Z" 
+          stroke="white" 
+          strokeWidth="0.5" 
+          strokeOpacity="0.3" 
+        />
       </g>
     </svg>
   );

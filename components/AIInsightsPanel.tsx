@@ -7,6 +7,7 @@ import OracleIcon from './OracleIcon';
 interface Message {
   role: 'user' | 'model';
   text: string;
+  links?: { title: string; uri: string }[];
 }
 
 interface Props {
@@ -19,7 +20,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
   const firstName = state.userName ? state.userName.split(' ')[0] : 'Empreendedor';
   
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: `Saudações, ${firstName}. Sou o Oracle NEXO. Analisei os números da ${state.companyName || 'sua empresa'} e estou pronto para te dar insights estratégicos sobre seu lucro e fluxo de caixa. Como posso ajudar agora?` }
+    { role: 'model', text: `Saudações, ${firstName}. Sou o Oracle NEXO. Analisei os números da ${state.companyName || 'sua empresa'} e agora estou conectado ao mercado global em tempo real. Como posso ajudar na sua estratégia de capital hoje?` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -54,20 +55,26 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
         model: 'gemini-3-flash-preview',
         contents: userMsg,
         config: {
-          systemInstruction: `Você é o Oracle NEXO, um assistente virtual de elite especializado em gestão financeira para pequenos negócios. 
-          Contexto financeiro atual do usuário: ${financialContext}.
-          Diretrizes: 
-          - Responda de forma direta, encorajadora e consultiva.
-          - Use o nome do usuário: ${firstName}.
-          - Ajude-o a entender onde ele pode economizar ou como cobrar melhor.
-          - Formate em Markdown.
-          - Nunca invente dados que não estão no contexto.`,
+          tools: [{ googleSearch: {} }],
+          systemInstruction: `Você é o Oracle NEXO, um consultor financeiro de elite. 
+          Contexto financeiro interno: ${financialContext}.
+          Use a ferramenta de pesquisa para trazer dados de mercado (taxas, inflação, notícias financeiras) se relevante.
+          Responda de forma executiva, direta e analítica. Use Markdown.`,
         },
       });
 
-      setMessages(prev => [...prev, { role: 'model', text: response.text || "Não consegui processar essa análise agora. Tente de outra forma." }]);
+      const links = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.map((chunk: any) => ({
+        title: chunk.web?.title || 'Fonte de Mercado',
+        uri: chunk.web?.uri
+      })).filter((l: any) => l.uri);
+
+      setMessages(prev => [...prev, { 
+        role: 'model', 
+        text: response.text || "Não consegui processar essa análise agora.",
+        links: links
+      }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'model', text: "Minha conexão com o banco de dados foi interrompida momentaneamente." }]);
+      setMessages(prev => [...prev, { role: 'model', text: "Minha conexão com o banco de dados e mercado foi interrompida." }]);
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +95,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                 <h2 className="text-xl font-black text-white tracking-tight italic uppercase leading-none mb-1">Oracle NEXO</h2>
                 <div className="flex items-center gap-2">
                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Consultoria Ativa</span>
+                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Market Intelligence Active</span>
                 </div>
               </div>
             </div>
@@ -99,13 +106,25 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar bg-gradient-to-b from-transparent to-black/20">
              {messages.map((msg, idx) => (
-               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                 <div className={`max-w-[90%] p-5 rounded-2xl text-sm leading-relaxed ${
+               <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                 <div className={`max-w-[95%] p-6 rounded-2xl text-sm leading-relaxed ${
                    msg.role === 'user' 
                     ? 'bg-emerald-600 text-white font-bold rounded-tr-none shadow-xl shadow-emerald-900/10' 
                     : 'bg-white/[0.04] border border-white/5 text-slate-200 rounded-tl-none backdrop-blur-md'
                  }`}>
-                   {msg.text}
+                   <div className="prose prose-invert prose-sm max-w-none">
+                     {msg.text}
+                   </div>
+                   {msg.links && msg.links.length > 0 && (
+                     <div className="mt-6 pt-4 border-t border-white/10 space-y-2">
+                       <p className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Fontes de Grounding:</p>
+                       {msg.links.map((link, i) => (
+                         <a key={i} href={link.uri} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-slate-500 hover:text-emerald-400 transition-colors truncate">
+                           <i className="fa-solid fa-link mr-2 text-[8px]"></i> {link.title}
+                         </a>
+                       ))}
+                     </div>
+                   )}
                  </div>
                </div>
              ))}
@@ -117,7 +136,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                       <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                       <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
                     </div>
-                    <span className="text-[9px] font-black text-emerald-500/70 uppercase tracking-widest">Analisando Dados...</span>
+                    <span className="text-[9px] font-black text-emerald-500/70 uppercase tracking-widest">Consultando Mercado...</span>
                  </div>
                </div>
              )}
@@ -127,7 +146,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-4 p-2 bg-white/[0.03] rounded-2xl border border-white/10 focus-within:border-emerald-500/50 transition-all">
               <input 
                 type="text" 
-                placeholder="Pergunte sobre seu lucro ou despesas..." 
+                placeholder="Pergunte sobre mercado, inflação ou seu caixa..." 
                 className="flex-1 bg-transparent border-none text-sm text-white focus:outline-none px-4 py-3 font-medium placeholder:text-slate-600"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}

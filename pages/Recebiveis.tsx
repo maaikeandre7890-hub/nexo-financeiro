@@ -12,6 +12,28 @@ const Recebiveis: React.FC = () => {
     filter === 'Todos' ? true : r.status === filter
   );
 
+  const exportToCSV = () => {
+    const headers = ['Cliente', 'Valor', 'Vencimento', 'Status', 'Categoria'];
+    const rows = filteredItems.map(r => [
+      r.clientName,
+      r.amount.toString(),
+      r.dueDate,
+      r.status,
+      r.category
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + [headers, ...rows].map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `nexo_recebiveis_${filter.toLowerCase()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-12 py-6 page-enter">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
@@ -21,12 +43,21 @@ const Recebiveis: React.FC = () => {
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic uppercase leading-none">Meus <br/><span className="text-slate-600">Recebíveis.</span></h1>
         </div>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="w-full md:w-auto px-10 py-5 bg-white text-black rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-xl"
-        >
-          Novo Recebimento
-        </button>
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          <button 
+            onClick={exportToCSV}
+            className="p-5 bg-white/5 border border-white/5 text-slate-400 rounded-2xl hover:text-white hover:bg-white/10 transition-all active:scale-95 shadow-xl"
+            title="Exportar para Excel/CSV"
+          >
+            <i className="fa-solid fa-file-export"></i>
+          </button>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="flex-1 md:flex-none px-10 py-5 bg-white text-black rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-xl"
+          >
+            Novo Recebimento
+          </button>
+        </div>
       </div>
       
       <div className="flex gap-3 overflow-x-auto pb-4 custom-scrollbar">

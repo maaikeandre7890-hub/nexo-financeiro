@@ -4,6 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import { useApp } from '../contexts/AppContext';
 import { AddReceivableModal } from '../components/Modals';
 import OracleIcon from '../components/OracleIcon';
+import BrandLogo from '../components/BrandLogo';
 
 const Dashboard: React.FC = () => {
   const { totals, state, getChartData } = useApp();
@@ -39,7 +40,7 @@ const Dashboard: React.FC = () => {
         </button>
       </section>
 
-      {/* Grid de KPIs Refinado */}
+      {/* Grid de KPIs Principal */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
           { label: 'Expectativa de Receita', val: totals.toReceive, color: 'text-emerald-500', sub: 'Pendentes de liquidação' },
@@ -57,31 +58,68 @@ const Dashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Oráculo de Inteligência - Visual Ultra Moderno */}
-      <div className="glass-card p-10 md:p-14 rounded-[4rem] flex flex-col md:flex-row items-center gap-12 border-emerald-500/10 relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/[0.02] to-transparent"></div>
-        <div className="w-24 h-24 bg-emerald-500/5 border border-emerald-500/20 rounded-[2.5rem] flex items-center justify-center text-emerald-500 shrink-0 relative z-10">
-          <OracleIcon className="w-14 h-14 nexus-pulse" />
-        </div>
-        <div className="flex-1 text-center md:text-left relative z-10">
-          <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em]">Oracle Insights</span>
-            <span className="px-2 py-0.5 bg-emerald-500/10 rounded text-[8px] font-bold text-emerald-400">ATIVO</span>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Oráculo de Inteligência */}
+        <div className="glass-card p-10 rounded-[3rem] flex flex-col items-start gap-8 border-emerald-500/10 relative overflow-hidden group h-full">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] to-transparent"></div>
+          <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-500 shrink-0 relative z-10">
+            <OracleIcon className="w-10 h-10" />
           </div>
-          <p className="text-lg md:text-xl text-slate-400 leading-relaxed font-medium italic">
-            "Sua saúde financeira está em <span className="text-emerald-500 font-black">{totals.cashHealth}%</span>. 
-            Identifiquei que <span className="text-white font-bold">R$ {totals.overdue.toLocaleString()}</span> estão retidos em atraso. 
-            Uma ação de cobrança hoje pode acelerar seu crescimento."
-          </p>
+          <div className="relative z-10 space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em]">Internal Insight</span>
+            </div>
+            <p className="text-xl text-slate-300 leading-relaxed font-medium italic">
+              "Saúde do caixa em <span className="text-emerald-500 font-black">{totals.cashHealth}%</span>. 
+              Recuperar <span className="text-white font-black">R$ {totals.overdue.toLocaleString()}</span> elevaria seu lucro líquido em <span className="text-emerald-400">12%</span> este mês."
+            </p>
+          </div>
+        </div>
+
+        {/* Market Context - Card Premium Refinado */}
+        <div className="glass-card p-10 rounded-[3rem] border-white/5 relative overflow-hidden flex flex-col justify-between group h-full bg-[#030d12]">
+           {/* Logo NEXO Mini */}
+           <div className="absolute top-8 left-10 opacity-30 group-hover:opacity-100 transition-opacity">
+              <BrandLogo className="w-6 h-6 grayscale" />
+           </div>
+
+           <div className="relative z-10 pt-10 space-y-6">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black text-emerald-500/60 uppercase tracking-[0.4em]">Market Opportunity</span>
+                <div className="flex gap-2">
+                   <span className="px-3 py-1 bg-white/[0.03] border border-white/5 rounded-full text-[9px] font-black text-slate-400 uppercase tracking-widest">Selic: 10,75%</span>
+                   <span className="px-3 py-1 bg-white/[0.03] border border-white/5 rounded-full text-[9px] font-black text-slate-400 uppercase tracking-widest">IPCA: 4,42%</span>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                 <h2 className="text-4xl font-black text-white mono tracking-tighter">R$ {(totals.toReceive * 0.08).toLocaleString(undefined, { maximumFractionDigits: 0 })}</h2>
+                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Custo oculto do capital parado</p>
+              </div>
+
+              <p className="text-sm text-slate-400 leading-relaxed font-medium max-w-sm">
+                A Taxa Selic e a inflação impactam diretamente a rentabilidade do seu capital.
+              </p>
+           </div>
+
+           <div className="relative z-10 pt-8 mt-auto">
+              <button className="w-full py-5 bg-emerald-500 text-slate-950 font-black text-[11px] uppercase tracking-[0.3em] rounded-2xl flex items-center justify-center gap-3 hover:bg-emerald-400 transition-all active:scale-[0.98] shadow-lg shadow-emerald-500/10">
+                Analisar com Oracle NEXO
+                <i className="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+           </div>
+           
+           {/* Efeito de brilho sutil ao fundo */}
+           <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-emerald-500/5 blur-[100px] rounded-full group-hover:bg-emerald-500/10 transition-colors"></div>
         </div>
       </div>
 
-      {/* Gráfico de Performance - Escala de Cinema */}
+      {/* Gráfico de Performance */}
       <div className="glass-card p-12 rounded-[4rem] relative overflow-hidden h-[500px]">
         <div className="flex justify-between items-center mb-12">
-          <h3 className="text-xs font-black text-white uppercase tracking-[0.4em]">Fluxo de Caixa Reais (6 Meses)</h3>
-          <div className="flex gap-2">
-            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-emerald-500 rounded-full"></div><span className="text-[9px] font-bold text-slate-500 uppercase">Receita</span></div>
+          <h3 className="text-xs font-black text-white uppercase tracking-[0.4em]">Performance de Faturamento (Semestral)</h3>
+          <div className="flex gap-4">
+            <div className="flex items-center gap-2"><div className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]"></div><span className="text-[9px] font-black text-slate-600 uppercase">Efetivado</span></div>
           </div>
         </div>
         {state.receivables.length > 0 ? (
@@ -89,25 +127,25 @@ const Dashboard: React.FC = () => {
             <AreaChart data={getChartData()}>
               <defs>
                 <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.3}/>
+                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.4}/>
                   <stop offset="100%" stopColor="#10b981" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.02)" />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 10, fontWeight: 700}} dy={15} />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 10, fontWeight: 900}} dy={15} />
               <YAxis hide domain={['auto', 'auto']} />
               <Tooltip 
                 cursor={{ stroke: 'rgba(16, 185, 129, 0.2)', strokeWidth: 2 }}
-                contentStyle={{ backgroundColor: '#020C10', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '20px', padding: '15px' }}
+                contentStyle={{ backgroundColor: '#020C10', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '24px', padding: '20px' }}
                 itemStyle={{ color: '#fff', fontSize: '14px', fontWeight: '900', fontFamily: 'JetBrains Mono' }}
               />
-              <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={4} fill="url(#chartGrad)" animationDuration={2000} />
+              <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={5} fill="url(#chartGrad)" animationDuration={2500} />
             </AreaChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-full flex flex-col items-center justify-center text-slate-800 opacity-20 italic">
+          <div className="h-full flex flex-col items-center justify-center text-slate-900 opacity-20 italic">
             <i className="fa-solid fa-chart-line text-8xl mb-6"></i>
-            <p className="text-[12px] font-black uppercase tracking-[0.5em]">Aguardando Fluxo de Dados</p>
+            <p className="text-[12px] font-black uppercase tracking-[0.5em]">Aguardando Ingestão de Ativos</p>
           </div>
         )}
       </div>
