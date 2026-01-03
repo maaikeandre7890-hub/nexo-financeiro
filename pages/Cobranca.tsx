@@ -24,15 +24,22 @@ const Cobranca: React.FC = () => {
     });
   }, [state.receivables, filter]);
 
+  const handleWhatsAppCharge = (item: any) => {
+    const client = state.clients.find(c => c.id === item.clientId);
+    const message = `Olá, tudo bem? Aqui é da ${state.companyName}. Passando apenas para lembrar do pagamento de R$ ${item.amount.toLocaleString()} que vence em ${new Date(item.dueDate).toLocaleDateString('pt-BR')}.`;
+    const encoded = encodeURIComponent(message);
+    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+  };
+
   return (
     <div className="space-y-8 md:space-y-10 py-2 page-enter">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">Cobrança Automática</h1>
-            <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[8px] font-black uppercase rounded border border-emerald-500/20">Premium</span>
+            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">Cobrança Rápida</h1>
+            <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[8px] font-black uppercase rounded border border-emerald-500/20">Automatizado</span>
           </div>
-          <p className="text-zinc-500 text-sm font-medium">Recuperação de crédito inteligência via WhatsApp e E-mail.</p>
+          <p className="text-zinc-500 text-sm font-medium">Envie lembretes de pagamento em um clique via WhatsApp.</p>
         </div>
       </div>
 
@@ -52,13 +59,12 @@ const Cobranca: React.FC = () => {
         ))}
       </div>
 
-      {/* Desktop Table */}
       <div className="hidden md:block glass-card rounded-3xl overflow-hidden border-white/5 min-h-[400px]">
         {filteredItems.length > 0 ? (
           <table className="w-full text-left">
             <thead>
               <tr className="bg-zinc-900/50 border-b border-white/5">
-                <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Cliente / Título</th>
+                <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Cliente</th>
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Vencimento</th>
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Valor</th>
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest text-right">Ação</th>
@@ -74,7 +80,12 @@ const Cobranca: React.FC = () => {
                   <td className="px-8 py-6 text-xs font-bold text-zinc-400">{new Date(item.dueDate).toLocaleDateString('pt-BR')}</td>
                   <td className="px-8 py-6 text-sm font-black text-white mono">R$ {item.amount.toLocaleString()}</td>
                   <td className="px-8 py-6 text-right">
-                    <button className="px-4 py-2 bg-zinc-900 border border-white/5 rounded-lg text-[9px] font-black uppercase text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all">Disparar</button>
+                    <button 
+                      onClick={() => handleWhatsAppCharge(item)}
+                      className="px-4 py-2 bg-zinc-900 border border-white/5 rounded-lg text-[9px] font-black uppercase text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all"
+                    >
+                      Enviar WhatsApp
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -83,12 +94,12 @@ const Cobranca: React.FC = () => {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center p-20 text-center opacity-30">
             <i className="fa-solid fa-shield-check text-4xl mb-6"></i>
-            <h3 className="text-xl font-bold text-white mb-2 italic">Em conformidade</h3>
+            <h3 className="text-xl font-bold text-white mb-2 italic">Tudo em conformidade</h3>
+            <p className="text-xs font-bold text-slate-600 uppercase">Nenhuma cobrança pendente para este filtro.</p>
           </div>
         )}
       </div>
 
-      {/* Mobile Card List */}
       <div className="md:hidden space-y-4">
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
@@ -98,7 +109,7 @@ const Cobranca: React.FC = () => {
                     <h4 className="font-black text-white text-sm tracking-tight">{item.clientName}</h4>
                     <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">{item.id}</p>
                   </div>
-                  <span className="text-[9px] font-black text-emerald-500 uppercase">Aguarda Disparo</span>
+                  <span className="text-[9px] font-black text-emerald-500 uppercase">Pendente</span>
                </div>
                <div className="flex justify-between items-center bg-zinc-950/50 p-3 rounded-xl border border-white/5">
                   <div className="space-y-0.5">
@@ -110,7 +121,10 @@ const Cobranca: React.FC = () => {
                     <p className="text-base font-black text-white mono">R$ {item.amount.toLocaleString()}</p>
                   </div>
                </div>
-               <button className="w-full py-4 bg-emerald-500 text-black font-black text-[10px] uppercase tracking-widest rounded-xl active:scale-95 transition-all">
+               <button 
+                  onClick={() => handleWhatsAppCharge(item)}
+                  className="w-full py-4 bg-emerald-500 text-black font-black text-[10px] uppercase tracking-widest rounded-xl active:scale-95 transition-all"
+               >
                   Cobrar via WhatsApp
                </button>
             </div>
@@ -118,7 +132,7 @@ const Cobranca: React.FC = () => {
         ) : (
           <div className="p-10 text-center opacity-30">
              <i className="fa-solid fa-circle-check text-4xl mb-4 text-emerald-500"></i>
-             <p className="text-xs font-black uppercase tracking-widest">Tudo em dia</p>
+             <p className="text-xs font-black uppercase tracking-widest text-slate-600">Nenhuma conta pendente</p>
           </div>
         )}
       </div>

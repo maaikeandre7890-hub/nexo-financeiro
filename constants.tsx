@@ -17,15 +17,15 @@ export const COLORS = {
 
 export const NAVIGATION: NavItem[] = [
   { label: 'Painel Geral', path: '/dashboard', icon: 'fa-chart-pie' },
-  { label: 'Clientes', path: '/clientes', icon: 'fa-users' },
+  { label: 'Meus Clientes', path: '/clientes', icon: 'fa-users' },
   { label: 'Contas a Receber', path: '/recebiveis', icon: 'fa-arrow-up-to-line' },
   { label: 'Contas em Atraso', path: '/parcelas-atraso', icon: 'fa-triangle-exclamation' },
-  { label: 'Histórico', path: '/historico', icon: 'fa-clock-rotate-left' },
+  { label: 'Histórico de Ações', path: '/historico', icon: 'fa-clock-rotate-left' },
   { label: 'Resumo do Mês', path: '/relatorios', icon: 'fa-file-invoice-dollar' },
   { label: 'Lucro do Mês', path: '/faturamento-liquido', icon: 'fa-scale-balanced' },
-  { label: 'Outras Despesas', path: '/despesas-extras', icon: 'fa-receipt' },
-  { label: 'Cobrança Automática', path: '/cobranca-automatica', icon: 'fa-robot' },
-  { label: 'Status do Sistema', path: '/sistema', icon: 'fa-microchip' },
+  { label: 'Minhas Despesas', path: '/despesas-extras', icon: 'fa-receipt' },
+  { label: 'Cobrar Clientes', path: '/cobranca-automatica', icon: 'fa-robot' },
+  { label: 'Status do App', path: '/sistema', icon: 'fa-microchip' },
   { label: 'Configurações', path: '/configuracoes', icon: 'fa-gear' },
-  { label: 'Guia de Uso', path: '/tutorial', icon: 'fa-book-open' },
+  { label: 'Manual de Uso', path: '/tutorial', icon: 'fa-book-open' },
 ];

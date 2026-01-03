@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { useApp } from '../contexts/AppContext';
@@ -15,8 +16,10 @@ interface Props {
 
 const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
   const { totals, state } = useApp();
+  const firstName = state.userName ? state.userName.split(' ')[0] : 'Empreendedor';
+  
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'Saudações, Alexandre. Sou o Oracle NEXO. Analisei seu faturamento líquido e identifiquei 3 pontos de otimização fiscal e operacional. Como posso auxiliar sua tomada de decisão estratégica agora?' }
+    { role: 'model', text: `Saudações, ${firstName}. Sou o Oracle NEXO. Analisei os números da ${state.companyName || 'sua empresa'} e estou pronto para te dar insights estratégicos sobre seu lucro e fluxo de caixa. Como posso ajudar agora?` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -38,8 +41,11 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
 
     const financialContext = JSON.stringify({
       totals,
+      company: state.companyName,
+      user: state.userName,
       clientCount: state.clients.length,
       overdueCount: state.receivables.filter(r => r.status === 'Atrasado').length,
+      expenseTotal: totals.totalExpenses
     });
 
     try {
@@ -48,19 +54,20 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
         model: 'gemini-3-flash-preview',
         contents: userMsg,
         config: {
-          systemInstruction: `Você é o Oracle NEXO, um assistente virtual de elite especializado em B2B Finance. 
+          systemInstruction: `Você é o Oracle NEXO, um assistente virtual de elite especializado em gestão financeira para pequenos negócios. 
           Contexto financeiro atual do usuário: ${financialContext}.
           Diretrizes: 
-          - Responda de forma executiva, objetiva e consultiva.
-          - Use termos técnicos (EBITDA, Cash Flow, CAC, LTV) onde apropriado.
+          - Responda de forma direta, encorajadora e consultiva.
+          - Use o nome do usuário: ${firstName}.
+          - Ajude-o a entender onde ele pode economizar ou como cobrar melhor.
           - Formate em Markdown.
-          - Mantenha o tom de um Concierge de Investimentos.`,
+          - Nunca invente dados que não estão no contexto.`,
         },
       });
 
-      setMessages(prev => [...prev, { role: 'model', text: response.text || "Erro ao processar insight. Verifique os nodes de dados." }]);
+      setMessages(prev => [...prev, { role: 'model', text: response.text || "Não consegui processar essa análise agora. Tente de outra forma." }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'model', text: "Conexão com o core do Oráculo interrompida." }]);
+      setMessages(prev => [...prev, { role: 'model', text: "Minha conexão com o banco de dados foi interrompida momentaneamente." }]);
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +88,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                 <h2 className="text-xl font-black text-white tracking-tight italic uppercase leading-none mb-1">Oracle NEXO</h2>
                 <div className="flex items-center gap-2">
                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Análise Preditiva Ativa</span>
+                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Consultoria Ativa</span>
                 </div>
               </div>
             </div>
@@ -107,11 +114,10 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                  <div className="bg-white/[0.03] px-6 py-4 rounded-2xl rounded-tl-none border border-white/5 flex gap-3 items-center">
                     <div className="flex gap-1.5">
                       <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0s]"></div>
-                      {/* Fixed JSX syntax error: Added missing ">" to the opening div tag */}
                       <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                       <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
                     </div>
-                    <span className="text-[9px] font-black text-emerald-500/70 uppercase tracking-widest">Processando Fluxo...</span>
+                    <span className="text-[9px] font-black text-emerald-500/70 uppercase tracking-widest">Analisando Dados...</span>
                  </div>
                </div>
              )}
@@ -121,7 +127,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-4 p-2 bg-white/[0.03] rounded-2xl border border-white/10 focus-within:border-emerald-500/50 transition-all">
               <input 
                 type="text" 
-                placeholder="Solicitar análise estratégica..." 
+                placeholder="Pergunte sobre seu lucro ou despesas..." 
                 className="flex-1 bg-transparent border-none text-sm text-white focus:outline-none px-4 py-3 font-medium placeholder:text-slate-600"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
