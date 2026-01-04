@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -13,81 +12,57 @@
     <style>
       :root {
         --bg-petroleum-base: #020608;
-        --bg-petroleum-deep: #000000;
-        --bg-surface: rgba(2, 12, 16, 0.7);
         --emerald-primary: #10b981;
-        --border-glass: rgba(255, 255, 255, 0.04);
-        --border-glass-bright: rgba(255, 255, 255, 0.08);
       }
       
-      body {
+      html {
+        /* ESTABILIZAÇÃO TOTAL: Reserva o espaço da scrollbar para evitar saltos de layout */
+        scrollbar-gutter: stable;
         background-color: var(--bg-petroleum-base);
-        color: #94A3B8;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        letter-spacing: -0.015em;
-        min-height: 100vh;
-        overflow-x: hidden;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
       }
 
-      body::before {
-        content: "";
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        background-color: transparent;
+        color: #94A3B8;
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+
+      #nexo-bg-canvas {
         position: fixed;
         inset: 0;
+        z-index: -10;
+        background-color: var(--bg-petroleum-base);
         background-image: 
           radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0, transparent 50%),
           radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.03) 0, transparent 50%),
           url('https://grainy-gradients.vercel.app/noise.svg');
         filter: contrast(150%) brightness(100%);
         opacity: 0.15;
-        z-index: -2;
         pointer-events: none;
+        transform: translateZ(0);
       }
 
-      .glass-card {
-        background: var(--bg-surface);
-        backdrop-filter: blur(40px);
-        -webkit-backdrop-filter: blur(40px);
-        border: 1px solid var(--border-glass);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      .glass-card:hover {
-        border-color: var(--border-glass-bright);
-        background: rgba(4, 20, 26, 0.85);
-        transform: translateY(-4px);
-        box-shadow: 0 30px 60px -15px rgba(16, 185, 129, 0.15);
-      }
-
-      .mono { font-family: 'JetBrains Mono', monospace; }
-
-      .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
       .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
       .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.05); border-radius: 20px; }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--emerald-primary); }
 
       .page-enter {
-        animation: revealPage 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: revealPage 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       @keyframes revealPage {
-        from { opacity: 0; transform: scale(0.98) translateY(20px); filter: blur(10px); }
-        to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-      }
-
-      .heading-xl { font-size: clamp(2.5rem, 8vw, 6rem); line-height: 0.85; font-weight: 900; letter-spacing: -0.05em; }
-      
-      input, select {
-        transition: all 0.3s ease;
-      }
-      input:focus, select:focus {
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-      }
-
-      @media (max-width: 768px) {
-        .tap-target { min-height: 54px; }
+        from { opacity: 0; transform: translateY(10px); filter: blur(4px); }
+        to { opacity: 1; transform: translateY(0); filter: blur(0); }
       }
     </style>
     <script type="importmap">
@@ -109,6 +84,7 @@
     <script type="module" src="./index.tsx"></script>
   </head>
   <body>
+    <div id="nexo-bg-canvas"></div>
     <div id="root"></div>
   </body>
 </html>

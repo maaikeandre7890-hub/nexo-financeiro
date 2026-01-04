@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -30,13 +29,29 @@ const App: React.FC = () => {
   const [isCommandBarOpen, setIsCommandBarOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+  const mainRef = useRef<HTMLElement>(null);
+
+  // Sincronização de Bloqueio sem perda de posição
+  useEffect(() => {
+    const isAnyOverlaid = isNotificationsOpen || isAIPanelOpen || isCommandBarOpen || isSidebarOpen;
+    const mainElement = mainRef.current;
+    
+    if (mainElement) {
+      if (isAnyOverlaid) {
+        // Bloqueia interações mas mantém visual e scroll position
+        mainElement.style.overflowY = 'hidden';
+      } else {
+        mainElement.style.overflowY = 'auto';
+      }
+    }
+  }, [isNotificationsOpen, isAIPanelOpen, isCommandBarOpen, isSidebarOpen]);
 
   useEffect(() => {
     setIsNotificationsOpen(false);
     setIsAIPanelOpen(false);
     setIsCommandBarOpen(false);
     setIsSidebarOpen(false);
-    window.scrollTo(0, 0);
+    if (mainRef.current) mainRef.current.scrollTo(0, 0);
   }, [location]);
 
   useEffect(() => {
@@ -55,9 +70,10 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen text-slate-300 selection:bg-emerald-500/30 overflow-x-hidden font-['Inter']">
+    <div className="flex h-screen w-full text-slate-300 selection:bg-emerald-500/30 font-['Inter'] overflow-hidden bg-transparent">
+      {/* Sidebar Mobile Overlay */}
       <div 
-        className={`fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
@@ -65,7 +81,7 @@ const App: React.FC = () => {
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
       
-      <div className="flex-1 flex flex-col min-w-0 h-screen relative overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full relative">
         <Header 
           onOpenNotifications={() => setIsNotificationsOpen(true)} 
           onOpenAI={() => setIsAIPanelOpen(true)}
@@ -73,7 +89,10 @@ const App: React.FC = () => {
           onToggleSidebar={() => setIsSidebarOpen(true)}
         />
         
-        <main className="flex-1 overflow-y-auto p-5 md:p-8 lg:px-14 lg:py-12 scroll-smooth relative custom-scrollbar pb-10">
+        <main 
+          ref={mainRef}
+          className="flex-1 overflow-y-auto p-5 md:p-8 lg:px-14 lg:py-12 relative custom-scrollbar pb-10"
+        >
           <div className="max-w-[1600px] mx-auto page-enter">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -99,7 +118,6 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      {/* Selo Oracle NEXO - Refined */}
       <div className="fixed bottom-10 right-10 z-40">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
