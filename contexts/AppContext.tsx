@@ -16,6 +16,7 @@ interface AppContextType {
   clearHistory: (pin: string) => boolean;
   getChartData: () => { name: string; value: number }[];
   completeOnboarding: (userData: { userName: string, companyName: string, businessType: string }) => void;
+  formatNumber: (num: number, precision?: number) => string;
   totals: {
     toReceive: number;
     overdue: number;
@@ -34,7 +35,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const saved = localStorage.getItem('nexo_data_v5_prod');
     if (saved) return JSON.parse(saved);
     
-    // ESTADO INICIAL ZERADO PARA NOVO USUÁRIO
     return {
       onboardingCompleted: false,
       userName: '',
@@ -56,6 +56,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
   }, [state]);
+
+  const formatNumber = (num: number, precision: number = 2) => {
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: precision,
+    }).format(num);
+  };
 
   const logAction = (action: string, details: string, type: AuditLog['type']) => {
     const newLog: AuditLog = { 
@@ -91,7 +98,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: new Date().toISOString(),
     };
     setState(prev => ({ ...prev, clients: [newClient, ...prev.clients] }));
-    logAction('Novo Cliente', `Entidade ${newClient.name} integrada à base.`, 'success');
+    logAction('Novo Cliente', `Entidade ${newClient.name} (${newClient.document}) integrada à base.`, 'success');
   };
 
   const updateClient = (id: string, data: Partial<Client>) => {
@@ -115,13 +122,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addReceivable = (recData: Omit<Receivable, 'id'>) => {
     const newRec: Receivable = { ...recData, id: 'REC-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
     setState(prev => ({ ...prev, receivables: [newRec, ...prev.receivables] }));
-    logAction('Receita Registrada', `Lançamento de R$ ${newRec.amount.toLocaleString()} para ${newRec.clientName}.`, 'success');
+    logAction('Receita Registrada', `Lançamento de R$ ${formatNumber(newRec.amount)} para ${newRec.clientName}.`, 'success');
   };
 
   const deleteReceivable = (id: string) => {
     const rec = state.receivables.find(r => r.id === id);
     setState(prev => ({ ...prev, receivables: prev.receivables.filter(r => r.id !== id) }));
-    if (rec) logAction('Exclusão de Receita', `Título R$ ${rec.amount} removido do fluxo.`, 'warning');
+    if (rec) logAction('Exclusão de Receita', `Título R$ ${formatNumber(rec.amount)} removido do fluxo.`, 'warning');
   };
 
   const markAsPaid = (id: string) => {
@@ -131,19 +138,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       receivables: prev.receivables.map(r => r.id === id ? { ...r, status: 'Pago' } : r)
     }));
-    logAction('Baixa de Título', `Recebimento de R$ ${rec.amount} confirmado e liquidado.`, 'success');
+    logAction('Baixa de Título', `Recebimento de R$ ${formatNumber(rec.amount)} confirmado e liquidado.`, 'success');
   };
 
   const addExpense = (expData: Omit<Expense, 'id'>) => {
     const newExp: Expense = { ...expData, id: 'EXP-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
     setState(prev => ({ ...prev, expenses: [newExp, ...prev.expenses] }));
-    logAction('Nova Despesa', `Saída de R$ ${newExp.amount} registrada: ${newExp.description}.`, 'warning');
+    logAction('Nova Despesa', `Saída de R$ ${formatNumber(newExp.amount)} registrada: ${newExp.description}.`, 'warning');
   };
 
   const deleteExpense = (id: string) => {
     const exp = state.expenses.find(e => e.id === id);
     setState(prev => ({ ...prev, expenses: prev.expenses.filter(e => e.id !== id) }));
-    if (exp) logAction('Exclusão de Despesa', `Gasto de R$ ${exp.amount} removido.`, 'info');
+    if (exp) logAction('Exclusão de Despesa', `Gasto de R$ ${formatNumber(exp.amount)} removido.`, 'info');
   };
 
   const clearHistory = (pin: string) => {
@@ -191,7 +198,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       state, addClient, updateClient, deleteClient, 
       addReceivable, deleteReceivable, markAsPaid, 
       addExpense, deleteExpense, logAction, clearHistory,
-      getChartData, totals, completeOnboarding
+      getChartData, totals, completeOnboarding, formatNumber
     }}>
       {children}
     </AppContext.Provider>

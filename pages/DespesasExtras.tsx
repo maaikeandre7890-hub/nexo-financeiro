@@ -4,7 +4,7 @@ import { useApp } from '../contexts/AppContext';
 import { AddExpenseModal } from '../components/Modals';
 
 const DespesasExtras: React.FC = () => {
-  const { state, totals, deleteExpense } = useApp();
+  const { state, totals, deleteExpense, formatNumber } = useApp();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -26,7 +26,7 @@ const DespesasExtras: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="glass-card p-8 rounded-[2rem] border-rose-500/10 bg-rose-500/[0.02]">
            <p className="text-[10px] font-black text-rose-400 uppercase mb-2">Total Pago este Mês</p>
-           <h2 className="text-4xl font-black text-white mono">R$ {totals.totalExpenses.toLocaleString()}</h2>
+           <h2 className="text-4xl font-black text-white mono">R$ {formatNumber(totals.totalExpenses)}</h2>
         </div>
         <div className="glass-card p-8 rounded-[2rem] border-white/5 flex items-center justify-between">
            <div>
@@ -58,7 +58,7 @@ const DespesasExtras: React.FC = () => {
                   <td className="px-8 py-6 text-zinc-400 text-xs font-medium">{new Date(exp.date).toLocaleDateString('pt-BR')}</td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex items-center justify-end gap-6">
-                      <span className="font-black text-rose-400 mono">R$ {exp.amount.toLocaleString()}</span>
+                      <span className="font-black text-rose-400 mono">R$ {formatNumber(exp.amount)}</span>
                       <button 
                         onClick={() => { if(confirm('Remover esta despesa para sempre?')) deleteExpense(exp.id)}}
                         className="text-slate-800 hover:text-rose-500 transition-colors"

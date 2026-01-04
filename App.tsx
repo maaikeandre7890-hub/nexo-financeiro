@@ -99,16 +99,19 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      <div className="fixed bottom-8 right-6 md:bottom-12 md:right-12 z-40 group flex flex-col items-end gap-3">
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 border border-emerald-500/20 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-emerald-500 backdrop-blur-xl shadow-2xl pointer-events-none mb-1">
-          Oracle NEXO — Análise Financeira
-        </div>
+      {/* Selo Oracle NEXO - Refined */}
+      <div className="fixed bottom-10 right-10 z-40">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-3xl shadow-[0_20px_60px_-15px_rgba(16,185,129,0.4)] flex items-center justify-center text-slate-950 transition-all active:scale-90 border border-white/20 relative overflow-hidden"
+          className="flex items-center gap-4 bg-emerald-500 hover:bg-emerald-400 p-2 pr-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(16,185,129,0.4)] transition-all active:scale-95 group border border-white/10"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-          <BrandLogo className="w-8 h-8 md:w-11 md:h-11" />
+          <div className="w-12 h-12 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
+            <BrandLogo className="w-8 h-8" />
+          </div>
+          <div className="flex flex-col items-start text-left pointer-events-none">
+            <span className="text-[11px] font-black text-slate-950 uppercase tracking-widest leading-none">Oracle NEXO</span>
+            <span className="text-[8px] font-black text-slate-900/40 uppercase tracking-widest mt-1">Análise Inteligente</span>
+          </div>
         </button>
       </div>
     </div>

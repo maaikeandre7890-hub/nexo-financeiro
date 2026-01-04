@@ -8,9 +8,16 @@ export interface NavItem {
 export interface Client {
   id: string;
   name: string;
+  type: 'PF' | 'PJ';
+  document: string; // CPF ou CNPJ
+  responsible?: string;
+  razaoSocial?: string;
   email: string;
-  status: 'Ativo' | 'Inativo';
+  phone: string;
+  status: 'Ativo' | 'Inadimplente' | 'Em negociação';
   monthlyValue: number;
+  dueDay: number;
+  paymentMethod: 'Boleto' | 'Pix' | 'Transferência' | 'Outro';
   score: number;
   createdAt: string;
 }

@@ -4,7 +4,7 @@ import { useApp } from '../contexts/AppContext';
 import { AddReceivableModal } from '../components/Modals';
 
 const Recebiveis: React.FC = () => {
-  const { state, markAsPaid, deleteReceivable } = useApp();
+  const { state, markAsPaid, deleteReceivable, formatNumber } = useApp();
   const [filter, setFilter] = useState<'Todos' | 'Pendente' | 'Pago' | 'Atrasado'>('Todos');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -16,7 +16,7 @@ const Recebiveis: React.FC = () => {
     const headers = ['Cliente', 'Valor', 'Vencimento', 'Status', 'Categoria'];
     const rows = filteredItems.map(r => [
       r.clientName,
-      r.amount.toString(),
+      formatNumber(r.amount).replace(/\./g, ''), // CSV needs raw or specifically formatted
       r.dueDate,
       r.status,
       r.category
@@ -107,7 +107,7 @@ const Recebiveis: React.FC = () => {
                   </span>
                 </td>
                 <td className="px-12 py-10 text-right">
-                  <span className="text-xl font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+                  <span className="text-xl font-black text-white mono">R$ {formatNumber(rec.amount)}</span>
                 </td>
                 <td className="px-12 py-10 text-right">
                    <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
@@ -141,7 +141,7 @@ const Recebiveis: React.FC = () => {
           <div key={rec.id} className="glass-card p-8 rounded-[3rem] border-white/5 space-y-6">
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="font-black text-white text-base tracking-tight">{rec.clientName}</h4>
+                <h4 className="font-black text-white text-sm tracking-tight">{rec.clientName}</h4>
                 <p className="text-[9px] text-slate-600 font-black uppercase tracking-[0.3em]">{rec.category}</p>
               </div>
               <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${
@@ -150,7 +150,7 @@ const Recebiveis: React.FC = () => {
             </div>
             <div className="flex justify-between items-center bg-white/[0.02] p-6 rounded-[2rem] border border-white/[0.05]">
               <span className="text-xs font-black text-slate-500 mono">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
-              <span className="text-lg font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+              <span className="text-lg font-black text-white mono">R$ {formatNumber(rec.amount)}</span>
             </div>
             {rec.status !== 'Pago' && (
               <button 

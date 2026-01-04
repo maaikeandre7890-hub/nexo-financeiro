@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { useApp } from '../contexts/AppContext';
 
 const Cobranca: React.FC = () => {
-  const { state } = useApp();
+  const { state, formatNumber } = useApp();
   const [filter, setFilter] = useState<'Todos' | 'Preventiva' | 'Hoje' | 'Atraso'>('Todos');
 
   const filteredItems = useMemo(() => {
@@ -26,7 +26,7 @@ const Cobranca: React.FC = () => {
 
   const handleWhatsAppCharge = (item: any) => {
     const client = state.clients.find(c => c.id === item.clientId);
-    const message = `Olá, tudo bem? Aqui é da ${state.companyName}. Passando apenas para lembrar do pagamento de R$ ${item.amount.toLocaleString()} que vence em ${new Date(item.dueDate).toLocaleDateString('pt-BR')}.`;
+    const message = `Olá, tudo bem? Aqui é da ${state.companyName}. Passando apenas para lembrar do pagamento de R$ ${formatNumber(item.amount)} que vence em ${new Date(item.dueDate).toLocaleDateString('pt-BR')}.`;
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/?text=${encoded}`, '_blank');
   };
@@ -78,7 +78,7 @@ const Cobranca: React.FC = () => {
                     <p className="text-[10px] text-zinc-600 font-bold uppercase">{item.id}</p>
                   </td>
                   <td className="px-8 py-6 text-xs font-bold text-zinc-400">{new Date(item.dueDate).toLocaleDateString('pt-BR')}</td>
-                  <td className="px-8 py-6 text-sm font-black text-white mono">R$ {item.amount.toLocaleString()}</td>
+                  <td className="px-8 py-6 text-sm font-black text-white mono">R$ {formatNumber(item.amount)}</td>
                   <td className="px-8 py-6 text-right">
                     <button 
                       onClick={() => handleWhatsAppCharge(item)}
@@ -118,7 +118,7 @@ const Cobranca: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Valor</p>
-                    <p className="text-base font-black text-white mono">R$ {item.amount.toLocaleString()}</p>
+                    <p className="text-base font-black text-white mono">R$ {formatNumber(item.amount)}</p>
                   </div>
                </div>
                <button 

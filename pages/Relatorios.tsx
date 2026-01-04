@@ -3,7 +3,7 @@ import React from 'react';
 import { useApp } from '../contexts/AppContext';
 
 const Relatorios: React.FC = () => {
-  const { totals, state } = useApp();
+  const { totals, state, formatNumber } = useApp();
 
   const paidIncome = state.receivables.filter(r => r.status === 'Pago').reduce((a, b) => a + b.amount, 0);
 
@@ -44,7 +44,7 @@ const Relatorios: React.FC = () => {
               {dre.map((item, i) => (
                 <div key={i} className={`flex justify-between items-center ${item.isBold ? 'pt-8 border-t border-white/10' : ''}`}>
                    <span className={`text-sm ${item.isBold ? 'font-black text-white' : 'font-bold text-slate-400'}`}>{item.label}</span>
-                   <span className={`text-xl font-black mono ${item.color}`}>R$ {item.val.toLocaleString()}</span>
+                   <span className={`text-xl font-black mono ${item.color}`}>R$ {formatNumber(item.val)}</span>
                 </div>
               ))}
            </div>
@@ -63,7 +63,7 @@ const Relatorios: React.FC = () => {
                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Margem de Lucro</p>
                 <h4 className="text-2xl font-black text-white italic">
                   {paidIncome > 0 
-                    ? ((totals.netBalance / paidIncome) * 100).toFixed(1)
+                    ? formatNumber((totals.netBalance / paidIncome) * 100, 1)
                     : 0}%
                 </h4>
              </div>
@@ -88,7 +88,7 @@ const Relatorios: React.FC = () => {
              <div>
                 <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Risco de Inadimplência</p>
                 <h4 className="text-2xl font-black text-white italic">
-                  R$ {totals.overdue.toLocaleString()}
+                  R$ {formatNumber(totals.overdue)}
                 </h4>
              </div>
              <div className="w-14 h-14 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500">

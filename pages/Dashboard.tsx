@@ -7,7 +7,7 @@ import OracleIcon from '../components/OracleIcon';
 import BrandLogo from '../components/BrandLogo';
 
 const Dashboard: React.FC = () => {
-  const { totals, state, getChartData } = useApp();
+  const { totals, state, getChartData, formatNumber } = useApp();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const greeting = useMemo(() => {
@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:bg-emerald-500/10 transition-colors duration-700"></div>
             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] relative z-10">{kpi.label}</p>
             <div className="relative z-10">
-              <p className={`text-4xl font-black ${kpi.color} mono tracking-tighter`}>R$ {kpi.val.toLocaleString()}</p>
+              <p className={`text-4xl font-black ${kpi.color} mono tracking-tighter`}>R$ {formatNumber(kpi.val)}</p>
               <p className="text-[9px] text-slate-600 font-bold uppercase mt-3 tracking-widest">{kpi.sub}</p>
             </div>
           </div>
@@ -71,7 +71,7 @@ const Dashboard: React.FC = () => {
             </div>
             <p className="text-xl text-slate-300 leading-relaxed font-medium italic">
               "Saúde do caixa em <span className="text-emerald-500 font-black">{totals.cashHealth}%</span>. 
-              Recuperar <span className="text-white font-black">R$ {totals.overdue.toLocaleString()}</span> elevaria seu lucro líquido em <span className="text-emerald-400">12%</span> este mês."
+              Recuperar <span className="text-white font-black">R$ {formatNumber(totals.overdue)}</span> elevaria seu lucro líquido em <span className="text-emerald-400">12%</span> este mês."
             </p>
           </div>
         </div>
@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                 <h2 className="text-4xl font-black text-white mono tracking-tighter">R$ {(totals.toReceive * 0.08).toLocaleString(undefined, { maximumFractionDigits: 0 })}</h2>
+                 <h2 className="text-4xl font-black text-white mono tracking-tighter">R$ {formatNumber(totals.toReceive * 0.08, 0)}</h2>
                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Custo oculto do capital parado</p>
               </div>
 
@@ -138,6 +138,7 @@ const Dashboard: React.FC = () => {
                 cursor={{ stroke: 'rgba(16, 185, 129, 0.2)', strokeWidth: 2 }}
                 contentStyle={{ backgroundColor: '#020C10', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '24px', padding: '20px' }}
                 itemStyle={{ color: '#fff', fontSize: '14px', fontWeight: '900', fontFamily: 'JetBrains Mono' }}
+                formatter={(value: number) => `R$ ${formatNumber(value)}`}
               />
               <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={5} fill="url(#chartGrad)" animationDuration={2500} />
             </AreaChart>

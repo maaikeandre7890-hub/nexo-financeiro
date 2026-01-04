@@ -16,7 +16,7 @@ interface Props {
 }
 
 const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { totals, state } = useApp();
+  const { totals, state, formatNumber } = useApp();
   const firstName = state.userName ? state.userName.split(' ')[0] : 'Empreendedor';
   
   const [messages, setMessages] = useState<Message[]>([
@@ -41,12 +41,18 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
     setIsLoading(true);
 
     const financialContext = JSON.stringify({
-      totals,
+      totals: {
+        toReceive: formatNumber(totals.toReceive),
+        overdue: formatNumber(totals.overdue),
+        paid: formatNumber(totals.paid),
+        totalExpenses: formatNumber(totals.totalExpenses),
+        netBalance: formatNumber(totals.netBalance),
+        cashHealth: totals.cashHealth
+      },
       company: state.companyName,
       user: state.userName,
       clientCount: state.clients.length,
-      overdueCount: state.receivables.filter(r => r.status === 'Atrasado').length,
-      expenseTotal: totals.totalExpenses
+      overdueCount: state.receivables.filter(r => r.status === 'Atrasado').length
     });
 
     try {
@@ -58,7 +64,8 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
           tools: [{ googleSearch: {} }],
           systemInstruction: `Você é o Oracle NEXO, um consultor financeiro de elite. 
           Contexto financeiro interno: ${financialContext}.
-          Use a ferramenta de pesquisa para trazer dados de mercado (taxas, inflação, notícias financeiras) se relevante.
+          IMPORTANTE: Sempre formate valores monetários e números no padrão brasileiro: use ponto para milhar e vírgula para decimal (ex: 1.500,00 ou 10.000).
+          Use a ferramenta de pesquisa para trazer dados de mercado se relevante.
           Responda de forma executiva, direta e analítica. Use Markdown.`,
         },
       });

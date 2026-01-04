@@ -3,7 +3,7 @@ import React from 'react';
 import { useApp } from '../contexts/AppContext';
 
 const Atraso: React.FC = () => {
-  const { state, totals, markAsPaid } = useApp();
+  const { state, totals, markAsPaid, formatNumber } = useApp();
   const overdueItems = state.receivables.filter(r => r.status === 'Atrasado');
 
   return (
@@ -22,7 +22,7 @@ const Atraso: React.FC = () => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-[100px] -mr-32 -mt-32"></div>
         <div className="relative z-10 space-y-4">
            <p className="text-[10px] font-black text-rose-400 uppercase tracking-[0.4em]">Montante Exposto ao Risco</p>
-           <div className="text-6xl md:text-8xl font-black text-white mono tracking-tighter italic">R$ {totals.overdue.toLocaleString()}</div>
+           <div className="text-6xl md:text-8xl font-black text-white mono tracking-tighter italic">R$ {formatNumber(totals.overdue)}</div>
            <p className="text-slate-500 font-bold text-sm uppercase tracking-widest">
              <span className="text-rose-400">{overdueItems.length}</span> títulos com vencimento expirado
            </p>
@@ -54,7 +54,7 @@ const Atraso: React.FC = () => {
                   <span className="text-sm font-black text-rose-400 mono italic">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
                 </td>
                 <td className="px-12 py-10">
-                  <span className="text-xl font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+                  <span className="text-xl font-black text-white mono">R$ {formatNumber(rec.amount)}</span>
                 </td>
                 <td className="px-12 py-10 text-right">
                   <button onClick={() => markAsPaid(rec.id)} className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] hover:text-white transition-colors">Marcar como Pago</button>
@@ -77,7 +77,7 @@ const Atraso: React.FC = () => {
             </div>
             <div className="flex justify-between items-center bg-rose-500/5 p-6 rounded-[2rem] border border-rose-500/10">
                <span className="text-xs font-black text-rose-400 mono">{new Date(rec.dueDate).toLocaleDateString('pt-BR')}</span>
-               <span className="text-lg font-black text-white mono">R$ {rec.amount.toLocaleString()}</span>
+               <span className="text-lg font-black text-white mono">R$ {formatNumber(rec.amount)}</span>
             </div>
             <button 
               onClick={() => markAsPaid(rec.id)} 
