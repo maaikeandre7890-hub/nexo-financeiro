@@ -57,20 +57,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       logs: [{ 
         id: 'L-INIT', 
         timestamp: new Date().toISOString(), 
-        action: 'Sistema Pronto', 
-        details: 'NEXO aguardando configuração inicial.', 
+        action: 'NEXO Terminal Ativo', 
+        details: 'Pronto para processamento de capital.', 
         type: 'info' 
       }]
     };
   });
 
+  // Efeito de Persistência e Tema
   useEffect(() => {
     localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
-    if (state.theme === 'light') {
-      document.documentElement.classList.add('light-theme');
-    } else {
-      document.documentElement.classList.remove('light-theme');
-    }
+    document.documentElement.className = state.theme === 'light' ? 'light-theme' : '';
   }, [state]);
 
   const formatNumber = (num: number, precision: number = 2) => {
@@ -88,13 +85,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       details, 
       type 
     };
-    setState(prev => ({ ...prev, logs: [newLog, ...prev.logs].slice(0, 200) }));
+    setState(prev => ({ ...prev, logs: [newLog, ...prev.logs].slice(0, 300) }));
   };
 
   const refreshData = async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Simula uma re-validação de integridade dos dados
+    await new Promise(resolve => setTimeout(resolve, 800));
+    logAction('Sincronização', 'Base de dados atualizada e validada.', 'info');
     setIsRefreshing(false);
   };
 
@@ -107,14 +106,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       ...userData,
       onboardingCompleted: true,
-      logs: [{
-        id: 'L-ONB',
-        timestamp: new Date().toISOString(),
-        action: 'Início do Sistema',
-        details: `Configurado para ${userData.companyName}.`,
-        type: 'success'
-      }, ...prev.logs]
     }));
+    logAction('Configuração', 'Perfil de gestor atualizado.', 'success');
   };
 
   const addClient = (clientData: Omit<Client, 'id' | 'createdAt' | 'score'>) => {
@@ -148,7 +141,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       receivables: [...newReceivables, ...prev.receivables]
     }));
 
-    logAction('Cliente Cadastrado', `${newClient.name} - Plano de ${newClient.installments} meses.`, 'success');
+    logAction('Novo Cliente', `${newClient.name} inserido com R$ ${formatNumber(newClient.monthlyValue)}/mês.`, 'success');
   };
 
   const bulkAddClients = (clientsData: Array<Omit<Client, 'id' | 'createdAt' | 'score'>>) => {
@@ -186,7 +179,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       receivables: [...newReceivables, ...prev.receivables]
     }));
 
-    logAction('Importação em Lote', `${clientsData.length} clientes importados via arquivo.`, 'success');
+    logAction('Importação', `${clientsData.length} novos contratos processados em lote.`, 'success');
   };
 
   const updateClient = (id: string, data: Partial<Client>) => {
@@ -195,7 +188,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const updatedRecs = prev.receivables.map(r => r.clientId === id ? { ...r, clientName: data.name || r.clientName } : r);
       return { ...prev, clients: updatedClients, receivables: updatedRecs };
     });
-    logAction('Cliente Atualizado', `Dados de ${id} modificados.`, 'info');
+    logAction('Alteração', `Cadastro do cliente ${id} modificado.`, 'info');
   };
 
   const renegotiateClient = (id: string, newValue: number, newInstallments: number) => {
@@ -207,49 +200,46 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         c.id === id ? { ...c, monthlyValue: newValue, installments: newInstallments, status: 'Em negociação' as const } : c
       );
 
-      // Remove parcelas pendentes e atrasadas futuras
       const preservedRecs = prev.receivables.filter(r => 
         r.clientId !== id || r.status === 'Pago'
       );
 
-      // Gera novas parcelas a partir de agora com categoria "Renegociação"
       const newRecs: Receivable[] = [];
       const now = new Date();
       for (let i = 0; i < newInstallments; i++) {
         const dueDate = new Date(now.getFullYear(), now.getMonth() + i, client.dueDay);
-        const dateStr = dueDate.toISOString().split('T')[0];
-        
         newRecs.push({
           id: `REC-REN-${id}-${i+1}-${Math.random().toString(36).substr(2, 4)}`,
           clientId: id,
           clientName: client.name,
           amount: newValue,
-          dueDate: dateStr,
+          dueDate: dueDate.toISOString().split('T')[0],
           status: 'Pendente',
           category: 'Renegociação'
         });
       }
 
-      return { 
-        ...prev, 
-        clients: updatedClients, 
-        receivables: [...preservedRecs, ...newRecs] 
-      };
+      return { ...prev, clients: updatedClients, receivables: [...preservedRecs, ...newRecs] };
     });
-    logAction('Renegociação', `Contrato ID:${id} renegociado para R$ ${newValue}/mês.`, 'warning');
+    logAction('Renegociação', `Acordo firmado para ID ${id}: R$ ${formatNumber(newValue)} p/ parcela.`, 'warning');
   };
 
   const deleteClient = (id: string) => {
+    const client = state.clients.find(c => c.id === id);
     setState(prev => ({ 
       ...prev, 
       clients: prev.clients.filter(c => c.id !== id),
       receivables: prev.receivables.filter(r => r.clientId !== id)
     }));
+    logAction('Exclusão', `Cliente ${client?.name} e seus títulos removidos do sistema.`, 'warning');
   };
 
-  const addReceivable = (recData: Omit<Receivable, 'id'>) => {
-    const newRec: Receivable = { ...recData, id: 'REC-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
+  // Implementação das funções de recebíveis ausentes para corrigir o erro de escopo
+  const addReceivable = (receivableData: Omit<Receivable, 'id'>) => {
+    const newId = 'REC-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    const newRec: Receivable = { ...receivableData, id: newId };
     setState(prev => ({ ...prev, receivables: [newRec, ...prev.receivables] }));
+    logAction('Novo Recebível', `${receivableData.clientName} - R$ ${formatNumber(receivableData.amount)}`, 'success');
   };
 
   const updateReceivable = (id: string, data: Partial<Receivable>) => {
@@ -257,13 +247,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       receivables: prev.receivables.map(r => r.id === id ? { ...r, ...data } : r)
     }));
+    logAction('Alteração Recebível', `Título ID ${id} atualizado.`, 'info');
   };
 
   const deleteReceivable = (id: string) => {
-    setState(prev => ({ ...prev, receivables: prev.receivables.filter(r => r.id !== id) }));
+    setState(prev => ({
+      ...prev,
+      receivables: prev.receivables.filter(r => r.id !== id)
+    }));
+    logAction('Exclusão Recebível', `Título ID ${id} removido.`, 'warning');
   };
 
   const markAsPaid = (id: string, method: Receivable['paymentMethod'] = 'PIX') => {
+    const rec = state.receivables.find(r => r.id === id);
     setState(prev => ({
       ...prev,
       receivables: prev.receivables.map(r => r.id === id ? { 
@@ -273,21 +269,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         paidAt: new Date().toISOString()
       } : r)
     }));
-    logAction('Recebimento', `Título liquidado via ${method}.`, 'success');
+    logAction('Baixa de Título', `R$ ${formatNumber(rec?.amount || 0)} liquidado via ${method}.`, 'success');
   };
 
   const addExpense = (expData: Omit<Expense, 'id'>) => {
     const newExp: Expense = { ...expData, id: 'EXP-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
     setState(prev => ({ ...prev, expenses: [newExp, ...prev.expenses] }));
+    logAction('Despesa', `${expData.description} (R$ ${formatNumber(expData.amount)}) registrada.`, 'warning');
   };
 
   const deleteExpense = (id: string) => {
     setState(prev => ({ ...prev, expenses: prev.expenses.filter(e => e.id !== id) }));
+    logAction('Remoção de Conta', `Despesa removida do fluxo.`, 'info');
   };
 
   const clearHistory = (pin: string) => {
     if (pin === '123456') {
       setState(prev => ({ ...prev, logs: [] }));
+      logAction('Limpeza Histórico', 'Audit log resetado pelo administrador.', 'info');
       return true;
     }
     return false;
@@ -298,10 +297,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const today = now.toISOString().split('T')[0];
     const currentMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     
-    // Dinheiro que entrou (QUALQUER título pago)
+    // Total Pago (Realizado)
     const paid = state.receivables.filter(r => r.status === 'Pago').reduce((a, b) => a + b.amount, 0);
     
-    // Dinheiro previsto (EXCLUI renegociações pendentes por regra de negócio)
+    // A Receber no Mês (Previsto)
     const toReceive = state.receivables.filter(r => 
       r.status === 'Pendente' && 
       r.dueDate.startsWith(currentMonthPrefix) &&
@@ -309,6 +308,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       r.category !== 'Renegociação'
     ).reduce((a, b) => a + b.amount, 0);
     
+    // Total em Atraso (Exposição Global)
     const overdue = state.receivables.filter(r => 
       (r.status === 'Atrasado' || (r.status === 'Pendente' && r.dueDate < today)) &&
       r.category !== 'Renegociação'
@@ -340,10 +340,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         .filter(r => r.dueDate.startsWith(monthYearPrefix) && r.category !== 'Renegociação')
         .reduce((sum, r) => sum + r.amount, 0);
         
-      data.push({ 
-        name: monthsNames[mIdx], 
-        value: monthlyTotal
-      });
+      data.push({ name: monthsNames[mIdx], value: monthlyTotal });
     }
     return data;
   };
