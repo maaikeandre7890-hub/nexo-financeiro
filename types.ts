@@ -30,6 +30,8 @@ export interface Receivable {
   dueDate: string;
   status: 'Pago' | 'Pendente' | 'Atrasado';
   category: string;
+  paymentMethod?: 'PIX' | 'Boleto' | 'Dinheiro' | 'Transferência';
+  paidAt?: string;
 }
 
 export interface Expense {

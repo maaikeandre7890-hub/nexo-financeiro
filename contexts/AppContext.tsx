@@ -7,11 +7,13 @@ interface AppContextType {
   addClient: (client: Omit<Client, 'id' | 'createdAt' | 'score'>) => void;
   updateClient: (id: string, data: Partial<Client>) => void;
   deleteClient: (id: string) => void;
+  renegotiateClient: (id: string, newValue: number, newInstallments: number) => void;
   addReceivable: (receivable: Omit<Receivable, 'id'>) => void;
+  updateReceivable: (id: string, data: Partial<Receivable>) => void;
   deleteReceivable: (id: string) => void;
   addExpense: (expense: Omit<Expense, 'id'>) => void;
   deleteExpense: (id: string) => void;
-  markAsPaid: (id: string) => void;
+  markAsPaid: (id: string, method?: Receivable['paymentMethod']) => void;
   logAction: (action: string, details: string, type: AuditLog['type']) => void;
   clearHistory: (pin: string) => boolean;
   getChartData: () => { name: string; value: number }[];
@@ -149,10 +151,56 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateClient = (id: string, data: Partial<Client>) => {
-    setState(prev => ({
-      ...prev,
-      clients: prev.clients.map(c => c.id === id ? { ...c, ...data } : c)
-    }));
+    setState(prev => {
+      const updatedClients = prev.clients.map(c => c.id === id ? { ...c, ...data } : c);
+      // Se mudar o nome do cliente, atualiza nos recebíveis também
+      const updatedRecs = prev.receivables.map(r => r.clientId === id ? { ...r, clientName: data.name || r.clientName } : r);
+      return { ...prev, clients: updatedClients, receivables: updatedRecs };
+    });
+    logAction('Cliente Atualizado', `Dados de ${id} modificados.`, 'info');
+  };
+
+  const renegotiateClient = (id: string, newValue: number, newInstallments: number) => {
+    setState(prev => {
+      const client = prev.clients.find(c => c.id === id);
+      if (!client) return prev;
+
+      const updatedClients = prev.clients.map(c => 
+        c.id === id ? { ...c, monthlyValue: newValue, installments: newInstallments, status: 'Ativo' as const } : c
+      );
+
+      // Remove parcelas pendentes e atrasadas futuras
+      const today = new Date().toISOString().split('T')[0];
+      const preservedRecs = prev.receivables.filter(r => 
+        r.clientId !== id || r.status === 'Pago'
+      );
+
+      // Gera novas parcelas a partir de agora
+      const newRecs: Receivable[] = [];
+      const now = new Date();
+      for (let i = 0; i < newInstallments; i++) {
+        const dueDate = new Date(now.getFullYear(), now.getMonth() + i, client.dueDay);
+        const dateStr = dueDate.toISOString().split('T')[0];
+        
+        // Só adiciona se não houver conflito de data com algo já pago (simplificado)
+        newRecs.push({
+          id: `REC-REN-${id}-${i+1}-${Math.random().toString(36).substr(2, 4)}`,
+          clientId: id,
+          clientName: client.name,
+          amount: newValue,
+          dueDate: dateStr,
+          status: 'Pendente',
+          category: 'Mensalidade Renegociada'
+        });
+      }
+
+      return { 
+        ...prev, 
+        clients: updatedClients, 
+        receivables: [...preservedRecs, ...newRecs] 
+      };
+    });
+    logAction('Renegociação', `Contrato ID:${id} renegociado para R$ ${newValue}/mês.`, 'warning');
   };
 
   const deleteClient = (id: string) => {
@@ -168,16 +216,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setState(prev => ({ ...prev, receivables: [newRec, ...prev.receivables] }));
   };
 
+  const updateReceivable = (id: string, data: Partial<Receivable>) => {
+    setState(prev => ({
+      ...prev,
+      receivables: prev.receivables.map(r => r.id === id ? { ...r, ...data } : r)
+    }));
+  };
+
   const deleteReceivable = (id: string) => {
     setState(prev => ({ ...prev, receivables: prev.receivables.filter(r => r.id !== id) }));
   };
 
-  const markAsPaid = (id: string) => {
+  const markAsPaid = (id: string, method: Receivable['paymentMethod'] = 'PIX') => {
     setState(prev => ({
       ...prev,
-      receivables: prev.receivables.map(r => r.id === id ? { ...r, status: 'Pago' } : r)
+      receivables: prev.receivables.map(r => r.id === id ? { 
+        ...r, 
+        status: 'Pago', 
+        paymentMethod: method,
+        paidAt: new Date().toISOString()
+      } : r)
     }));
-    logAction('Recebimento', `Valor recebido com sucesso.`, 'success');
+    logAction('Recebimento', `Título liquidado via ${method}.`, 'success');
   };
 
   const addExpense = (expData: Omit<Expense, 'id'>) => {
@@ -202,17 +262,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const today = now.toISOString().split('T')[0];
     const currentMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     
-    // 1. Dinheiro que já entrou (Pago)
     const paid = state.receivables.filter(r => r.status === 'Pago').reduce((a, b) => a + b.amount, 0);
     
-    // 2. Dinheiro PREVISTO PARA O MÊS ATUAL (Apenas parcelas deste mês que ainda não foram pagas e não estão vencidas)
     const toReceive = state.receivables.filter(r => 
       r.status === 'Pendente' && 
       r.dueDate.startsWith(currentMonthPrefix) &&
       r.dueDate >= today
     ).reduce((a, b) => a + b.amount, 0);
     
-    // 3. Dinheiro EM ATRASO (Qualquer parcela pendente com data menor que hoje)
     const overdue = state.receivables.filter(r => 
       r.status === 'Atrasado' || 
       (r.status === 'Pendente' && r.dueDate < today)
@@ -254,8 +311,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return (
     <AppContext.Provider value={{ 
-      state, addClient, updateClient, deleteClient, 
-      addReceivable, deleteReceivable, markAsPaid, 
+      state, addClient, updateClient, deleteClient, renegotiateClient,
+      addReceivable, updateReceivable, deleteReceivable, markAsPaid, 
       addExpense, deleteExpense, logAction, clearHistory,
       getChartData, totals, completeOnboarding, formatNumber,
       refreshData, isRefreshing, toggleTheme

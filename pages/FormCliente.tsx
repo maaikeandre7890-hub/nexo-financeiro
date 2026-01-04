@@ -11,11 +11,11 @@ const FormCliente: React.FC = () => {
     name: '', 
     type: 'PF' as 'PF' | 'PJ', 
     document: '', 
-    installments: '12', // Valor padrão de 1 ano
+    installments: '12', 
     email: '', 
     phone: '', 
     monthlyValue: '', 
-    dueDay: '10', // Dia padrão dia 10
+    dueDay: '10', 
     status: 'Ativo' as any
   });
 
@@ -23,6 +23,14 @@ const FormCliente: React.FC = () => {
     val = val.replace(/\D/g, "");
     if (type === 'PF') return val.substring(0, 11).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     return val.substring(0, 14).replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+  };
+
+  const maskPhone = (val: string) => {
+    val = val.replace(/\D/g, "");
+    if (val.length <= 10) {
+      return val.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    }
+    return val.substring(0, 11).replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
   };
 
   const maskCurrency = (val: string) => {
@@ -33,7 +41,7 @@ const FormCliente: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.document || !formData.monthlyValue) return;
+    if (!formData.name || !formData.document || !formData.monthlyValue || !formData.phone) return;
     
     const rawValue = Number(formData.monthlyValue.replace(/\./g, "").replace(",", "."));
     
@@ -43,10 +51,9 @@ const FormCliente: React.FC = () => {
       installments: Number(formData.installments),
       dueDay: Number(formData.dueDay),
       email: formData.email || `${formData.name.toLowerCase().replace(/\s/g, '')}@exemplo.com`,
-      phone: formData.phone || '(00) 00000-0000'
+      phone: formData.phone
     });
     
-    // Redireciona para Dashboard para ver o impacto nos gráficos
     navigate('/dashboard');
   };
 
@@ -63,7 +70,7 @@ const FormCliente: React.FC = () => {
       <div className="flex items-center justify-between border-b border-white/5 pb-8">
         <div className="space-y-1">
           <h1 className={`text-3xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>Novo Cliente</h1>
-          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">Cadastro rápido de venda</p>
+          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">Cadastro de Venda e Contato</p>
         </div>
         <button 
           onClick={() => navigate('/clientes')}
@@ -88,12 +95,12 @@ const FormCliente: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className={labelClass}>CPF</label>
-                <input required className={inputClass} placeholder="Ex: 000.000.000-00" value={formData.document} onChange={e => setFormData({...formData, document: maskDocument(e.target.value, formData.type)})} />
+                <label className={labelClass}>CPF / CNPJ</label>
+                <input required className={inputClass} placeholder="Documento oficial" value={formData.document} onChange={e => setFormData({...formData, document: maskDocument(e.target.value, formData.type)})} />
               </div>
               <div>
-                <label className={labelClass}>Quantas parcelas?</label>
-                <input required type="number" min="1" className={inputClass} placeholder="Ex: 12 (ou 60)" value={formData.installments} onChange={e => setFormData({...formData, installments: e.target.value})} />
+                <label className={labelClass}>WhatsApp / Celular</label>
+                <input required className={inputClass} placeholder="(00) 00000-0000" value={formData.phone} onChange={e => setFormData({...formData, phone: maskPhone(e.target.value)})} />
               </div>
             </div>
           </div>
@@ -109,16 +116,19 @@ const FormCliente: React.FC = () => {
               </div>
             </div>
             <div>
-              <label className={labelClass}>Dia de cobrança</label>
-              <select className={`${inputClass} appearance-none cursor-pointer pr-10`} value={formData.dueDay} onChange={e => setFormData({...formData, dueDay: e.target.value})}>
-                {[...Array(31)].map((_, i) => <option key={i+1} value={i+1} className="bg-slate-950 text-white font-bold italic">Dia {i+1}</option>)}
-              </select>
+              <label className={labelClass}>Dia de cobrança e Parcelas</label>
+              <div className="flex gap-4">
+                <select className={`${inputClass} appearance-none cursor-pointer flex-1`} value={formData.dueDay} onChange={e => setFormData({...formData, dueDay: e.target.value})}>
+                  {[...Array(31)].map((_, i) => <option key={i+1} value={i+1} className="bg-slate-950 text-white font-bold italic">Dia {i+1}</option>)}
+                </select>
+                <input required type="number" min="1" className={`${inputClass} w-24 text-center`} placeholder="Parcelas" value={formData.installments} onChange={e => setFormData({...formData, installments: e.target.value})} />
+              </div>
             </div>
           </div>
         </div>
 
         <button type="submit" className="w-full bg-emerald-500 text-black font-black py-6 rounded-2xl transition-all shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)] hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] mt-6 border border-white/10">
-          Cadastrar cliente
+          CONSOLIDAR CADASTRO
         </button>
       </form>
     </div>
