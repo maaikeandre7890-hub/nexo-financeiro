@@ -64,7 +64,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   });
 
-  // Efeito de Persistência e Tema
   useEffect(() => {
     localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
     document.documentElement.className = state.theme === 'light' ? 'light-theme' : '';
@@ -91,9 +90,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshData = async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
-    // Simula uma re-validação de integridade dos dados
     await new Promise(resolve => setTimeout(resolve, 800));
-    logAction('Sincronização', 'Base de dados atualizada e validada.', 'info');
+    logAction('Sincronização', 'Base de dados mensal validada.', 'info');
     setIsRefreshing(false);
   };
 
@@ -131,7 +129,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         amount: newClient.monthlyValue,
         dueDate: dueDate.toISOString().split('T')[0],
         status: 'Pendente',
-        category: 'Mensalidade'
+        category: 'Mensalidade',
+        // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
+        paymentMethod: 'PIX' // Default
       });
     }
 
@@ -168,7 +168,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           amount: client.monthlyValue,
           dueDate: dueDate.toISOString().split('T')[0],
           status: 'Pendente',
-          category: 'Mensalidade'
+          category: 'Mensalidade',
+          // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
+          paymentMethod: 'PIX'
         });
       }
     });
@@ -178,8 +180,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       clients: [...newClients, ...prev.clients],
       receivables: [...newReceivables, ...prev.receivables]
     }));
-
-    logAction('Importação', `${clientsData.length} novos contratos processados em lote.`, 'success');
   };
 
   const updateClient = (id: string, data: Partial<Client>) => {
@@ -188,7 +188,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const updatedRecs = prev.receivables.map(r => r.clientId === id ? { ...r, clientName: data.name || r.clientName } : r);
       return { ...prev, clients: updatedClients, receivables: updatedRecs };
     });
-    logAction('Alteração', `Cadastro do cliente ${id} modificado.`, 'info');
   };
 
   const renegotiateClient = (id: string, newValue: number, newInstallments: number) => {
@@ -215,26 +214,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           amount: newValue,
           dueDate: dueDate.toISOString().split('T')[0],
           status: 'Pendente',
-          category: 'Renegociação'
+          category: 'Renegociação',
+          // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
+          paymentMethod: 'PIX'
         });
       }
 
       return { ...prev, clients: updatedClients, receivables: [...preservedRecs, ...newRecs] };
     });
-    logAction('Renegociação', `Acordo firmado para ID ${id}: R$ ${formatNumber(newValue)} p/ parcela.`, 'warning');
   };
 
   const deleteClient = (id: string) => {
-    const client = state.clients.find(c => c.id === id);
     setState(prev => ({ 
       ...prev, 
       clients: prev.clients.filter(c => c.id !== id),
       receivables: prev.receivables.filter(r => r.clientId !== id)
     }));
-    logAction('Exclusão', `Cliente ${client?.name} e seus títulos removidos do sistema.`, 'warning');
   };
 
-  // Implementação das funções de recebíveis ausentes para corrigir o erro de escopo
   const addReceivable = (receivableData: Omit<Receivable, 'id'>) => {
     const newId = 'REC-' + Math.random().toString(36).substr(2, 6).toUpperCase();
     const newRec: Receivable = { ...receivableData, id: newId };
@@ -255,9 +252,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       receivables: prev.receivables.filter(r => r.id !== id)
     }));
-    logAction('Exclusão Recebível', `Título ID ${id} removido.`, 'warning');
   };
 
+  // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
   const markAsPaid = (id: string, method: Receivable['paymentMethod'] = 'PIX') => {
     const rec = state.receivables.find(r => r.id === id);
     setState(prev => ({
@@ -275,18 +272,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addExpense = (expData: Omit<Expense, 'id'>) => {
     const newExp: Expense = { ...expData, id: 'EXP-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
     setState(prev => ({ ...prev, expenses: [newExp, ...prev.expenses] }));
-    logAction('Despesa', `${expData.description} (R$ ${formatNumber(expData.amount)}) registrada.`, 'warning');
   };
 
   const deleteExpense = (id: string) => {
     setState(prev => ({ ...prev, expenses: prev.expenses.filter(e => e.id !== id) }));
-    logAction('Remoção de Conta', `Despesa removida do fluxo.`, 'info');
   };
 
   const clearHistory = (pin: string) => {
     if (pin === '123456') {
       setState(prev => ({ ...prev, logs: [] }));
-      logAction('Limpeza Histórico', 'Audit log resetado pelo administrador.', 'info');
       return true;
     }
     return false;
@@ -297,29 +291,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const today = now.toISOString().split('T')[0];
     const currentMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     
-    // Total Pago (Realizado)
-    const paid = state.receivables.filter(r => r.status === 'Pago').reduce((a, b) => a + b.amount, 0);
+    // FILTRO MENSAL OBRIGATÓRIO PARA O DASHBOARD
+    const paid = state.receivables.filter(r => 
+      r.status === 'Pago' && 
+      (r.paidAt?.startsWith(currentMonthPrefix) || r.dueDate.startsWith(currentMonthPrefix))
+    ).reduce((a, b) => a + b.amount, 0);
     
-    // A Receber no Mês (Previsto)
     const toReceive = state.receivables.filter(r => 
       r.status === 'Pendente' && 
-      r.dueDate.startsWith(currentMonthPrefix) &&
-      r.dueDate >= today &&
-      r.category !== 'Renegociação'
+      r.dueDate.startsWith(currentMonthPrefix)
     ).reduce((a, b) => a + b.amount, 0);
     
-    // Total em Atraso (Exposição Global)
     const overdue = state.receivables.filter(r => 
       (r.status === 'Atrasado' || (r.status === 'Pendente' && r.dueDate < today)) &&
-      r.category !== 'Renegociação'
+      r.dueDate.startsWith(currentMonthPrefix)
     ).reduce((a, b) => a + b.amount, 0);
     
-    const totalExpenses = state.expenses.reduce((a, b) => a + b.amount, 0);
+    const totalExpenses = state.expenses.filter(e => 
+      e.date.startsWith(currentMonthPrefix)
+    ).reduce((a, b) => a + b.amount, 0);
+
     const netBalance = paid - totalExpenses;
     
-    const totalTitles = state.receivables.length;
-    const paidTitles = state.receivables.filter(r => r.status === 'Pago').length;
-    const cashHealth = totalTitles > 0 ? Math.floor((paidTitles / totalTitles) * 100) : 100;
+    const monthlyTitles = state.receivables.filter(r => r.dueDate.startsWith(currentMonthPrefix));
+    const paidMonthlyTitles = monthlyTitles.filter(r => r.status === 'Pago').length;
+    const cashHealth = monthlyTitles.length > 0 ? Math.floor((paidMonthlyTitles / monthlyTitles.length) * 100) : 100;
 
     const monthlyRecurring = state.clients.reduce((a, b) => a + b.monthlyValue, 0);
 
@@ -337,7 +333,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const monthYearPrefix = `${targetDate.getFullYear()}-${String(mIdx + 1).padStart(2, '0')}`;
       
       const monthlyTotal = state.receivables
-        .filter(r => r.dueDate.startsWith(monthYearPrefix) && r.category !== 'Renegociação')
+        .filter(r => r.dueDate.startsWith(monthYearPrefix))
         .reduce((sum, r) => sum + r.amount, 0);
         
       data.push({ name: monthsNames[mIdx], value: monthlyTotal });

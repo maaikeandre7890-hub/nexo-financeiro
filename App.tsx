@@ -25,7 +25,6 @@ import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
 import Renegociacoes from './pages/Renegociacoes';
 import NotFound from './pages/NotFound';
-import BrandLogo from './components/BrandLogo';
 import { useApp } from './contexts/AppContext';
 
 const App: React.FC = () => {
@@ -62,19 +61,20 @@ const App: React.FC = () => {
 
   return (
     <div 
-      className={`flex h-screen w-full transition-all duration-500 font-['Inter'] overflow-hidden ${
+      className={`flex h-screen w-full transition-colors duration-300 overflow-hidden ${
         state.theme === 'light' 
-          ? 'light-theme bg-[#f1f5f9] text-[#0f172a]' 
-          : 'bg-[#10161a] text-slate-300'
+          ? 'light-theme bg-[var(--bg-main)] text-[var(--text-main)]' 
+          : 'bg-[#0B0D10] text-[var(--text-muted)]'
       }`}
     >
-      {/* Sidebar Mobile Overlay */}
+      {/* Overlay Mobile */}
       <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] transition-opacity duration-300 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      <div className={`fixed inset-y-0 left-0 z-[110] w-[280px] transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 md:w-72 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      {/* Sidebar Wrapper */}
+      <div className={`fixed inset-y-0 left-0 z-[110] transform transition-all duration-500 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-[280px]' : '-translate-x-full md:w-[72px]'}`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
       
@@ -88,9 +88,9 @@ const App: React.FC = () => {
         
         <main 
           ref={mainRef}
-          className="flex-1 overflow-y-auto p-6 md:p-10 lg:px-14 lg:py-12 relative custom-scrollbar pb-24"
+          className="flex-1 overflow-y-auto p-6 md:p-10 lg:p-12 relative custom-scrollbar pb-24"
         >
-          <div className="max-w-[1500px] mx-auto page-enter">
+          <div className="max-w-[1440px] mx-auto page-enter">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -120,19 +120,16 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      {/* Floating Action Button (FAB) - Glass Effect */}
-      <div className="fixed bottom-10 right-10 z-50">
+      <div className="fixed bottom-8 right-8 z-50">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className={`w-14 h-14 rounded-full shadow-2xl transition-all flex items-center justify-center group border relative overflow-hidden ${
+          className={`w-12 h-12 rounded-full shadow-2xl transition-all flex items-center justify-center border ${
             state.theme === 'light' 
-              ? 'bg-emerald-500/90 border-emerald-600/20 text-white' 
-              : 'bg-emerald-500/10 backdrop-blur-xl border-emerald-500/30 text-emerald-400'
+              ? 'bg-emerald-500 border-emerald-600 text-white' 
+              : 'bg-emerald-500/10 backdrop-blur-md border-emerald-500/20 text-emerald-400'
           } hover:scale-110 active:scale-95`}
-          aria-label="Oracle AI"
         >
-          <div className="absolute inset-0 bg-emerald-500/10 animate-pulse"></div>
-          <i className="fa-solid fa-sparkles text-xl relative z-10"></i>
+          <i className="fa-solid fa-sparkles text-lg"></i>
         </button>
       </div>
     </div>

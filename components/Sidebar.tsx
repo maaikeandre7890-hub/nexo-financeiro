@@ -12,9 +12,9 @@ interface Props {
 const Sidebar: React.FC<Props> = ({ onClose }) => {
   const { state } = useApp();
   const sections = [
-    { title: 'Operacional', items: NAVIGATION.slice(0, 4) },
-    { title: 'Inteligência', items: NAVIGATION.slice(4, 9) },
-    { title: 'Sistema', items: NAVIGATION.slice(9) },
+    { title: 'Operacional', items: NAVIGATION.slice(0, 5) },
+    { title: 'Análise', items: NAVIGATION.slice(5, 9) },
+    { title: 'Gestão', items: NAVIGATION.slice(9) },
   ];
 
   const getInitials = (name: string) => {
@@ -22,38 +22,53 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-all duration-300 border-r border-white/[0.04] overflow-hidden ${state.theme === 'light' ? 'bg-white' : 'bg-[#0f1518]'}`}>
-      <div className="pt-10 pb-10 px-8 flex items-center justify-between">
-        <div className="flex items-center gap-3 group cursor-pointer">
-           <BrandLogo className="w-8 h-8" />
-           <span className={`text-lg font-black tracking-tighter ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>NEXO<span className="text-emerald-500">.</span></span>
+    <aside className="fixed md:absolute inset-y-0 left-0 z-20 flex flex-col h-full bg-[var(--bg-sidebar)] border-r border-[var(--border-subtle)] transition-all duration-300 ease-in-out overflow-hidden w-[280px] md:w-[72px] md:hover:w-[300px] group shadow-2xl md:shadow-none">
+      
+      {/* Brand Header */}
+      <div className="h-20 flex items-center px-6 overflow-hidden shrink-0">
+        <div className="flex items-center gap-4 min-w-max">
+           <BrandLogo className="w-8 h-8 shrink-0" />
+           <span className="text-base font-bold tracking-tight text-[var(--text-main)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+             NEXO<span className="text-emerald-500">.</span>
+           </span>
         </div>
       </div>
 
-      <nav className="flex-1 px-4 space-y-8 overflow-y-auto custom-scrollbar scroll-smooth">
+      {/* Navigation - Bloco único e contínuo */}
+      <nav className="flex-1 py-2 overflow-y-auto overflow-x-hidden custom-scrollbar">
         {sections.map((section, idx) => (
-          <div key={idx} className="space-y-3">
-            <h3 className={`px-4 text-[10px] font-bold uppercase tracking-[0.15em] opacity-30 ${state.theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
+          <div key={idx} className="mb-0">
+            <h3 className="px-6 text-[8px] font-black uppercase tracking-[0.25em] text-[var(--text-deep)] opacity-0 group-hover:opacity-40 transition-opacity duration-300 whitespace-nowrap mt-4 mb-1">
               {section.title}
             </h3>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {section.items.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 group relative ${
+                    `flex items-center h-11 px-6 transition-all duration-200 relative group/item ${
                       isActive
-                        ? state.theme === 'light' ? 'bg-emerald-500/10 text-emerald-600 font-semibold' : 'bg-emerald-500/10 text-emerald-400 font-semibold'
-                        : state.theme === 'light' ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-500 hover:bg-white/[0.03] hover:text-slate-200'
+                        ? 'bg-emerald-500/5 text-emerald-400'
+                        : 'text-[var(--text-muted)] hover:bg-white/[0.03] hover:text-[var(--text-main)]'
                     }`
                   }
                 >
                   {({ isActive }) => (
                     <>
-                      <i className={`fa-solid ${item.icon} text-[14px] ${isActive ? '' : 'opacity-30'}`}></i>
-                      <span className="text-[13px] tracking-tight">
+                      {/* Active Line Indicator */}
+                      {isActive && (
+                        <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-emerald-500 rounded-r-full" />
+                      )}
+                      
+                      <div className={`flex items-center justify-center w-[24px] shrink-0 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
+                        <i className={`fa-solid ${item.icon} text-[18px] opacity-90`}></i>
+                      </div>
+
+                      <span className={`ml-5 text-[14px] font-medium tracking-tight whitespace-nowrap transition-all duration-300 ${
+                        isActive ? 'text-emerald-400 font-bold' : 'text-[var(--text-muted)]'
+                      } opacity-0 group-hover:opacity-100 flex items-center`}>
                         {item.label}
                       </span>
                     </>
@@ -65,14 +80,19 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
         ))}
       </nav>
 
-      <div className={`p-6 border-t border-white/[0.04] ${state.theme === 'light' ? 'bg-slate-50' : 'bg-black/20'}`}>
-        <div className="flex items-center gap-3 p-1">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shadow-lg shadow-emerald-500/10">
+      {/* User Profile Section - Sem divisórias */}
+      <div className="p-4 shrink-0 overflow-hidden mb-2">
+        <div className="flex items-center gap-4 px-2 h-11">
+          <div className="w-[28px] h-[28px] rounded bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shrink-0 shadow-lg shadow-emerald-500/10">
             {getInitials(state.userName || 'AD')}
           </div>
-          <div className="flex flex-col min-w-0">
-            <p className={`text-xs font-bold truncate ${state.theme === 'light' ? 'text-slate-800' : 'text-white'}`}>{state.userName || 'User'}</p>
-            <p className="text-[10px] font-medium text-slate-500 truncate">{state.companyName}</p>
+          <div className="flex flex-col min-w-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <p className="text-[11px] font-bold truncate text-[var(--text-main)] leading-none">
+              {state.userName || 'User'}
+            </p>
+            <p className="text-[9px] font-bold text-[var(--text-deep)] truncate uppercase tracking-tighter leading-none mt-1">
+              {state.companyName}
+            </p>
           </div>
         </div>
       </div>

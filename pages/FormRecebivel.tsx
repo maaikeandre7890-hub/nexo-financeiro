@@ -6,7 +6,14 @@ import { useApp } from '../contexts/AppContext';
 const FormRecebivel: React.FC = () => {
   const { state, addReceivable, formatNumber } = useApp();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ clientId: '', amount: '', dueDate: '', category: 'Venda' });
+  const [formData, setFormData] = useState({ 
+    clientId: '', 
+    amount: '', 
+    dueDate: '', 
+    category: 'Venda',
+    // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
+    paymentMethod: 'PIX' 
+  });
 
   const maskCurrency = (val: string) => {
     val = val.replace(/\D/g, "");
@@ -19,8 +26,19 @@ const FormRecebivel: React.FC = () => {
     const client = state.clients.find(c => c.id === formData.clientId);
     if (!client || !formData.amount || !formData.dueDate) return;
     const rawAmount = Number(formData.amount.replace(/\./g, "").replace(",", "."));
-    addReceivable({ clientId: client.id, clientName: client.name, amount: rawAmount, dueDate: formData.dueDate, status: 'Pendente', category: formData.category });
-    navigate('/recebiveis');
+    
+    addReceivable({ 
+      clientId: client.id, 
+      clientName: client.name, 
+      amount: rawAmount, 
+      dueDate: formData.dueDate, 
+      status: 'Pendente', 
+      category: formData.category,
+      paymentMethod: formData.paymentMethod as any
+    });
+    
+    // Redirecionamento obrigatório para Dashboard
+    navigate('/dashboard');
   };
 
   const labelClass = `text-[10px] font-black uppercase tracking-widest mb-2.5 block ml-1 ${
@@ -40,7 +58,7 @@ const FormRecebivel: React.FC = () => {
         </div>
         <button 
           onClick={() => navigate('/recebiveis')}
-          className="px-6 py-3 bg-transparent border border-white/10 hover:border-white/20 hover:bg-white/5 rounded-xl text-[10px] font-black text-slate-500 hover:text-slate-300 uppercase tracking-widest transition-all"
+          className="px-6 py-3 bg-transparent border border-white/10 rounded-xl text-[10px] font-black text-slate-500 uppercase tracking-widest transition-all"
         >
           <i className="fa-solid fa-arrow-left mr-2"></i> Voltar
         </button>
@@ -51,7 +69,7 @@ const FormRecebivel: React.FC = () => {
           <div>
             <label className={labelClass}>Vincular ao Cliente</label>
             <select required className={inputClass} value={formData.clientId} onChange={e => setFormData({...formData, clientId: e.target.value})}>
-              <option value="" className="bg-slate-950">Selecione na base de dados...</option>
+              <option value="" className="bg-slate-950">Selecione o cliente...</option>
               {state.clients.map(c => <option key={c.id} value={c.id} className="bg-slate-950 font-bold">{c.name}</option>)}
             </select>
           </div>
@@ -65,14 +83,25 @@ const FormRecebivel: React.FC = () => {
               </div>
             </div>
             <div>
-              <label className={labelClass}>Data de Emissão</label>
+              <label className={labelClass}>Data de Vencimento</label>
               <input required type="date" className={inputClass} value={formData.dueDate} onChange={e => setFormData({...formData, dueDate: e.target.value})} />
             </div>
           </div>
+
+          <div>
+            <label className={labelClass}>Forma de Pagamento</label>
+            <select required className={inputClass} value={formData.paymentMethod} onChange={e => setFormData({...formData, paymentMethod: e.target.value})}>
+              {/* Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts */}
+              <option value="PIX" className="bg-slate-950">Pix</option>
+              <option value="Boleto" className="bg-slate-950">Boleto</option>
+              <option value="Dinheiro" className="bg-slate-950">Dinheiro</option>
+              <option value="Transferência" className="bg-slate-950">Transferência</option>
+            </select>
+          </div>
         </div>
 
-        <button type="submit" className="w-full bg-white text-black font-black py-6 rounded-2xl transition-all shadow-2xl hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] mt-10 border border-white/10">
-          CONSOLIDAR TÍTULO FINANCEIRO
+        <button type="submit" className="w-full bg-emerald-500 text-black font-black py-6 rounded-2xl transition-all shadow-2xl hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] mt-10 border border-white/10">
+          CONSOLIDAR TÍTULO E IR PARA DASHBOARD
         </button>
       </form>
     </div>

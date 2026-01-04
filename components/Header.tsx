@@ -12,61 +12,48 @@ interface Props {
 const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, onToggleSidebar }) => {
   const { state, refreshData, isRefreshing, toggleTheme } = useApp();
 
-  const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  };
-
   return (
-    <header className="h-20 px-8 md:px-12 flex items-center justify-between sticky top-0 z-[90] transition-all duration-300 bg-[var(--bg-header)] backdrop-blur-md border-b border-white/[0.04]">
+    <header className="h-16 px-8 flex items-center justify-between sticky top-0 z-[90] bg-[var(--bg-header)] border-b border-[var(--border-subtle)]">
       <div className="flex items-center gap-4">
         <button 
           onClick={onToggleSidebar} 
-          className={`w-10 h-10 flex items-center justify-center rounded-xl border transition-all md:hidden ${
-            state.theme === 'light' ? 'bg-white border-slate-200 text-slate-400' : 'bg-white/[0.03] border-white/5 text-slate-500'
-          }`}
+          className="w-9 h-9 flex items-center justify-center rounded border border-[var(--border-subtle)] text-[var(--text-muted)] md:hidden"
         >
           <i className="fa-solid fa-bars text-sm"></i>
         </button>
         
         <div 
           onClick={onOpenSearch} 
-          className={`hidden md:flex items-center gap-3 px-5 py-2.5 rounded-xl border cursor-pointer group transition-all w-64 ${
-            state.theme === 'light' ? 'bg-slate-50 border-slate-200' : 'bg-white/[0.02] border-white/5 hover:border-white/10'
-          }`}
+          className="hidden md:flex items-center gap-3 px-4 py-2 rounded border border-[var(--border-subtle)] cursor-pointer hover:border-emerald-500/30 transition-all w-64"
         >
-          <i className="fa-solid fa-magnifying-glass text-[11px] text-slate-500"></i>
-          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">Atalho Buscar...</span>
+          <i className="fa-solid fa-magnifying-glass text-[10px] text-[var(--text-deep)]"></i>
+          <span className="text-[10px] font-bold text-[var(--text-deep)] uppercase tracking-widest">Atalho Buscar</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 md:gap-4">
+      <div className="flex items-center gap-3">
         <button 
           onClick={toggleTheme} 
-          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/5 text-slate-500 hover:text-emerald-500 transition-all"
-          title="Alternar Tema"
+          className="w-8 h-8 flex items-center justify-center rounded border border-[var(--border-subtle)] text-[var(--text-deep)] hover:text-emerald-500 transition-all"
         >
-          <i className={`fa-solid ${state.theme === 'dark' ? 'fa-sun' : 'fa-moon'} text-sm`}></i>
+          <i className={`fa-solid ${state.theme === 'dark' ? 'fa-sun' : 'fa-moon'} text-[11px]`}></i>
         </button>
 
         <button 
           onClick={refreshData} 
           disabled={isRefreshing}
-          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/5 text-slate-500 hover:text-emerald-500 transition-all disabled:opacity-50"
+          className="w-8 h-8 flex items-center justify-center rounded border border-[var(--border-subtle)] text-[var(--text-deep)] hover:text-emerald-500 transition-all"
         >
-          <i className={`fa-solid fa-rotate text-xs ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`}></i>
+          <i className={`fa-solid fa-rotate text-[10px] ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`}></i>
         </button>
 
         <button 
           onClick={onOpenNotifications} 
-          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/5 text-slate-500 hover:text-white transition-all relative"
+          className="w-8 h-8 flex items-center justify-center rounded border border-[var(--border-subtle)] text-[var(--text-deep)] relative"
         >
-          <i className="fa-solid fa-bell text-sm"></i>
-          <span className="absolute top-3 right-3 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-[var(--bg-main)]"></span>
+          <i className="fa-solid fa-bell text-[11px]"></i>
+          <span className="absolute top-2 right-2 w-1 h-1 bg-emerald-500 rounded-full"></span>
         </button>
-
-        <div className="w-9 h-9 ml-2 rounded-xl bg-emerald-500 text-slate-950 flex items-center justify-center text-[10px] font-bold shadow-lg shadow-emerald-500/10">
-          {getInitials(state.userName || 'AD')}
-        </div>
       </div>
     </header>
   );
