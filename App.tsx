@@ -22,6 +22,7 @@ import Cobranca from './pages/Cobranca';
 import Sistema from './pages/Sistema';
 import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
+import Renegociacoes from './pages/Renegociacoes';
 import NotFound from './pages/NotFound';
 import BrandLogo from './components/BrandLogo';
 import { useApp } from './contexts/AppContext';
@@ -95,6 +96,7 @@ const App: React.FC = () => {
               
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/clientes/novo" element={<FormCliente />} />
+              <Route path="/renegociacoes" element={<Renegociacoes />} />
               
               <Route path="/recebiveis" element={<Recebiveis />} />
               <Route path="/recebiveis/novo" element={<FormRecebivel />} />

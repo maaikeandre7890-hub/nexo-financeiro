@@ -43,11 +43,17 @@ const Clientes: React.FC = () => {
           <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic uppercase leading-none">Meus <br/><span className="text-slate-600">Clientes.</span></h1>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <div className="relative group w-full sm:w-80">
+          <button 
+            onClick={() => navigate('/renegociacoes')}
+            className="w-full sm:w-auto px-8 py-5 bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-amber-500 hover:text-black transition-all active:scale-95 shadow-xl"
+          >
+            <i className="fa-solid fa-handshake-angle mr-2"></i> Renegociações
+          </button>
+          <div className="relative group w-full sm:w-64">
             <i className="fa-solid fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors"></i>
             <input 
               type="text" 
-              placeholder="Buscar cliente ou documento..." 
+              placeholder="Buscar..." 
               className="w-full bg-white/[0.02] border border-white/[0.05] rounded-[2rem] py-5 pl-14 pr-8 text-xs font-black text-white focus:outline-none focus:border-emerald-500/30 transition-all shadow-inner"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -132,8 +138,8 @@ const Clientes: React.FC = () => {
                     <div className="space-y-1">
                       <span className="text-xl font-black text-white mono">R$ {formatNumber(client.monthlyValue)}</span>
                       <div className="flex justify-end">
-                        <p className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${isAtrasado ? 'text-rose-500 border-rose-500/30 bg-rose-500/5' : 'text-emerald-500 border-emerald-500/30 bg-emerald-500/5'}`}>
-                          {isAtrasado ? 'EM ATRASO' : 'ATIVO'}
+                        <p className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${isAtrasado ? 'text-rose-500 border-rose-500/30 bg-rose-500/5' : client.status === 'Em negociação' ? 'text-amber-500 border-amber-500/30 bg-amber-500/5' : 'text-emerald-500 border-emerald-500/30 bg-emerald-500/5'}`}>
+                          {isAtrasado ? 'EM ATRASO' : client.status === 'Em negociação' ? 'RENEGOCIANDO' : 'ATIVO'}
                         </p>
                       </div>
                     </div>
@@ -195,7 +201,7 @@ const Clientes: React.FC = () => {
         })}
       </div>
 
-      {/* MODAIS OPERACIONAIS (MANTIDOS) */}
+      {/* MODAIS OPERACIONAIS */}
       
       {/* Modal Editar */}
       {editingClient && (

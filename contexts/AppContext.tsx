@@ -153,7 +153,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const updateClient = (id: string, data: Partial<Client>) => {
     setState(prev => {
       const updatedClients = prev.clients.map(c => c.id === id ? { ...c, ...data } : c);
-      // Se mudar o nome do cliente, atualiza nos recebíveis também
       const updatedRecs = prev.receivables.map(r => r.clientId === id ? { ...r, clientName: data.name || r.clientName } : r);
       return { ...prev, clients: updatedClients, receivables: updatedRecs };
     });
@@ -166,23 +165,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (!client) return prev;
 
       const updatedClients = prev.clients.map(c => 
-        c.id === id ? { ...c, monthlyValue: newValue, installments: newInstallments, status: 'Ativo' as const } : c
+        c.id === id ? { ...c, monthlyValue: newValue, installments: newInstallments, status: 'Em negociação' as const } : c
       );
 
       // Remove parcelas pendentes e atrasadas futuras
-      const today = new Date().toISOString().split('T')[0];
       const preservedRecs = prev.receivables.filter(r => 
         r.clientId !== id || r.status === 'Pago'
       );
 
-      // Gera novas parcelas a partir de agora
+      // Gera novas parcelas a partir de agora com categoria "Renegociação"
       const newRecs: Receivable[] = [];
       const now = new Date();
       for (let i = 0; i < newInstallments; i++) {
         const dueDate = new Date(now.getFullYear(), now.getMonth() + i, client.dueDay);
         const dateStr = dueDate.toISOString().split('T')[0];
         
-        // Só adiciona se não houver conflito de data com algo já pago (simplificado)
         newRecs.push({
           id: `REC-REN-${id}-${i+1}-${Math.random().toString(36).substr(2, 4)}`,
           clientId: id,
@@ -190,7 +187,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           amount: newValue,
           dueDate: dateStr,
           status: 'Pendente',
-          category: 'Mensalidade Renegociada'
+          category: 'Renegociação'
         });
       }
 
@@ -262,17 +259,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const today = now.toISOString().split('T')[0];
     const currentMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     
+    // Dinheiro que entrou (QUALQUER título pago)
     const paid = state.receivables.filter(r => r.status === 'Pago').reduce((a, b) => a + b.amount, 0);
     
+    // Dinheiro previsto (EXCLUI renegociações pendentes por regra de negócio)
     const toReceive = state.receivables.filter(r => 
       r.status === 'Pendente' && 
       r.dueDate.startsWith(currentMonthPrefix) &&
-      r.dueDate >= today
+      r.dueDate >= today &&
+      r.category !== 'Renegociação'
     ).reduce((a, b) => a + b.amount, 0);
     
     const overdue = state.receivables.filter(r => 
-      r.status === 'Atrasado' || 
-      (r.status === 'Pendente' && r.dueDate < today)
+      (r.status === 'Atrasado' || (r.status === 'Pendente' && r.dueDate < today)) &&
+      r.category !== 'Renegociação'
     ).reduce((a, b) => a + b.amount, 0);
     
     const totalExpenses = state.expenses.reduce((a, b) => a + b.amount, 0);
@@ -298,7 +298,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const monthYearPrefix = `${targetDate.getFullYear()}-${String(mIdx + 1).padStart(2, '0')}`;
       
       const monthlyTotal = state.receivables
-        .filter(r => r.dueDate.startsWith(monthYearPrefix))
+        .filter(r => r.dueDate.startsWith(monthYearPrefix) && r.category !== 'Renegociação')
         .reduce((sum, r) => sum + r.amount, 0);
         
       data.push({ 

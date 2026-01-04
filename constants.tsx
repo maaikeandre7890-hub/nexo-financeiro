@@ -18,6 +18,7 @@ export const COLORS = {
 export const NAVIGATION: NavItem[] = [
   { label: 'Painel Geral', path: '/dashboard', icon: 'fa-chart-pie' },
   { label: 'Meus Clientes', path: '/clientes', icon: 'fa-users' },
+  { label: 'Renegociações', path: '/renegociacoes', icon: 'fa-handshake-angle' },
   { label: 'Contas a Receber', path: '/recebiveis', icon: 'fa-arrow-up-to-line' },
   { label: 'Contas em Atraso', path: '/parcelas-atraso', icon: 'fa-triangle-exclamation' },
   { label: 'Histórico de Ações', path: '/historico', icon: 'fa-clock-rotate-left' },
