@@ -10,6 +10,7 @@ export interface Client {
   name: string;
   type: 'PF' | 'PJ';
   document: string; // CPF ou CNPJ
+  installments: number; // Quantidade de parcelas
   responsible?: string;
   razaoSocial?: string;
   email: string;

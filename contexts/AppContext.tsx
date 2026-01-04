@@ -55,7 +55,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         id: 'L-INIT', 
         timestamp: new Date().toISOString(), 
         action: 'Sistema Pronto', 
-        details: 'NEXO aguardando configuração inicial de identidade.', 
+        details: 'NEXO aguardando configuração inicial.', 
         type: 'info' 
       }]
     };
@@ -63,7 +63,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
-    // Aplica a classe de tema no elemento HTML para estilos globais
     if (state.theme === 'light') {
       document.documentElement.classList.add('light-theme');
     } else {
@@ -73,7 +72,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const formatNumber = (num: number, precision: number = 2) => {
     return new Intl.NumberFormat('pt-BR', {
-      minimumFractionDigits: 0,
+      minimumFractionDigits: 2,
       maximumFractionDigits: precision,
     }).format(num);
   };
@@ -92,30 +91,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshData = async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
-    
-    // Simulação de latência de rede/consulta ao backend
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    
-    // Força a leitura direta do localStorage (Ignorando estado em memória temporário)
-    const freshData = localStorage.getItem('nexo_data_v5_prod');
-    if (freshData) {
-      const parsed = JSON.parse(freshData);
-      setState(prev => ({ 
-        ...parsed, 
-        theme: prev.theme, // Preserva o tema atual durante a sincronização
-        logs: [
-          { 
-            id: 'REF-' + Date.now(), 
-            timestamp: new Date().toISOString(), 
-            action: 'Sincronização Ativa', 
-            details: 'Revalidação de dados concluída. Cache ignorado.', 
-            type: 'info' 
-          }, 
-          ...prev.logs
-        ].slice(0, 200)
-      }));
-    }
-    
+    await new Promise(resolve => setTimeout(resolve, 1000));
     setIsRefreshing(false);
   };
 
@@ -131,22 +107,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       logs: [{
         id: 'L-ONB',
         timestamp: new Date().toISOString(),
-        action: 'Onboarding Concluído',
-        details: `Ambiente configurado para ${userData.companyName}. Responsável: ${userData.userName}.`,
+        action: 'Início do Sistema',
+        details: `Configurado para ${userData.companyName}.`,
         type: 'success'
       }, ...prev.logs]
     }));
   };
 
   const addClient = (clientData: Omit<Client, 'id' | 'createdAt' | 'score'>) => {
+    const newId = 'CL-' + Math.random().toString(36).substr(2, 6).toUpperCase();
     const newClient: Client = {
       ...clientData,
-      id: 'CL-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+      id: newId,
       score: 100,
       createdAt: new Date().toISOString(),
     };
-    setState(prev => ({ ...prev, clients: [newClient, ...prev.clients] }));
-    logAction('Novo Cliente', `Entidade ${newClient.name} (${newClient.document}) integrada à base.`, 'success');
+
+    const newReceivables: Receivable[] = [];
+    const now = new Date();
+    
+    for (let i = 0; i < newClient.installments; i++) {
+      const dueDate = new Date(now.getFullYear(), now.getMonth() + i, newClient.dueDay);
+      newReceivables.push({
+        id: `REC-${newId}-${i+1}`,
+        clientId: newId,
+        clientName: newClient.name,
+        amount: newClient.monthlyValue,
+        dueDate: dueDate.toISOString().split('T')[0],
+        status: 'Pendente',
+        category: 'Mensalidade'
+      });
+    }
+
+    setState(prev => ({ 
+      ...prev, 
+      clients: [newClient, ...prev.clients],
+      receivables: [...newReceivables, ...prev.receivables]
+    }));
+
+    logAction('Cliente Cadastrado', `${newClient.name} - Plano de ${newClient.installments} meses.`, 'success');
   };
 
   const updateClient = (id: string, data: Partial<Client>) => {
@@ -154,88 +153,100 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       clients: prev.clients.map(c => c.id === id ? { ...c, ...data } : c)
     }));
-    logAction('Edição de Cliente', `Dados da entidade ID:${id} atualizados.`, 'info');
   };
 
   const deleteClient = (id: string) => {
-    const client = state.clients.find(c => c.id === id);
     setState(prev => ({ 
       ...prev, 
       clients: prev.clients.filter(c => c.id !== id),
       receivables: prev.receivables.filter(r => r.clientId !== id)
     }));
-    if (client) logAction('Exclusão Crítica', `Cliente ${client.name} e faturas relacionadas removidos.`, 'warning');
   };
 
   const addReceivable = (recData: Omit<Receivable, 'id'>) => {
     const newRec: Receivable = { ...recData, id: 'REC-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
     setState(prev => ({ ...prev, receivables: [newRec, ...prev.receivables] }));
-    logAction('Receita Registrada', `Lançamento de R$ ${formatNumber(newRec.amount)} para ${newRec.clientName}.`, 'success');
   };
 
   const deleteReceivable = (id: string) => {
-    const rec = state.receivables.find(r => r.id === id);
     setState(prev => ({ ...prev, receivables: prev.receivables.filter(r => r.id !== id) }));
-    if (rec) logAction('Exclusão de Receita', `Título R$ ${formatNumber(rec.amount)} removido do fluxo.`, 'warning');
   };
 
   const markAsPaid = (id: string) => {
-    const rec = state.receivables.find(r => r.id === id);
-    if (!rec) return;
     setState(prev => ({
       ...prev,
       receivables: prev.receivables.map(r => r.id === id ? { ...r, status: 'Pago' } : r)
     }));
-    logAction('Baixa de Título', `Recebimento de R$ ${formatNumber(rec.amount)} confirmado e liquidado.`, 'success');
+    logAction('Recebimento', `Valor recebido com sucesso.`, 'success');
   };
 
   const addExpense = (expData: Omit<Expense, 'id'>) => {
     const newExp: Expense = { ...expData, id: 'EXP-' + Math.random().toString(36).substr(2, 6).toUpperCase() };
     setState(prev => ({ ...prev, expenses: [newExp, ...prev.expenses] }));
-    logAction('Nova Despesa', `Saída de R$ ${formatNumber(newExp.amount)} registrada: ${newExp.description}.`, 'warning');
   };
 
   const deleteExpense = (id: string) => {
-    const exp = state.expenses.find(e => e.id === id);
     setState(prev => ({ ...prev, expenses: prev.expenses.filter(e => e.id !== id) }));
-    if (exp) logAction('Exclusão de Despesa', `Gasto de R$ ${formatNumber(exp.amount)} removido.`, 'info');
   };
 
   const clearHistory = (pin: string) => {
     if (pin === '123456') {
-      setState(prev => ({ ...prev, logs: [{ id: 'L-ROOT', timestamp: new Date().toISOString(), action: 'Limpeza de Auditoria', details: 'Histórico resetado via PIN de administrador.', type: 'warning' }] }));
+      setState(prev => ({ ...prev, logs: [] }));
       return true;
     }
     return false;
   };
 
   const totals = useMemo(() => {
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const currentMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    
+    // 1. Dinheiro que já entrou (Pago)
     const paid = state.receivables.filter(r => r.status === 'Pago').reduce((a, b) => a + b.amount, 0);
-    const toReceive = state.receivables.filter(r => r.status === 'Pendente').reduce((a, b) => a + b.amount, 0);
-    const overdue = state.receivables.filter(r => r.status === 'Atrasado').reduce((a, b) => a + b.amount, 0);
+    
+    // 2. Dinheiro PREVISTO PARA O MÊS ATUAL (Apenas parcelas deste mês que ainda não foram pagas e não estão vencidas)
+    const toReceive = state.receivables.filter(r => 
+      r.status === 'Pendente' && 
+      r.dueDate.startsWith(currentMonthPrefix) &&
+      r.dueDate >= today
+    ).reduce((a, b) => a + b.amount, 0);
+    
+    // 3. Dinheiro EM ATRASO (Qualquer parcela pendente com data menor que hoje)
+    const overdue = state.receivables.filter(r => 
+      r.status === 'Atrasado' || 
+      (r.status === 'Pendente' && r.dueDate < today)
+    ).reduce((a, b) => a + b.amount, 0);
+    
     const totalExpenses = state.expenses.reduce((a, b) => a + b.amount, 0);
     const netBalance = paid - totalExpenses;
     
     const totalTitles = state.receivables.length;
     const paidTitles = state.receivables.filter(r => r.status === 'Pago').length;
-    const cashHealth = totalTitles > 0 ? Math.floor((paidTitles / totalTitles) * 100) : 0;
+    const cashHealth = totalTitles > 0 ? Math.floor((paidTitles / totalTitles) * 100) : 100;
 
-    const monthlyRecurring = state.clients.filter(c => c.status === 'Ativo').reduce((a, b) => a + b.monthlyValue, 0);
+    const monthlyRecurring = state.clients.reduce((a, b) => a + b.monthlyValue, 0);
 
     return { paid, toReceive, overdue, totalExpenses, netBalance, cashHealth, monthlyRecurring };
   }, [state.receivables, state.expenses, state.clients]);
 
   const getChartData = () => {
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const currentMonth = new Date().getMonth();
+    const monthsNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const now = new Date();
     const data = [];
     
-    for(let i = 5; i >= 0; i--) {
-      const mIdx = (currentMonth - i + 12) % 12;
-      const baseValue = totals.paid > 0 ? totals.paid / 4 : 0; 
+    for(let i = 0; i < 6; i++) {
+      const targetDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
+      const mIdx = targetDate.getMonth();
+      const monthYearPrefix = `${targetDate.getFullYear()}-${String(mIdx + 1).padStart(2, '0')}`;
+      
+      const monthlyTotal = state.receivables
+        .filter(r => r.dueDate.startsWith(monthYearPrefix))
+        .reduce((sum, r) => sum + r.amount, 0);
+        
       data.push({ 
-        name: months[mIdx], 
-        value: baseValue > 0 ? Math.floor(baseValue + (Math.random() * baseValue * 0.1)) : 0
+        name: monthsNames[mIdx], 
+        value: monthlyTotal
       });
     }
     return data;
