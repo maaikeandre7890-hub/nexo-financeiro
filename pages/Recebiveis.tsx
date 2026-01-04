@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
-import { AddReceivableModal } from '../components/Modals';
 
 const Recebiveis: React.FC = () => {
   const { state, markAsPaid, deleteReceivable, formatNumber } = useApp();
   const [filter, setFilter] = useState<'Todos' | 'Pendente' | 'Pago' | 'Atrasado'>('Todos');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const filteredItems = state.receivables.filter(r => 
     filter === 'Todos' ? true : r.status === filter
@@ -16,15 +16,12 @@ const Recebiveis: React.FC = () => {
     const headers = ['Cliente', 'Valor', 'Vencimento', 'Status', 'Categoria'];
     const rows = filteredItems.map(r => [
       r.clientName,
-      formatNumber(r.amount).replace(/\./g, ''), // CSV needs raw or specifically formatted
+      formatNumber(r.amount).replace(/\./g, ''),
       r.dueDate,
       r.status,
       r.category
     ]);
-
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + [headers, ...rows].map(e => e.join(",")).join("\n");
-
+    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].map(e => e.join(",")).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -52,7 +49,7 @@ const Recebiveis: React.FC = () => {
             <i className="fa-solid fa-file-export"></i>
           </button>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => navigate('/recebiveis/novo')}
             className="flex-1 md:flex-none px-10 py-5 bg-white text-black rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-xl"
           >
             Novo Recebimento
@@ -131,9 +128,6 @@ const Recebiveis: React.FC = () => {
             ))}
           </tbody>
         </table>
-        {filteredItems.length === 0 && (
-          <div className="py-24 text-center opacity-30 italic">Nenhum registro encontrado.</div>
-        )}
       </div>
 
       <div className="md:hidden space-y-6">
@@ -163,8 +157,6 @@ const Recebiveis: React.FC = () => {
           </div>
         ))}
       </div>
-
-      <AddReceivableModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

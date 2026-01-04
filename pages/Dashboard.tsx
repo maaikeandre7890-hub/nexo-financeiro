@@ -1,14 +1,14 @@
 
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useApp } from '../contexts/AppContext';
-import { AddReceivableModal } from '../components/Modals';
 import OracleIcon from '../components/OracleIcon';
 import BrandLogo from '../components/BrandLogo';
 
 const Dashboard: React.FC = () => {
   const { totals, state, getChartData, formatNumber } = useApp();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -33,7 +33,7 @@ const Dashboard: React.FC = () => {
           </h1>
         </div>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => navigate('/recebiveis/novo')}
           className="w-full md:w-auto px-12 py-5 bg-white text-slate-950 text-[12px] font-black uppercase rounded-[2rem] hover:bg-emerald-400 active:scale-95 transition-all shadow-[0_20px_40px_-10px_rgba(255,255,255,0.2)]"
         >
           Novo Registro
@@ -78,7 +78,6 @@ const Dashboard: React.FC = () => {
 
         {/* Market Context - Card Premium Refinado */}
         <div className="glass-card p-10 rounded-[3rem] border-white/5 relative overflow-hidden flex flex-col justify-between group h-full bg-[#030d12]">
-           {/* Logo NEXO Mini */}
            <div className="absolute top-8 left-10 opacity-30 group-hover:opacity-100 transition-opacity">
               <BrandLogo className="w-6 h-6 grayscale" />
            </div>
@@ -109,7 +108,6 @@ const Dashboard: React.FC = () => {
               </button>
            </div>
            
-           {/* Efeito de brilho sutil ao fundo */}
            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-emerald-500/5 blur-[100px] rounded-full group-hover:bg-emerald-500/10 transition-colors"></div>
         </div>
       </div>
@@ -150,8 +148,6 @@ const Dashboard: React.FC = () => {
           </div>
         )}
       </div>
-
-      <AddReceivableModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

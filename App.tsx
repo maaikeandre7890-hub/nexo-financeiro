@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -8,12 +9,15 @@ import CommandBar from './components/CommandBar';
 import Onboarding from './components/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
+import FormCliente from './pages/FormCliente';
 import Recebiveis from './pages/Recebiveis';
+import FormRecebivel from './pages/FormRecebivel';
 import Atraso from './pages/Atraso';
 import Historico from './pages/Historico';
 import Relatorios from './pages/Relatorios';
 import FaturamentoLiquido from './pages/FaturamentoLiquido';
 import DespesasExtras from './pages/DespesasExtras';
+import FormDespesa from './pages/FormDespesa';
 import Cobranca from './pages/Cobranca';
 import Sistema from './pages/Sistema';
 import Configuracoes from './pages/Configuracoes';
@@ -24,27 +28,12 @@ import { useApp } from './contexts/AppContext';
 
 const App: React.FC = () => {
   const { state } = useApp();
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
-  const [isCommandBarOpen, setIsCommandBarOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = React.useState(false);
+  const [isAIPanelOpen, setIsAIPanelOpen] = React.useState(false);
+  const [isCommandBarOpen, setIsCommandBarOpen] = React.useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
-
-  // Sincronização de Bloqueio sem perda de posição
-  useEffect(() => {
-    const isAnyOverlaid = isNotificationsOpen || isAIPanelOpen || isCommandBarOpen || isSidebarOpen;
-    const mainElement = mainRef.current;
-    
-    if (mainElement) {
-      if (isAnyOverlaid) {
-        // Bloqueia interações mas mantém visual e scroll position
-        mainElement.style.overflowY = 'hidden';
-      } else {
-        mainElement.style.overflowY = 'auto';
-      }
-    }
-  }, [isNotificationsOpen, isAIPanelOpen, isCommandBarOpen, isSidebarOpen]);
 
   useEffect(() => {
     setIsNotificationsOpen(false);
@@ -97,13 +86,21 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              
               <Route path="/clientes" element={<Clientes />} />
+              <Route path="/clientes/novo" element={<FormCliente />} />
+              
               <Route path="/recebiveis" element={<Recebiveis />} />
+              <Route path="/recebiveis/novo" element={<FormRecebivel />} />
+              
               <Route path="/parcelas-atraso" element={<Atraso />} />
               <Route path="/historico" element={<Historico />} />
               <Route path="/relatorios" element={<Relatorios />} />
               <Route path="/faturamento-liquido" element={<FaturamentoLiquido />} />
+              
               <Route path="/despesas-extras" element={<DespesasExtras />} />
+              <Route path="/despesas/novo" element={<FormDespesa />} />
+              
               <Route path="/cobranca-automatica" element={<Cobranca />} />
               <Route path="/sistema" element={<Sistema />} />
               <Route path="/configuracoes" element={<Configuracoes />} />

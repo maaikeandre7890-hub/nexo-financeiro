@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
-import { AddClientModal } from '../components/Modals';
 
 const Clientes: React.FC = () => {
   const { state, formatNumber, deleteClient } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const filteredClients = state.clients.filter(client => 
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -34,7 +34,7 @@ const Clientes: React.FC = () => {
             />
           </div>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => navigate('/clientes/novo')}
             className="w-full sm:w-auto px-10 py-5 bg-white text-black rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-xl"
           >
             Adicionar Novo
@@ -149,8 +149,6 @@ const Clientes: React.FC = () => {
           </div>
         ))}
       </div>
-
-      <AddClientModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

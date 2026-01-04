@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
-import { AddExpenseModal } from '../components/Modals';
 
 const DespesasExtras: React.FC = () => {
   const { state, totals, deleteExpense, formatNumber } = useApp();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -15,7 +15,7 @@ const DespesasExtras: React.FC = () => {
           <p className="text-slate-500 font-medium italic">Controle tudo o que você pagou ou tem para pagar.</p>
         </div>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => navigate('/despesas/novo')}
           className="bg-rose-500 hover:bg-rose-400 text-white font-black py-4 px-8 rounded-xl transition-all flex items-center gap-2 active:scale-95"
         >
           <i className="fa-solid fa-minus"></i>
@@ -77,8 +77,6 @@ const DespesasExtras: React.FC = () => {
           </tbody>
         </table>
       </div>
-
-      <AddExpenseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
