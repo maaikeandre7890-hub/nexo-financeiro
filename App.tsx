@@ -62,15 +62,15 @@ const App: React.FC = () => {
 
   return (
     <div 
-      className={`flex h-screen w-full transition-colors duration-500 font-['Inter'] overflow-hidden ${
+      className={`flex h-screen w-full transition-all duration-500 font-['Inter'] overflow-hidden ${
         state.theme === 'light' 
-          ? 'light-theme bg-[#E2E8F0] text-[#0F172A]' 
-          : 'bg-[var(--bg-main)] text-slate-300'
+          ? 'light-theme bg-[#f1f5f9] text-[#0f172a]' 
+          : 'bg-[#10161a] text-slate-300'
       }`}
     >
       {/* Sidebar Mobile Overlay */}
       <div 
-        className={`fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
@@ -88,29 +88,24 @@ const App: React.FC = () => {
         
         <main 
           ref={mainRef}
-          className="flex-1 overflow-y-auto p-5 md:p-10 lg:px-16 lg:py-16 relative custom-scrollbar pb-24"
+          className="flex-1 overflow-y-auto p-6 md:p-10 lg:px-14 lg:py-12 relative custom-scrollbar pb-24"
         >
-          <div className="max-w-[1600px] mx-auto page-enter">
+          <div className="max-w-[1500px] mx-auto page-enter">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/clientes/novo" element={<FormCliente />} />
               <Route path="/clientes/importar" element={<ImportarClientes />} />
               <Route path="/renegociacoes" element={<Renegociacoes />} />
-              
               <Route path="/recebiveis" element={<Recebiveis />} />
               <Route path="/recebiveis/novo" element={<FormRecebivel />} />
-              
               <Route path="/parcelas-atraso" element={<Atraso />} />
               <Route path="/historico" element={<Historico />} />
               <Route path="/relatorios" element={<Relatorios />} />
               <Route path="/faturamento-liquido" element={<FaturamentoLiquido />} />
-              
               <Route path="/despesas-extras" element={<DespesasExtras />} />
               <Route path="/despesas/novo" element={<FormDespesa />} />
-              
               <Route path="/cobranca-automatica" element={<Cobranca />} />
               <Route path="/sistema" element={<Sistema />} />
               <Route path="/configuracoes" element={<Configuracoes />} />
@@ -125,15 +120,19 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      {/* Floating Action Button (FAB) - Minimalista */}
-      <div className="fixed bottom-8 right-8 z-50">
+      {/* Floating Action Button (FAB) - Glass Effect */}
+      <div className="fixed bottom-10 right-10 z-50">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className="w-14 h-14 bg-emerald-500 text-slate-950 rounded-full shadow-[0_15px_30px_-10px_rgba(16,185,129,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center group border border-white/20 relative"
-          aria-label="Assistente NEXO IA"
+          className={`w-14 h-14 rounded-full shadow-2xl transition-all flex items-center justify-center group border relative overflow-hidden ${
+            state.theme === 'light' 
+              ? 'bg-emerald-500/90 border-emerald-600/20 text-white' 
+              : 'bg-emerald-500/10 backdrop-blur-xl border-emerald-500/30 text-emerald-400'
+          } hover:scale-110 active:scale-95`}
+          aria-label="Oracle AI"
         >
-          <div className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-10 group-hover:opacity-30"></div>
-          <BrandLogo className="w-8 h-8 pointer-events-none relative z-10" />
+          <div className="absolute inset-0 bg-emerald-500/10 animate-pulse"></div>
+          <i className="fa-solid fa-sparkles text-xl relative z-10"></i>
         </button>
       </div>
     </div>

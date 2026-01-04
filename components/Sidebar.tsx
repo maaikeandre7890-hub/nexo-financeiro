@@ -22,23 +22,18 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-colors duration-500 border-r border-[var(--border-subtle)] shadow-2xl overflow-hidden ${state.theme === 'light' ? 'bg-white' : 'bg-[#020608]'}`}>
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-
-      <div className="pt-14 pb-12 px-8 flex flex-col items-start">
-        <div className="flex items-center gap-4 group cursor-pointer">
-           <BrandLogo className="w-10 h-10 transition-transform duration-700 group-hover:scale-110" />
-           <div className="flex flex-col">
-              <span className={`text-xl font-black italic tracking-tighter leading-none ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>NEXO<span className="text-emerald-500">.</span></span>
-              <span className="text-[6px] font-black text-slate-600 uppercase tracking-[0.4em] mt-1.5 opacity-60">Strategic Intelligence</span>
-           </div>
+    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-all duration-300 border-r border-[var(--border-subtle)] overflow-hidden ${state.theme === 'light' ? 'bg-[var(--bg-sidebar)]' : 'bg-[var(--bg-sidebar)]'}`}>
+      <div className="pt-10 pb-10 px-8 flex items-center justify-between">
+        <div className="flex items-center gap-3 group cursor-pointer">
+           <BrandLogo className="w-8 h-8" />
+           <span className={`text-lg font-black tracking-tighter ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>NEXO<span className="text-emerald-500">.</span></span>
         </div>
       </div>
 
-      <nav className="flex-1 px-5 space-y-12 overflow-y-auto custom-scrollbar scroll-smooth">
+      <nav className="flex-1 px-4 space-y-8 overflow-y-auto custom-scrollbar scroll-smooth">
         {sections.map((section, idx) => (
-          <div key={idx} className="space-y-4">
-            <h3 className={`px-5 text-[9px] font-black uppercase tracking-[0.4em] ${state.theme === 'light' ? 'text-slate-400' : 'text-slate-800'}`}>
+          <div key={idx} className="space-y-3">
+            <h3 className={`px-4 text-[10px] font-bold uppercase tracking-[0.15em] opacity-30 ${state.theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
               {section.title}
             </h3>
             <div className="space-y-1">
@@ -48,20 +43,18 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
                   to={item.path}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    `flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-500 group relative ${
+                    `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 group relative ${
                       isActive
-                        ? state.theme === 'light' ? 'bg-emerald-500/5 text-emerald-600' : 'text-white bg-white/[0.03] shadow-inner'
-                        : state.theme === 'light' ? 'text-slate-500 hover:text-emerald-600 hover:bg-emerald-500/5' : 'text-slate-600 hover:text-slate-200 hover:bg-white/[0.01]'
+                        ? state.theme === 'light' ? 'bg-emerald-500/10 text-emerald-600 font-semibold' : 'bg-emerald-500/10 text-emerald-400 font-semibold'
+                        : state.theme === 'light' ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-500 hover:bg-white/[0.02] hover:text-slate-300'
                     }`
                   }
                 >
+                  {/* Fixed: Wrapped NavLink children in a function to correctly access isActive from scope */}
                   {({ isActive }) => (
                     <>
-                      {isActive && (
-                        <div className="absolute left-0 w-1 h-5 bg-emerald-500 rounded-r-full shadow-[0_0_15px_#10b981]"></div>
-                      )}
-                      <i className={`fa-solid ${item.icon} text-[14px] transition-colors duration-500 ${isActive ? 'text-emerald-500' : 'group-hover:text-emerald-400'}`}></i>
-                      <span className={`text-[13px] font-bold tracking-tight transition-all duration-500 ${isActive ? 'translate-x-1' : ''}`}>
+                      <i className={`fa-solid ${item.icon} text-[14px] ${isActive ? '' : 'opacity-40'}`}></i>
+                      <span className="text-[13px] tracking-tight">
                         {item.label}
                       </span>
                     </>
@@ -73,14 +66,14 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
         ))}
       </nav>
 
-      <div className={`p-8 border-t border-[var(--border-subtle)] ${state.theme === 'light' ? 'bg-slate-50' : 'bg-black/40'}`}>
-        <div className="flex items-center gap-4 group cursor-pointer p-1">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-500 text-black flex items-center justify-center font-black text-[10px] shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform duration-500">
+      <div className={`p-6 border-t border-[var(--border-subtle)] ${state.theme === 'light' ? 'bg-slate-50/50' : 'bg-black/10'}`}>
+        <div className="flex items-center gap-3 p-1">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px]">
             {getInitials(state.userName || 'AD')}
           </div>
           <div className="flex flex-col min-w-0">
-            <p className={`text-xs font-black truncate tracking-tight uppercase italic ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>{state.userName || 'User'}</p>
-            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">{state.companyName}</p>
+            <p className={`text-xs font-bold truncate ${state.theme === 'light' ? 'text-slate-800' : 'text-white'}`}>{state.userName || 'User'}</p>
+            <p className="text-[10px] font-medium text-slate-500 truncate">{state.companyName}</p>
           </div>
         </div>
       </div>

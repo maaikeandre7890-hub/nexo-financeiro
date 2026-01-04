@@ -17,53 +17,60 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
   };
 
   return (
-    <header className="h-24 px-8 md:px-14 flex items-center justify-between sticky top-0 z-[90] transition-colors duration-500 bg-[var(--bg-header)] backdrop-blur-3xl border-b border-[var(--border-subtle)]">
-      <div className="flex items-center gap-6">
+    <header className="h-20 px-8 md:px-12 flex items-center justify-between sticky top-0 z-[90] transition-all duration-300 bg-[var(--bg-header)] backdrop-blur-lg border-b border-[var(--border-subtle)]">
+      <div className="flex items-center gap-4">
         <button 
           onClick={onToggleSidebar} 
-          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-400 hover:text-white transition-all border border-white/[0.05] hover:border-emerald-500/20 active:scale-90"
+          className={`w-10 h-10 flex items-center justify-center rounded-xl border transition-all md:hidden ${
+            state.theme === 'light' ? 'bg-white border-slate-200 text-slate-400' : 'bg-white/[0.03] border-white/5 text-slate-500'
+          }`}
         >
-          <i className="fa-solid fa-bars-staggered text-sm"></i>
+          <i className="fa-solid fa-bars text-sm"></i>
         </button>
         
         <div 
           onClick={onOpenSearch} 
-          className="hidden md:flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/[0.01] border border-white/[0.05] cursor-pointer group hover:border-emerald-500/30 transition-all w-80 shadow-inner"
+          className={`hidden md:flex items-center gap-3 px-5 py-2.5 rounded-xl border cursor-pointer group transition-all w-64 ${
+            state.theme === 'light' ? 'bg-slate-50 border-slate-200' : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+          }`}
         >
-          <i className="fa-solid fa-magnifying-glass text-[12px] text-slate-600 group-hover:text-emerald-500 transition-colors"></i>
-          <span className="text-[11px] font-black text-slate-600 group-hover:text-slate-400 uppercase tracking-widest transition-colors">Pesquisar Operações</span>
+          <i className="fa-solid fa-magnifying-glass text-[11px] text-slate-500"></i>
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest">Buscar...</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 md:gap-6">
-        {/* TEMA TOGGLE */}
+      <div className="flex items-center gap-2.5 md:gap-3">
         <button 
           onClick={toggleTheme} 
-          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-500 border border-white/[0.05] hover:text-emerald-500 transition-all active:scale-95"
-          title={`Ativar Modo ${state.theme === 'dark' ? 'Claro' : 'Escuro'}`}
+          className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
+            state.theme === 'light' ? 'bg-slate-100 text-slate-500' : 'bg-white/[0.03] text-slate-500 hover:text-emerald-500'
+          }`}
+          title="Alternar Tema"
         >
           <i className={`fa-solid ${state.theme === 'dark' ? 'fa-sun' : 'fa-moon'} text-sm`}></i>
         </button>
 
-        {/* REFRESH REAL DE DADOS */}
         <button 
           onClick={refreshData} 
           disabled={isRefreshing}
-          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-500 border border-white/[0.05] relative hover:text-emerald-500 transition-all group disabled:opacity-50"
-          title="Sincronizar Dados"
+          className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
+            state.theme === 'light' ? 'bg-slate-100 text-slate-500' : 'bg-white/[0.03] text-slate-500 hover:text-emerald-500'
+          }`}
         >
-          <i className={`fa-solid fa-arrows-rotate text-sm ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`}></i>
+          <i className={`fa-solid fa-rotate text-xs ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`}></i>
         </button>
 
         <button 
           onClick={onOpenNotifications} 
-          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-500 border border-white/[0.05] relative hover:text-white transition-all group"
+          className={`w-10 h-10 flex items-center justify-center rounded-xl relative transition-all ${
+            state.theme === 'light' ? 'bg-slate-100 text-slate-500' : 'bg-white/[0.03] text-slate-500 hover:text-white'
+          }`}
         >
           <i className="fa-solid fa-bell text-sm"></i>
-          <span className="absolute top-4 right-4 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[var(--bg-main)] shadow-[0_0_10px_#10b981]"></span>
+          <span className="absolute top-3 right-3 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-[var(--bg-main)]"></span>
         </button>
 
-        <div className="w-12 h-12 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-[12px] font-black text-emerald-500 shadow-xl cursor-pointer hover:bg-emerald-500 hover:text-black transition-all duration-500">
+        <div className="w-9 h-9 ml-2 rounded-xl bg-emerald-500 text-black flex items-center justify-center text-[10px] font-bold shadow-lg shadow-emerald-500/10">
           {getInitials(state.userName || 'AD')}
         </div>
       </div>

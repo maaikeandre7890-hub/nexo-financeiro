@@ -20,7 +20,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
   const firstName = state.userName ? state.userName.split(' ')[0] : 'Empreendedor';
   
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: `Saudações, ${firstName}. Sou a NEXO IA. Analisei os números da ${state.companyName || 'sua empresa'} e agora estou conectada ao mercado global em tempo real. Como posso ajudar na sua estratégia de capital hoje?` }
+    { role: 'model', text: `Olá ${firstName}. Sou a NEXO IA. Gostaria de analisar alguma estratégia específica para a ${state.companyName || 'sua empresa'} hoje?` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -45,14 +45,8 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
         toReceive: formatNumber(totals.toReceive),
         overdue: formatNumber(totals.overdue),
         paid: formatNumber(totals.paid),
-        totalExpenses: formatNumber(totals.totalExpenses),
-        netBalance: formatNumber(totals.netBalance),
         cashHealth: totals.cashHealth
-      },
-      company: state.companyName,
-      user: state.userName,
-      clientCount: state.clients.length,
-      overdueCount: state.receivables.filter(r => r.status === 'Atrasado').length
+      }
     });
 
     try {
@@ -62,26 +56,22 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
         contents: userMsg,
         config: {
           tools: [{ googleSearch: {} }],
-          systemInstruction: `Você é a NEXO IA, uma consultora financeira de elite. 
-          Contexto financeiro interno: ${financialContext}.
-          IMPORTANTE: Sempre formate valores monetários e números no padrão brasileiro: use ponto para milhar e vírgula para decimal (ex: 1.500,00 ou 10.000).
-          Use a ferramenta de pesquisa para trazer dados de mercado se relevante.
-          Responda de forma executiva, direta e analítica. Use Markdown.`,
+          systemInstruction: `Você é o analista financeiro premium da NEXO. Contexto: ${financialContext}. Seja executivo, direto e preciso. Padrão R$.`,
         },
       });
 
       const links = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.map((chunk: any) => ({
-        title: chunk.web?.title || 'Fonte de Mercado',
+        title: chunk.web?.title || 'Referência',
         uri: chunk.web?.uri
       })).filter((l: any) => l.uri);
 
       setMessages(prev => [...prev, { 
         role: 'model', 
-        text: response.text || "Não consegui processar essa análise agora.",
+        text: response.text || "Não foi possível processar agora.",
         links: links
       }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'model', text: "Minha conexão com o banco de dados e mercado foi interrompida." }]);
+      setMessages(prev => [...prev, { role: 'model', text: "Houve um erro na comunicação estratégica." }]);
     } finally {
       setIsLoading(false);
     }
@@ -90,52 +80,35 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
   return (
     <>
       <div 
-        className={`fixed inset-0 bg-slate-950/80 backdrop-blur-xl z-[120] transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[120] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={onClose} 
       />
       <div 
-        className={`fixed z-[130] transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1) bg-[#071821] border-white/10 shadow-[-20px_0_60px_rgba(0,0,0,0.8)]
-          ${/* Mobile: Bottom Sheet | Desktop: Right Drawer */ ''}
-          bottom-0 left-0 w-full h-[85vh] rounded-t-[3rem] translate-y-full md:translate-y-0 md:top-0 md:right-0 md:left-auto md:w-full md:max-w-xl md:h-screen md:rounded-t-none md:border-l md:translate-x-full
-          ${isOpen ? 'translate-y-0 md:translate-x-0' : ''}`}
+        className={`fixed z-[130] transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) bg-[#131c21] border-l border-white/5
+          bottom-0 left-0 w-full h-[80vh] rounded-t-3xl md:top-0 md:right-0 md:left-auto md:w-full md:max-w-md md:h-screen md:rounded-t-none
+          ${isOpen ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-x-full md:translate-y-0'}`}
       >
-        <div className="flex flex-col h-full relative overflow-hidden">
-          
-          <div className="p-8 md:p-10 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.02] backdrop-blur-md">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 md:w-14 md:h-14 oracle-chip rounded-2xl flex items-center justify-center text-emerald-500">
-                <OracleIcon className="w-8 h-8" />
-              </div>
-              <div>
-                <h2 className="text-xl font-black text-white tracking-tight italic uppercase leading-none mb-1">NEXO IA</h2>
-                <div className="flex items-center gap-2">
-                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Consultoria Ativa</span>
-                </div>
-              </div>
+        <div className="flex flex-col h-full">
+          <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+            <div className="flex items-center gap-3">
+              <OracleIcon className="w-6 h-6 text-emerald-500" />
+              <h2 className="text-sm font-bold text-white uppercase tracking-widest">Consultoria NEXO</h2>
             </div>
-            <button onClick={onClose} className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all text-slate-500 hover:text-white">
-              <i className="fa-solid fa-xmark"></i>
-            </button>
+            <button onClick={onClose} className="text-slate-500 hover:text-white"><i className="fa-solid fa-xmark"></i></button>
           </div>
 
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-10 space-y-6 custom-scrollbar bg-gradient-to-b from-transparent to-black/20">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
              {messages.map((msg, idx) => (
                <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                 <div className={`max-w-[90%] md:max-w-[85%] p-5 md:p-6 rounded-2xl text-sm leading-relaxed ${
-                   msg.role === 'user' 
-                    ? 'bg-emerald-600 text-white font-bold rounded-tr-none shadow-xl shadow-emerald-900/10' 
-                    : 'bg-white/[0.04] border border-white/5 text-slate-200 rounded-tl-none backdrop-blur-md'
+                 <div className={`max-w-[90%] p-4 rounded-2xl text-xs leading-relaxed ${
+                   msg.role === 'user' ? 'bg-emerald-500 text-black font-bold' : 'bg-white/[0.04] text-slate-200 border border-white/5'
                  }`}>
-                   <div className="prose prose-invert prose-sm max-w-none">
-                     {msg.text}
-                   </div>
+                   {msg.text}
                    {msg.links && msg.links.length > 0 && (
-                     <div className="mt-6 pt-4 border-t border-white/10 space-y-2">
-                       <p className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Referências de Mercado:</p>
+                     <div className="mt-4 pt-3 border-t border-white/10 space-y-1">
                        {msg.links.map((link, i) => (
-                         <a key={i} href={link.uri} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-slate-500 hover:text-emerald-400 transition-colors truncate">
-                           <i className="fa-solid fa-link mr-2 text-[8px]"></i> {link.title}
+                         <a key={i} href={link.uri} target="_blank" rel="noopener noreferrer" className="block text-[10px] text-emerald-400 truncate">
+                           <i className="fa-solid fa-link mr-1"></i> {link.title}
                          </a>
                        ))}
                      </div>
@@ -143,39 +116,23 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                  </div>
                </div>
              ))}
-             {isLoading && (
-               <div className="flex justify-start">
-                 <div className="bg-white/[0.03] px-6 py-4 rounded-2xl rounded-tl-none border border-white/5 flex gap-3 items-center">
-                    <div className="flex gap-1.5">
-                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0s]"></div>
-                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-                    </div>
-                    <span className="text-[9px] font-black text-emerald-500/70 uppercase tracking-widest">Processando...</span>
-                 </div>
-               </div>
-             )}
+             {isLoading && <div className="text-[10px] font-bold text-emerald-500 uppercase animate-pulse">Analisando...</div>}
           </div>
 
-          <div className="p-6 md:p-10 border-t border-white/[0.05] bg-black/40 backdrop-blur-2xl">
-            <div className="flex items-center gap-4 p-2 bg-white/[0.03] rounded-2xl border border-white/10 focus-within:border-emerald-500/50 transition-all">
+          <div className="p-6 border-t border-white/5">
+            <div className="flex items-center gap-3 p-1.5 bg-white/[0.02] rounded-xl border border-white/10">
               <input 
                 type="text" 
-                placeholder="Pergunte sobre estratégia ou mercado..." 
-                className="flex-1 bg-transparent border-none text-sm text-white focus:outline-none px-4 py-3 font-medium placeholder:text-slate-600"
+                placeholder="Como posso ajudar?" 
+                className="flex-1 bg-transparent border-none text-xs text-white focus:outline-none px-3"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
               />
-              <button 
-                onClick={handleSendMessage}
-                disabled={isLoading}
-                className="w-12 h-12 bg-emerald-500 text-slate-950 rounded-xl flex items-center justify-center hover:bg-emerald-400 transition-all disabled:opacity-30 shadow-lg"
-              >
-                <i className="fa-solid fa-paper-plane"></i>
+              <button onClick={handleSendMessage} className="w-10 h-10 bg-emerald-500 text-black rounded-lg flex items-center justify-center hover:bg-emerald-400 transition-all">
+                <i className="fa-solid fa-paper-plane text-sm"></i>
               </button>
             </div>
-            <p className="mt-4 text-center text-[9px] font-black text-slate-700 uppercase tracking-widest">NEXO Intelligence v1.0 • Capital Analysis Engine</p>
           </div>
         </div>
       </div>

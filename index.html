@@ -12,33 +12,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        /* NEXO PETROLEUM THEME (PREMIUM) */
-        --bg-main: #05161d;
-        --bg-card: rgba(10, 30, 40, 0.6);
-        --bg-sidebar: #041218;
-        --bg-header: rgba(5, 22, 29, 0.85);
-        --text-main: #F8FAFC;
-        --text-muted: #94A3B8;
-        --text-deep: #475569;
-        --border-subtle: rgba(255, 255, 255, 0.05);
+        /* NEXO PREMIUM PETROLEUM THEME (DARK CLEAN) */
+        --bg-main: #10161a;        /* Fundo principal mais suave */
+        --bg-card: #161f24;        /* Card com elevação sutil */
+        --bg-sidebar: #0d1216;
+        --bg-header: rgba(16, 22, 26, 0.85);
+        --text-main: #f8fafc;
+        --text-muted: #8292a2;     /* Cinza azulado para leitura suave */
+        --text-deep: #415262;
+        --border-subtle: rgba(255, 255, 255, 0.04);
         --border-accent: rgba(16, 185, 129, 0.1);
         
         --emerald-primary: #10b981;
-        --emerald-hover: #059669;
-        --track-bg: #081d26;
+        --emerald-hover: #34d399;
+        --track-bg: #1a2329;
       }
 
       .light-theme {
-        --bg-main: #F1F5F9; 
-        --bg-card: #FFFFFF; 
-        --bg-sidebar: #FFFFFF;
-        --bg-header: rgba(255, 255, 255, 0.9);
-        --text-main: #020617; 
-        --text-muted: #475569; 
-        --text-deep: #64748B;
-        --border-subtle: rgba(16, 185, 129, 0.1);
-        --border-accent: rgba(16, 185, 129, 0.4); 
-        --track-bg: #E2E8F0;
+        --bg-main: #f1f5f9; 
+        --bg-card: #ffffff; 
+        --bg-sidebar: #f8fafc;
+        --bg-header: rgba(241, 245, 249, 0.9);
+        --text-main: #0f172a; 
+        --text-muted: #64748b; 
+        --text-deep: #94a3b8;
+        --border-subtle: rgba(15, 23, 42, 0.06);
+        --border-accent: rgba(16, 185, 129, 0.3); 
+        --track-bg: #e2e8f0;
       }
       
       html {
@@ -67,42 +67,48 @@
         z-index: -10;
         background-color: var(--bg-main);
         background-image: 
-          radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0, transparent 50%),
-          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.02) 0, transparent 50%),
-          url('https://grainy-gradients.vercel.app/noise.svg');
-        filter: contrast(110%) brightness(100%);
-        opacity: 0.15;
+          radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.02) 0, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.01) 0, transparent 50%);
         pointer-events: none;
         transition: background-color 0.4s ease;
       }
 
       .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
       .custom-scrollbar::-webkit-scrollbar-track { background: var(--track-bg); }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--emerald-primary); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--text-deep); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--emerald-primary); }
 
-      .page-enter { animation: revealPage 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+      .page-enter { animation: revealPage 0.4s cubic-bezier(0, 0, 0.2, 1); }
       @keyframes revealPage {
-        from { opacity: 0; transform: translateY(10px); }
+        from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
       }
 
       .glass-card {
         background: var(--bg-card);
-        backdrop-filter: blur(20px);
         border: 1px solid var(--border-subtle);
-        transition: all 0.3s ease;
+        border-radius: 20px;
+        transition: all 0.25s ease;
+      }
+
+      .glass-card:hover {
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
       }
 
       .light-theme .glass-card {
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+      }
+      
+      .light-theme .glass-card:hover {
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        border-color: rgba(16, 185, 129, 0.1);
       }
 
-      .light-theme .text-white, .light-theme .text-slate-100, .light-theme .text-slate-200, .light-theme .text-slate-300 { color: var(--text-main) !important; }
-      .light-theme .text-slate-400, .light-theme .text-slate-500 { color: var(--text-muted) !important; }
-      .light-theme .bg-slate-950, .light-theme .bg-black { background-color: #FFFFFF !important; }
-      .light-theme .bg-white\/\[0\.02\], .light-theme .bg-white\/5 { background-color: rgba(0,0,0,0.02) !important; }
-      .light-theme .border-white\/5, .light-theme .border-white\/10 { border-color: rgba(0,0,0,0.08) !important; }
+      .mono { font-family: 'JetBrains Mono', monospace; }
+      
+      /* Typography smoothing */
+      h1, h2, h3, h4 { letter-spacing: -0.02em; }
     </style>
     <script type="importmap">
 {
