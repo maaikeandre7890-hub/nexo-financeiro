@@ -22,7 +22,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-all duration-300 border-r border-[var(--border-subtle)] overflow-hidden ${state.theme === 'light' ? 'bg-[var(--bg-sidebar)]' : 'bg-[var(--bg-sidebar)]'}`}>
+    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-all duration-300 border-r border-white/[0.04] overflow-hidden ${state.theme === 'light' ? 'bg-white' : 'bg-[#0f1518]'}`}>
       <div className="pt-10 pb-10 px-8 flex items-center justify-between">
         <div className="flex items-center gap-3 group cursor-pointer">
            <BrandLogo className="w-8 h-8" />
@@ -46,14 +46,13 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
                     `flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 group relative ${
                       isActive
                         ? state.theme === 'light' ? 'bg-emerald-500/10 text-emerald-600 font-semibold' : 'bg-emerald-500/10 text-emerald-400 font-semibold'
-                        : state.theme === 'light' ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-500 hover:bg-white/[0.02] hover:text-slate-300'
+                        : state.theme === 'light' ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-500 hover:bg-white/[0.03] hover:text-slate-200'
                     }`
                   }
                 >
-                  {/* Fixed: Wrapped NavLink children in a function to correctly access isActive from scope */}
                   {({ isActive }) => (
                     <>
-                      <i className={`fa-solid ${item.icon} text-[14px] ${isActive ? '' : 'opacity-40'}`}></i>
+                      <i className={`fa-solid ${item.icon} text-[14px] ${isActive ? '' : 'opacity-30'}`}></i>
                       <span className="text-[13px] tracking-tight">
                         {item.label}
                       </span>
@@ -66,9 +65,9 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
         ))}
       </nav>
 
-      <div className={`p-6 border-t border-[var(--border-subtle)] ${state.theme === 'light' ? 'bg-slate-50/50' : 'bg-black/10'}`}>
+      <div className={`p-6 border-t border-white/[0.04] ${state.theme === 'light' ? 'bg-slate-50' : 'bg-black/20'}`}>
         <div className="flex items-center gap-3 p-1">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px]">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shadow-lg shadow-emerald-500/10">
             {getInitials(state.userName || 'AD')}
           </div>
           <div className="flex flex-col min-w-0">

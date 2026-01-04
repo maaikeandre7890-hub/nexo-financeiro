@@ -12,16 +12,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        /* NEXO PREMIUM PETROLEUM THEME (DARK CLEAN) */
-        --bg-main: #10161a;        /* Fundo principal mais suave */
-        --bg-card: #161f24;        /* Card com elevação sutil */
-        --bg-sidebar: #0d1216;
-        --bg-header: rgba(16, 22, 26, 0.85);
-        --text-main: #f8fafc;
-        --text-muted: #8292a2;     /* Cinza azulado para leitura suave */
-        --text-deep: #415262;
-        --border-subtle: rgba(255, 255, 255, 0.04);
-        --border-accent: rgba(16, 185, 129, 0.1);
+        /* NEXO CLEAN PETROLEUM THEME */
+        --bg-main: #141b1f;        /* Azul Petróleo Acinzentado */
+        --bg-card: #1c252b;        /* Superfície mais clara que o fundo */
+        --bg-sidebar: #0f1518;
+        --bg-header: rgba(20, 27, 31, 0.8);
+        --text-main: #f1f5f9;
+        --text-muted: #8e9ba5;     /* Tom neutro para não cansar a vista */
+        --text-deep: #4b5e6a;
+        --border-subtle: rgba(255, 255, 255, 0.05);
+        --border-accent: rgba(16, 185, 129, 0.12);
         
         --emerald-primary: #10b981;
         --emerald-hover: #34d399;
@@ -36,7 +36,7 @@
         --text-main: #0f172a; 
         --text-muted: #64748b; 
         --text-deep: #94a3b8;
-        --border-subtle: rgba(15, 23, 42, 0.06);
+        --border-subtle: rgba(15, 23, 42, 0.08);
         --border-accent: rgba(16, 185, 129, 0.3); 
         --track-bg: #e2e8f0;
       }
@@ -67,48 +67,36 @@
         z-index: -10;
         background-color: var(--bg-main);
         background-image: 
-          radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.02) 0, transparent 50%),
-          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.01) 0, transparent 50%);
+          radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.02) 0, transparent 40%),
+          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.01) 0, transparent 40%);
         pointer-events: none;
-        transition: background-color 0.4s ease;
       }
 
-      .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+      .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
       .custom-scrollbar::-webkit-scrollbar-track { background: var(--track-bg); }
       .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--text-deep); border-radius: 10px; }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--emerald-primary); }
 
-      .page-enter { animation: revealPage 0.4s cubic-bezier(0, 0, 0.2, 1); }
+      .page-enter { animation: revealPage 0.4s ease-out; }
       @keyframes revealPage {
-        from { opacity: 0; transform: translateY(8px); }
+        from { opacity: 0; transform: translateY(6px); }
         to { opacity: 1; transform: translateY(0); }
       }
 
       .glass-card {
         background: var(--bg-card);
         border: 1px solid var(--border-subtle);
-        border-radius: 20px;
-        transition: all 0.25s ease;
+        border-radius: 16px;
+        transition: all 0.2s ease;
       }
 
       .glass-card:hover {
         border-color: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
-      }
-
-      .light-theme .glass-card {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
-      }
-      
-      .light-theme .glass-card:hover {
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-        border-color: rgba(16, 185, 129, 0.1);
       }
 
       .mono { font-family: 'JetBrains Mono', monospace; }
       
-      /* Typography smoothing */
-      h1, h2, h3, h4 { letter-spacing: -0.02em; }
+      h1, h2, h3, h4 { letter-spacing: -0.015em; color: var(--text-main); }
     </style>
     <script type="importmap">
 {
