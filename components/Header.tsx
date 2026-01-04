@@ -10,14 +10,14 @@ interface Props {
 }
 
 const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, onToggleSidebar }) => {
-  const { state } = useApp();
+  const { state, refreshData, isRefreshing, toggleTheme } = useApp();
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
   return (
-    <header className="h-24 px-8 md:px-14 flex items-center justify-between sticky top-0 z-[90] bg-[#020608]/90 backdrop-blur-3xl border-b border-white/[0.03]">
+    <header className="h-24 px-8 md:px-14 flex items-center justify-between sticky top-0 z-[90] transition-colors duration-500 bg-[var(--bg-header)] backdrop-blur-3xl border-b border-[var(--border-subtle)]">
       <div className="flex items-center gap-6">
         <button 
           onClick={onToggleSidebar} 
@@ -41,17 +41,36 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
           className="hidden lg:flex items-center gap-3 text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] hover:text-white transition-all group"
         >
           <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full group-hover:animate-ping"></div>
-          Oracle Assistant
+          Nexo IA
         </button>
 
         <div className="h-8 w-px bg-white/[0.05] hidden md:block"></div>
+
+        {/* TEMA TOGGLE */}
+        <button 
+          onClick={toggleTheme} 
+          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-500 border border-white/[0.05] hover:text-emerald-500 transition-all active:scale-95"
+          title={`Ativar Modo ${state.theme === 'dark' ? 'Claro' : 'Escuro'}`}
+        >
+          <i className={`fa-solid ${state.theme === 'dark' ? 'fa-sun' : 'fa-moon'} text-sm`}></i>
+        </button>
+
+        {/* REFRESH REAL DE DADOS */}
+        <button 
+          onClick={refreshData} 
+          disabled={isRefreshing}
+          className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-500 border border-white/[0.05] relative hover:text-emerald-500 transition-all group disabled:opacity-50"
+          title="Sincronizar Dados"
+        >
+          <i className={`fa-solid fa-arrows-rotate text-sm ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`}></i>
+        </button>
 
         <button 
           onClick={onOpenNotifications} 
           className="w-12 h-12 flex items-center justify-center bg-white/[0.02] rounded-2xl text-slate-500 border border-white/[0.05] relative hover:text-white transition-all group"
         >
           <i className="fa-solid fa-bell text-sm"></i>
-          <span className="absolute top-4 right-4 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[#020608] shadow-[0_0_10px_#10b981]"></span>
+          <span className="absolute top-4 right-4 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[var(--bg-main)] shadow-[0_0_10px_#10b981]"></span>
         </button>
 
         <div className="w-12 h-12 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-[12px] font-black text-emerald-500 shadow-xl cursor-pointer hover:bg-emerald-500 hover:text-black transition-all duration-500">

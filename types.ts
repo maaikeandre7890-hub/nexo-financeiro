@@ -17,7 +17,6 @@ export interface Client {
   status: 'Ativo' | 'Inadimplente' | 'Em negociação';
   monthlyValue: number;
   dueDay: number;
-  paymentMethod: 'Boleto' | 'Pix' | 'Transferência' | 'Outro';
   score: number;
   createdAt: string;
 }
@@ -50,6 +49,7 @@ export interface AuditLog {
 
 export interface AppState {
   onboardingCompleted: boolean;
+  theme: 'dark' | 'light';
   userName: string;
   companyName: string;
   businessType: string;

@@ -59,7 +59,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen w-full text-slate-300 selection:bg-emerald-500/30 font-['Inter'] overflow-hidden bg-transparent">
+    <div className={`flex h-screen w-full transition-colors duration-500 font-['Inter'] overflow-hidden ${state.theme === 'light' ? 'light-theme bg-[#F1F5F9] text-[#0F172A]' : 'bg-transparent text-slate-300'}`}>
       {/* Sidebar Mobile Overlay */}
       <div 
         className={`fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
@@ -80,7 +80,7 @@ const App: React.FC = () => {
         
         <main 
           ref={mainRef}
-          className="flex-1 overflow-y-auto p-5 md:p-8 lg:px-14 lg:py-12 relative custom-scrollbar pb-10"
+          className="flex-1 overflow-y-auto p-5 md:p-10 lg:px-16 lg:py-16 relative custom-scrollbar pb-16"
         >
           <div className="max-w-[1600px] mx-auto page-enter">
             <Routes>
@@ -124,8 +124,8 @@ const App: React.FC = () => {
             <BrandLogo className="w-8 h-8" />
           </div>
           <div className="flex flex-col items-start text-left pointer-events-none">
-            <span className="text-[11px] font-black text-slate-950 uppercase tracking-widest leading-none">Oracle NEXO</span>
-            <span className="text-[8px] font-black text-slate-900/40 uppercase tracking-widest mt-1">Análise Inteligente</span>
+            <span className={`text-[11px] font-black uppercase tracking-widest leading-none ${state.theme === 'light' ? 'text-white' : 'text-slate-950'}`}>NEXO IA</span>
+            <span className={`text-[8px] font-black uppercase tracking-widest mt-1 ${state.theme === 'light' ? 'text-white/60' : 'text-slate-900/40'}`}>Análise Inteligente</span>
           </div>
         </button>
       </div>

@@ -46,7 +46,7 @@ const Sistema: React.FC = () => {
                <i className="fa-solid fa-sparkles"></i>
              </div>
              <div>
-               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Oráculo NEXO</p>
+               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Nexo IA</p>
                <p className="text-sm font-black text-white">Ativo</p>
              </div>
           </div>

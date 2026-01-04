@@ -55,7 +55,7 @@ const FaturamentoLiquido: React.FC = () => {
               <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
                 <i className="fa-solid fa-user-tie"></i>
               </div>
-              <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Dica do Oráculo</h4>
+              <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Dica da NEXO IA</h4>
             </div>
             <p className="text-sm text-zinc-400 leading-relaxed italic">
               "Você está com uma boa sobra de dinheiro. Tente reduzir um pouco os custos fixos para aumentar seu lucro em pelo menos 5% no próximo mês."

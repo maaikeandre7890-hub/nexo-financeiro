@@ -20,7 +20,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
   const firstName = state.userName ? state.userName.split(' ')[0] : 'Empreendedor';
   
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: `Saudações, ${firstName}. Sou o Oracle NEXO. Analisei os números da ${state.companyName || 'sua empresa'} e agora estou conectado ao mercado global em tempo real. Como posso ajudar na sua estratégia de capital hoje?` }
+    { role: 'model', text: `Saudações, ${firstName}. Sou a NEXO IA. Analisei os números da ${state.companyName || 'sua empresa'} e agora estou conectada ao mercado global em tempo real. Como posso ajudar na sua estratégia de capital hoje?` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +62,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
         contents: userMsg,
         config: {
           tools: [{ googleSearch: {} }],
-          systemInstruction: `Você é o Oracle NEXO, um consultor financeiro de elite. 
+          systemInstruction: `Você é a NEXO IA, uma consultora financeira de elite. 
           Contexto financeiro interno: ${financialContext}.
           IMPORTANTE: Sempre formate valores monetários e números no padrão brasileiro: use ponto para milhar e vírgula para decimal (ex: 1.500,00 ou 10.000).
           Use a ferramenta de pesquisa para trazer dados de mercado se relevante.
@@ -99,7 +99,7 @@ const AIInsightsPanel: React.FC<Props> = ({ isOpen, onClose }) => {
                 <OracleIcon className="w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-xl font-black text-white tracking-tight italic uppercase leading-none mb-1">Oracle NEXO</h2>
+                <h2 className="text-xl font-black text-white tracking-tight italic uppercase leading-none mb-1">NEXO IA</h2>
                 <div className="flex items-center gap-2">
                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Market Intelligence Active</span>

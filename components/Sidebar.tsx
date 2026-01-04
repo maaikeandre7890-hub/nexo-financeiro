@@ -22,14 +22,14 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <aside className="w-full md:w-72 bg-[#000000] flex flex-col h-full z-20 relative border-r border-white/[0.03] shadow-2xl overflow-hidden">
+    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-colors duration-500 border-r border-[var(--border-subtle)] shadow-2xl overflow-hidden ${state.theme === 'light' ? 'bg-[#FFFFFF]' : 'bg-[#000000]'}`}>
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
       <div className="pt-14 pb-12 px-8 flex flex-col items-start">
         <div className="flex items-center gap-4 group cursor-pointer">
            <BrandLogo className="w-10 h-10 transition-transform duration-700 group-hover:scale-110" />
            <div className="flex flex-col">
-              <span className="text-xl font-black text-white italic tracking-tighter leading-none">NEXO<span className="text-emerald-500">.</span></span>
+              <span className={`text-xl font-black italic tracking-tighter leading-none ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>NEXO<span className="text-emerald-500">.</span></span>
               <span className="text-[6px] font-black text-slate-600 uppercase tracking-[0.4em] mt-1.5 opacity-60">Strategic Intelligence</span>
            </div>
         </div>
@@ -38,7 +38,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
       <nav className="flex-1 px-5 space-y-12 overflow-y-auto custom-scrollbar scroll-smooth">
         {sections.map((section, idx) => (
           <div key={idx} className="space-y-4">
-            <h3 className="px-5 text-[9px] font-black text-slate-800 uppercase tracking-[0.4em]">
+            <h3 className={`px-5 text-[9px] font-black uppercase tracking-[0.4em] ${state.theme === 'light' ? 'text-slate-400' : 'text-slate-800'}`}>
               {section.title}
             </h3>
             <div className="space-y-1">
@@ -50,8 +50,8 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
                   className={({ isActive }) =>
                     `flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-500 group relative ${
                       isActive
-                        ? 'text-white bg-white/[0.03] shadow-inner'
-                        : 'text-slate-600 hover:text-slate-200 hover:bg-white/[0.01]'
+                        ? state.theme === 'light' ? 'bg-emerald-500/5 text-emerald-600' : 'text-white bg-white/[0.03] shadow-inner'
+                        : state.theme === 'light' ? 'text-slate-500 hover:text-emerald-600 hover:bg-emerald-500/5' : 'text-slate-600 hover:text-slate-200 hover:bg-white/[0.01]'
                     }`
                   }
                 >
@@ -73,13 +73,13 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
         ))}
       </nav>
 
-      <div className="p-8 border-t border-white/[0.03] bg-black/40">
+      <div className={`p-8 border-t border-[var(--border-subtle)] ${state.theme === 'light' ? 'bg-slate-50' : 'bg-black/40'}`}>
         <div className="flex items-center gap-4 group cursor-pointer p-1">
           <div className="w-10 h-10 rounded-2xl bg-emerald-500 text-black flex items-center justify-center font-black text-[10px] shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform duration-500">
             {getInitials(state.userName || 'AD')}
           </div>
           <div className="flex flex-col min-w-0">
-            <p className="text-xs font-black text-white truncate tracking-tight uppercase italic">{state.userName || 'User'}</p>
+            <p className={`text-xs font-black truncate tracking-tight uppercase italic ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>{state.userName || 'User'}</p>
             <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest truncate">{state.companyName}</p>
           </div>
         </div>

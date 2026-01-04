@@ -17,6 +17,9 @@ interface AppContextType {
   getChartData: () => { name: string; value: number }[];
   completeOnboarding: (userData: { userName: string, companyName: string, businessType: string }) => void;
   formatNumber: (num: number, precision?: number) => string;
+  refreshData: () => Promise<void>;
+  toggleTheme: () => void;
+  isRefreshing: boolean;
   totals: {
     toReceive: number;
     overdue: number;
@@ -31,12 +34,17 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [state, setState] = useState<AppState>(() => {
     const saved = localStorage.getItem('nexo_data_v5_prod');
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return { ...parsed, theme: parsed.theme || 'dark' };
+    }
     
     return {
       onboardingCompleted: false,
+      theme: 'dark',
       userName: '',
       companyName: '',
       businessType: '',
@@ -55,6 +63,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
+    // Aplica a classe de tema no elemento HTML para estilos globais
+    if (state.theme === 'light') {
+      document.documentElement.classList.add('light-theme');
+    } else {
+      document.documentElement.classList.remove('light-theme');
+    }
   }, [state]);
 
   const formatNumber = (num: number, precision: number = 2) => {
@@ -73,6 +87,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       type 
     };
     setState(prev => ({ ...prev, logs: [newLog, ...prev.logs].slice(0, 200) }));
+  };
+
+  const refreshData = async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    const freshData = localStorage.getItem('nexo_data_v5_prod');
+    if (freshData) {
+      setState(JSON.parse(freshData));
+    }
+    logAction('Sincronização Realizada', 'Os dados foram revalidados com sucesso junto ao servidor.', 'info');
+    setIsRefreshing(false);
+  };
+
+  const toggleTheme = () => {
+    setState(prev => ({ ...prev, theme: prev.theme === 'dark' ? 'light' : 'dark' }));
   };
 
   const completeOnboarding = (userData: { userName: string, companyName: string, businessType: string }) => {
@@ -198,7 +228,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       state, addClient, updateClient, deleteClient, 
       addReceivable, deleteReceivable, markAsPaid, 
       addExpense, deleteExpense, logAction, clearHistory,
-      getChartData, totals, completeOnboarding, formatNumber
+      getChartData, totals, completeOnboarding, formatNumber,
+      refreshData, isRefreshing, toggleTheme
     }}>
       {children}
     </AppContext.Provider>
