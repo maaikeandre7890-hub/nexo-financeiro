@@ -10,6 +10,7 @@ import Onboarding from './components/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
 import FormCliente from './pages/FormCliente';
+import ImportarClientes from './pages/ImportarClientes';
 import Recebiveis from './pages/Recebiveis';
 import FormRecebivel from './pages/FormRecebivel';
 import Atraso from './pages/Atraso';
@@ -96,6 +97,7 @@ const App: React.FC = () => {
               
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/clientes/novo" element={<FormCliente />} />
+              <Route path="/clientes/importar" element={<ImportarClientes />} />
               <Route path="/renegociacoes" element={<Renegociacoes />} />
               
               <Route path="/recebiveis" element={<Recebiveis />} />

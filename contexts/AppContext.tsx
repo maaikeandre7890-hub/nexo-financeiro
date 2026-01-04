@@ -5,6 +5,7 @@ import { Client, Receivable, Expense, AuditLog, AppState } from '../types';
 interface AppContextType {
   state: AppState;
   addClient: (client: Omit<Client, 'id' | 'createdAt' | 'score'>) => void;
+  bulkAddClients: (clients: Array<Omit<Client, 'id' | 'createdAt' | 'score'>>) => void;
   updateClient: (id: string, data: Partial<Client>) => void;
   deleteClient: (id: string) => void;
   renegotiateClient: (id: string, newValue: number, newInstallments: number) => void;
@@ -148,6 +149,44 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
 
     logAction('Cliente Cadastrado', `${newClient.name} - Plano de ${newClient.installments} meses.`, 'success');
+  };
+
+  const bulkAddClients = (clientsData: Array<Omit<Client, 'id' | 'createdAt' | 'score'>>) => {
+    const newClients: Client[] = [];
+    const newReceivables: Receivable[] = [];
+    const now = new Date();
+
+    clientsData.forEach((data) => {
+      const newId = 'CL-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+      const client: Client = {
+        ...data,
+        id: newId,
+        score: 100,
+        createdAt: now.toISOString(),
+      };
+      newClients.push(client);
+
+      for (let i = 0; i < client.installments; i++) {
+        const dueDate = new Date(now.getFullYear(), now.getMonth() + i, client.dueDay);
+        newReceivables.push({
+          id: `REC-${newId}-${i+1}-${Math.random().toString(36).substr(2, 4)}`,
+          clientId: newId,
+          clientName: client.name,
+          amount: client.monthlyValue,
+          dueDate: dueDate.toISOString().split('T')[0],
+          status: 'Pendente',
+          category: 'Mensalidade'
+        });
+      }
+    });
+
+    setState(prev => ({
+      ...prev,
+      clients: [...newClients, ...prev.clients],
+      receivables: [...newReceivables, ...prev.receivables]
+    }));
+
+    logAction('Importação em Lote', `${clientsData.length} clientes importados via arquivo.`, 'success');
   };
 
   const updateClient = (id: string, data: Partial<Client>) => {
@@ -311,7 +350,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return (
     <AppContext.Provider value={{ 
-      state, addClient, updateClient, deleteClient, renegotiateClient,
+      state, addClient, bulkAddClients, updateClient, deleteClient, renegotiateClient,
       addReceivable, updateReceivable, deleteReceivable, markAsPaid, 
       addExpense, deleteExpense, logAction, clearHistory,
       getChartData, totals, completeOnboarding, formatNumber,

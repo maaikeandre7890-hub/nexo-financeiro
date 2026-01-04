@@ -44,6 +44,12 @@ const Clientes: React.FC = () => {
         </div>
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
           <button 
+            onClick={() => navigate('/clientes/importar')}
+            className="w-full sm:w-auto px-8 py-5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 hover:text-black transition-all active:scale-95 shadow-xl"
+          >
+            <i className="fa-solid fa-file-import mr-2"></i> Importar Clientes
+          </button>
+          <button 
             onClick={() => navigate('/renegociacoes')}
             className="w-full sm:w-auto px-8 py-5 bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-[2rem] font-black text-[11px] uppercase tracking-widest hover:bg-amber-500 hover:text-black transition-all active:scale-95 shadow-xl"
           >
