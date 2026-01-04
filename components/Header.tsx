@@ -35,17 +35,7 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <button 
-          onClick={onOpenAI} 
-          className="hidden lg:flex items-center gap-3 text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] hover:text-white transition-all group"
-        >
-          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full group-hover:animate-ping"></div>
-          Nexo IA
-        </button>
-
-        <div className="h-8 w-px bg-white/[0.05] hidden md:block"></div>
-
+      <div className="flex items-center gap-4 md:gap-6">
         {/* TEMA TOGGLE */}
         <button 
           onClick={toggleTheme} 

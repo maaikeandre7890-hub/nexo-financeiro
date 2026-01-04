@@ -12,24 +12,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        /* NEXO DARK (DEFAULT) */
-        --bg-main: #020608;
-        --bg-card: rgba(2, 12, 16, 0.7);
-        --bg-sidebar: #020608;
-        --bg-header: rgba(2, 6, 8, 0.9);
+        /* NEXO PETROLEUM THEME (PREMIUM) */
+        --bg-main: #05161d;
+        --bg-card: rgba(10, 30, 40, 0.6);
+        --bg-sidebar: #041218;
+        --bg-header: rgba(5, 22, 29, 0.85);
         --text-main: #F8FAFC;
         --text-muted: #94A3B8;
         --text-deep: #475569;
-        --border-subtle: rgba(255, 255, 255, 0.04);
+        --border-subtle: rgba(255, 255, 255, 0.05);
         --border-accent: rgba(16, 185, 129, 0.1);
         
         --emerald-primary: #10b981;
         --emerald-hover: #059669;
-        --track-bg: #0a0f12;
+        --track-bg: #081d26;
       }
 
       .light-theme {
-        /* NEXO LIGHT PREMIUM - ALTO CONTRASTE */
         --bg-main: #F1F5F9; 
         --bg-card: #FFFFFF; 
         --bg-sidebar: #FFFFFF;
@@ -68,11 +67,11 @@
         z-index: -10;
         background-color: var(--bg-main);
         background-image: 
-          radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0, transparent 50%),
-          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.03) 0, transparent 50%),
+          radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.02) 0, transparent 50%),
           url('https://grainy-gradients.vercel.app/noise.svg');
-        filter: contrast(120%) brightness(100%);
-        opacity: 0.12;
+        filter: contrast(110%) brightness(100%);
+        opacity: 0.15;
         pointer-events: none;
         transition: background-color 0.4s ease;
       }
@@ -81,15 +80,15 @@
       .custom-scrollbar::-webkit-scrollbar-track { background: var(--track-bg); }
       .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--emerald-primary); border-radius: 10px; }
 
-      .page-enter { animation: revealPage 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+      .page-enter { animation: revealPage 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
       @keyframes revealPage {
-        from { opacity: 0; transform: translateY(15px); }
+        from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
       }
 
       .glass-card {
         background: var(--bg-card);
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(20px);
         border: 1px solid var(--border-subtle);
         transition: all 0.3s ease;
       }

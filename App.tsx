@@ -65,7 +65,7 @@ const App: React.FC = () => {
       className={`flex h-screen w-full transition-colors duration-500 font-['Inter'] overflow-hidden ${
         state.theme === 'light' 
           ? 'light-theme bg-[#E2E8F0] text-[#0F172A]' 
-          : 'bg-[#020608] text-slate-300'
+          : 'bg-[var(--bg-main)] text-slate-300'
       }`}
     >
       {/* Sidebar Mobile Overlay */}
@@ -88,7 +88,7 @@ const App: React.FC = () => {
         
         <main 
           ref={mainRef}
-          className="flex-1 overflow-y-auto p-5 md:p-10 lg:px-16 lg:py-16 relative custom-scrollbar pb-16"
+          className="flex-1 overflow-y-auto p-5 md:p-10 lg:px-16 lg:py-16 relative custom-scrollbar pb-24"
         >
           <div className="max-w-[1600px] mx-auto page-enter">
             <Routes>
@@ -125,18 +125,15 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      <div className="fixed bottom-10 right-10 z-40">
+      {/* Floating Action Button (FAB) - Minimalista */}
+      <div className="fixed bottom-8 right-8 z-50">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className="flex items-center gap-4 bg-emerald-500 hover:bg-emerald-400 p-2 pr-6 rounded-2xl shadow-[0_20px_40px_-15px_rgba(16,185,129,0.4)] transition-all active:scale-95 group border border-white/10"
+          className="w-14 h-14 bg-emerald-500 text-slate-950 rounded-full shadow-[0_15px_30px_-10px_rgba(16,185,129,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center group border border-white/20 relative"
+          aria-label="Assistente NEXO IA"
         >
-          <div className="w-12 h-12 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
-            <BrandLogo className="w-8 h-8" />
-          </div>
-          <div className="flex flex-col items-start text-left pointer-events-none">
-            <span className={`text-[11px] font-black uppercase tracking-widest leading-none ${state.theme === 'light' ? 'text-white' : 'text-slate-950'}`}>NEXO IA</span>
-            <span className={`text-[8px] font-black uppercase tracking-widest mt-1 ${state.theme === 'light' ? 'text-white/60' : 'text-slate-900/40'}`}>Análise Inteligente</span>
-          </div>
+          <div className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-10 group-hover:opacity-30"></div>
+          <BrandLogo className="w-8 h-8 pointer-events-none relative z-10" />
         </button>
       </div>
     </div>
