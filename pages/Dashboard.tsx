@@ -74,7 +74,9 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-between items-start mb-10 relative z-10">
             <div className="space-y-1">
               <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--text-main)]">Forecast Semestral</h3>
-              <p className="text-[10px] font-bold text-[var(--text-deep)] uppercase">Projeção estimada de recebimentos</p>
+              <p className="text-[10px] font-bold text-[var(--text-deep)] uppercase" title="Valores estimados. Podem variar conforme pagamentos, atrasos ou novos clientes.">
+                Previsão do dinheiro que deve entrar no seu caixa nos próximos 6 meses, com base no cenário atual.
+              </p>
             </div>
           </div>
           

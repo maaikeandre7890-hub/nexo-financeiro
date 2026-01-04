@@ -8,7 +8,7 @@ const Onboarding: React.FC = () => {
   const [formData, setFormData] = useState({
     userName: '',
     companyName: '',
-    businessType: ''
+    businessType: 'SaaS / B2B'
   });
   const { completeOnboarding } = useApp();
 
@@ -21,116 +21,140 @@ const Onboarding: React.FC = () => {
     completeOnboarding(formData);
   };
 
-  const buttonClass = "w-full py-6 bg-emerald-500 text-slate-950 hover:bg-emerald-400 active:scale-[0.98] transition-all duration-500 rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-2 shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)]";
+  const inputClass = "w-full bg-[#1A1A1A] border border-white/5 rounded-lg px-4 py-4 text-sm font-medium text-white focus:outline-none focus:border-white/20 transition-all placeholder:text-zinc-600";
+  const labelClass = "text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block";
+  const primaryButtonClass = "w-full py-4 bg-white text-black hover:bg-zinc-200 active:scale-[0.98] transition-all duration-300 rounded-lg font-bold uppercase tracking-widest text-[11px] shadow-xl";
 
   return (
-    <div className="fixed inset-0 z-[200] bg-[#020608] flex items-center justify-center p-6 overflow-hidden">
-      {/* Glow de Fundo Cinemático */}
-      <div className="absolute inset-0 bg-gradient-radial from-emerald-500/10 via-transparent to-transparent opacity-60"></div>
+    <div className="fixed inset-0 z-[200] bg-[#000000] flex flex-col md:flex-row overflow-hidden font-['Space_Grotesk']">
       
-      <div className="max-w-xl w-full relative z-10">
-        <div className="flex flex-col items-center text-center mb-16 animate-in fade-in zoom-in duration-1000">
-          <div className="relative group mb-12">
-            <div className="absolute inset-0 bg-emerald-500/10 blur-[100px] rounded-full opacity-50"></div>
-            <BrandLogo className="w-32 h-32 md:w-40 md:h-40" showText={true} centered={true} />
-          </div>
+      {/* COLUNA ESQUERDA: LOGIN / FORM */}
+      <div className="w-full md:w-[45%] lg:w-[40%] h-full flex items-center justify-center p-8 md:p-12 lg:p-20 z-10 relative bg-[#000000]">
+        <div className="w-full max-w-md space-y-10 animate-in fade-in slide-in-from-left-8 duration-700">
           
-          <div className="flex gap-2 mb-10">
-            {[1, 2, 3].map(s => (
-              <div key={s} className={`h-1 transition-all duration-700 rounded-full ${step >= s ? 'w-12 bg-emerald-500 shadow-[0_0_15px_#10b981]' : 'w-4 bg-white/5'}`}></div>
-            ))}
+          {/* Header do Form */}
+          <div className="space-y-6">
+            <BrandLogo className="w-12 h-12" />
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold text-white tracking-tight">
+                {step === 1 ? 'Bem-vindo ao NEXO' : step === 2 ? 'Acesse sua conta' : 'Tudo pronto'}
+              </h1>
+              <p className="text-sm text-zinc-500 font-medium">
+                {step === 1 && 'Sua inteligência de capital centralizada em um único terminal.'}
+                {step === 2 && 'Preencha os dados da sua unidade para prosseguir.'}
+                {step === 3 && 'Protocolo de segurança e acesso confirmado.'}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="glass-card p-10 md:p-14 rounded-[3.5rem] border-white/[0.03] relative overflow-hidden bg-black/60 backdrop-blur-3xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
-          {step === 1 && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              <div className="space-y-4 text-center">
-                <p className="text-slate-400 font-medium italic text-lg leading-relaxed">
-                  Bem-vindo ao centro de comando de seu capital. Prepare-se para a gestão definitiva.
-                </p>
-              </div>
-              <button 
-                onClick={handleNext}
-                className={buttonClass}
-              >
-                ATIVAR TERMINAL
-              </button>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="space-y-2 text-center border-b border-white/5 pb-8">
-                <h2 className="text-2xl font-black text-white tracking-tight uppercase italic">Autenticação</h2>
-                <p className="text-slate-600 text-[9px] font-black uppercase tracking-[0.5em]">Configurando Acesso Seguro</p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.4em] ml-2">Identidade do Gestor</label>
-                  <input 
-                    autoFocus
-                    type="text" 
-                    placeholder="Seu Nome Completo"
-                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/50 h-16 transition-all"
-                    value={formData.userName}
-                    onChange={e => setFormData({...formData, userName: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.4em] ml-2">Razão Social da Unidade</label>
-                  <input 
-                    type="text" 
-                    placeholder="Nome da sua Empresa"
-                    className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500/50 h-16 transition-all"
-                    value={formData.companyName}
-                    onChange={e => setFormData({...formData, companyName: e.target.value})}
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-4 pt-4">
-                <button onClick={handleBack} className="flex-1 py-5 bg-white/[0.01] border border-white/5 text-slate-600 rounded-2xl font-black uppercase tracking-widest text-[9px] hover:text-white transition-all">Voltar</button>
-                <button 
-                  disabled={!isStep2Valid}
-                  onClick={handleNext}
-                  className={`${buttonClass} flex-[2] disabled:opacity-20`}
-                >
-                  CONSOLIDAR
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 text-center">
-              <div className="space-y-8">
-                <div className="w-24 h-24 bg-emerald-500/10 rounded-[2.5rem] flex items-center justify-center mx-auto text-emerald-500 mb-6 border border-emerald-500/20 shadow-2xl animate-pulse relative">
-                  <div className="absolute inset-0 bg-emerald-500/20 blur-2xl rounded-full"></div>
-                  <i className="fa-solid fa-check text-3xl relative z-10"></i>
-                </div>
-                <div>
-                  <h2 className="text-3xl font-black text-white tracking-tighter italic uppercase leading-none">Protocolo Ativo.</h2>
-                  <p className="text-slate-500 leading-relaxed font-medium text-sm italic mt-4 max-w-xs mx-auto">
-                    Terminal configurado com sucesso para <br/><span className="text-emerald-500 font-bold">{formData.companyName}</span>.
+          {/* Card do Formulário */}
+          <div className="bg-[#111111] p-8 rounded-2xl border border-white/5 shadow-2xl space-y-8">
+            {step === 1 && (
+              <div className="space-y-6 animate-in fade-in duration-500">
+                <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
+                  <p className="text-[10px] leading-relaxed text-emerald-400 font-medium italic">
+                    "O NEXO redefine a gestão financeira para líderes que buscam clareza absoluta e resultados reais."
                   </p>
                 </div>
+                <button onClick={handleNext} className={primaryButtonClass}>
+                  INICIAR SESSÃO
+                </button>
               </div>
+            )}
 
-              <button 
-                onClick={handleFinish}
-                className={buttonClass}
-              >
-                ASSUMIR COMANDO
-              </button>
-            </div>
-          )}
+            {step === 2 && (
+              <div className="space-y-6 animate-in fade-in duration-500">
+                <div className="space-y-4">
+                  <div>
+                    <label className={labelClass}>Nome do Gestor</label>
+                    <input 
+                      autoFocus
+                      type="text" 
+                      placeholder="Seu nome"
+                      className={inputClass}
+                      value={formData.userName}
+                      onChange={e => setFormData({...formData, userName: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Unidade / Empresa</label>
+                    <input 
+                      type="text" 
+                      placeholder="Nome da empresa"
+                      className={inputClass}
+                      value={formData.companyName}
+                      onChange={e => setFormData({...formData, companyName: e.target.value})}
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex gap-3 pt-2">
+                  <button onClick={handleBack} className="flex-1 py-4 bg-transparent border border-white/5 text-zinc-500 rounded-lg font-bold text-[10px] uppercase hover:text-white transition-all">
+                    Voltar
+                  </button>
+                  <button 
+                    disabled={!isStep2Valid}
+                    onClick={handleNext}
+                    className={`${primaryButtonClass} flex-[2] disabled:opacity-20`}
+                  >
+                    CONTINUAR
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="space-y-8 text-center animate-in fade-in zoom-in-95 duration-500">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                  <i className="fa-solid fa-check text-xl"></i>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-white font-bold text-lg">{formData.companyName}</p>
+                  <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Acesso Autorizado</p>
+                </div>
+                <button onClick={handleFinish} className={primaryButtonClass}>
+                  ENTRAR NO DASHBOARD
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Footer discreto */}
+          <div className="pt-4">
+            <p className="text-[9px] font-bold text-zinc-800 uppercase tracking-[0.4em]">
+              NEXO SYSTEM PLATFORM — © 2025
+            </p>
+          </div>
         </div>
+      </div>
+
+      {/* COLUNA DIREITA: BRANDING / GRADIENT */}
+      <div className="hidden md:flex flex-1 bg-[#000000] relative items-center justify-center overflow-hidden">
         
-        <div className="mt-16 text-center opacity-30">
-           <p className="text-[9px] font-black text-slate-700 uppercase tracking-[0.8em]">NEXO SYSTEM PLATFORM — © 2025</p>
+        {/* Gradientes Abstratos Desfocados */}
+        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-purple-600/30 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-1/4 -left-20 w-80 h-80 bg-pink-600/20 rounded-full blur-[100px] delay-700 animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-magenta-600/10 rounded-full blur-[150px]"></div>
+        
+        {/* Headline Branding */}
+        <div className="relative z-10 text-center space-y-4 px-12">
+          <div className="space-y-0">
+            <h2 className="text-6xl lg:text-8xl font-medium text-white tracking-tighter leading-none animate-in fade-in slide-in-from-bottom-12 duration-1000">
+              Decisões claras.
+            </h2>
+            <h2 className="text-6xl lg:text-8xl font-medium text-white/40 tracking-tighter leading-none animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
+              Resultados reais.
+            </h2>
+          </div>
+          <div className="pt-8 animate-in fade-in duration-1000 delay-500">
+             <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.6em]">
+               The intelligence behind your capital
+             </p>
+          </div>
         </div>
+
+        {/* Textura de ruído sutil */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
       </div>
     </div>
   );
