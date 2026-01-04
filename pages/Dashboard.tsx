@@ -21,14 +21,14 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-24 py-6 page-enter">
-      {/* Header com Espaçamento de Luxo */}
+      {/* Header com Tipografia Ajustada */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
              <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">Central de Inteligência Operacional</span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter leading-none italic uppercase">
+          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-[1.1] italic uppercase">
             {greeting}, <br/><span className="text-emerald-500">{firstName}.</span>
           </h1>
         </div>
@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
           { label: 'Exposição ao Risco', val: totals.overdue, color: 'text-rose-500', sub: 'Títulos em atraso crítico' },
           { label: 'Disponibilidade Real', val: totals.netBalance, color: 'text-white', sub: 'Lucro líquido projetado' }
         ].map((kpi, idx) => (
-          <div key={idx} className={`glass-card p-12 rounded-[3.5rem] flex flex-col justify-between h-64 group overflow-hidden relative transition-all duration-500 hover:-translate-y-2 ${state.theme === 'light' ? 'shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] ring-1 ring-emerald-500/10' : ''}`}>
+          <div key={idx} className={`glass-card p-12 rounded-[3.5rem] flex flex-col justify-between h-64 group overflow-hidden relative transition-all duration-500 hover:-translate-y-2 ${state.theme === 'light' ? 'shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)]' : ''}`}>
             <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:bg-emerald-500/10 transition-colors duration-700"></div>
             <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] relative z-10">{kpi.label}</p>
             <div className="relative z-10">

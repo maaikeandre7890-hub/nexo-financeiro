@@ -29,17 +29,17 @@
       }
 
       .light-theme {
-        /* NEXO LIGHT PREMIUM REFINADO */
-        --bg-main: #F1F5F9; /* Off-white acinzentado para profundidade */
-        --bg-card: #FFFFFF; /* Branco puro para cards */
+        /* NEXO LIGHT PREMIUM - CONTRASTE REFINADO */
+        --bg-main: #E2E8F0; /* Off-white mais denso para criar profundidade */
+        --bg-card: #FFFFFF; /* Branco puro para os cards se destacarem */
         --bg-sidebar: #FFFFFF;
-        --bg-header: rgba(241, 245, 249, 0.95);
-        --text-main: #0F172A; /* Slate-900 para contraste máximo */
-        --text-muted: #475569; /* Slate-600 para hierarquia */
-        --text-deep: #64748B; /* Slate-500 */
-        --border-subtle: rgba(16, 185, 129, 0.15);
-        --border-accent: rgba(16, 185, 129, 0.3);
-        --track-bg: #E2E8F0;
+        --bg-header: rgba(226, 232, 240, 0.95);
+        --text-main: #0F172A;
+        --text-muted: #334155; /* Slate-700 para melhor leitura */
+        --text-deep: #64748B;
+        --border-subtle: rgba(16, 185, 129, 0.12);
+        --border-accent: rgba(16, 185, 129, 0.5); /* Aumentada a presença para o gradiente */
+        --track-bg: #CBD5E1;
       }
       
       html {
@@ -114,8 +114,13 @@
       /* GLASS CARD OVERRIDES FOR LIGHT THEME */
       .light-theme .glass-card {
         background: var(--bg-card);
-        border: 1px solid var(--border-accent);
-        box-shadow: 0 12px 40px -15px rgba(0,0,0,0.06), 0 4px 12px -5px rgba(0,0,0,0.03);
+        /* Técnica de Gradiente em Borda de 2px */
+        border: 2px solid transparent;
+        background-image: linear-gradient(var(--bg-card), var(--bg-card)), 
+                          linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(16, 185, 129, 0.1) 100%);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+        box-shadow: 0 15px 45px -15px rgba(0,0,0,0.08), 0 5px 15px -5px rgba(0,0,0,0.04);
       }
 
       .light-theme .text-white { color: var(--text-main) !important; }
@@ -129,10 +134,10 @@
       .light-theme .bg-slate-950 { background-color: #F8FAFC !important; }
       .light-theme .bg-black { background-color: #FFFFFF !important; }
       .light-theme .bg-zinc-900 { background-color: #F1F5F9 !important; }
-      .light-theme .bg-white\/\[0\.01\] { background-color: rgba(16, 185, 129, 0.015) !important; }
-      .light-theme .bg-white\/\[0\.02\] { background-color: rgba(16, 185, 129, 0.02) !important; }
-      .light-theme .bg-white\/\[0\.03\] { background-color: rgba(16, 185, 129, 0.03) !important; }
-      .light-theme .bg-white\/\[0\.04\] { background-color: rgba(16, 185, 129, 0.04) !important; }
+      .light-theme .bg-white\/\[0\.01\] { background-color: rgba(16, 185, 129, 0.01) !important; }
+      .light-theme .bg-white\/\[0\.02\] { background-color: rgba(16, 185, 129, 0.015) !important; }
+      .light-theme .bg-white\/\[0\.03\] { background-color: rgba(16, 185, 129, 0.02) !important; }
+      .light-theme .bg-white\/\[0\.04\] { background-color: rgba(16, 185, 129, 0.03) !important; }
       .light-theme .border-white\/\[0\.03\] { border-color: var(--border-subtle) !important; }
       .light-theme .border-white\/\[0\.05\] { border-color: var(--border-accent) !important; }
       .light-theme .border-white\/10 { border-color: var(--border-accent) !important; }
