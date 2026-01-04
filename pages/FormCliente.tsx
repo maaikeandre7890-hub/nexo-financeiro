@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 
 const FormCliente: React.FC = () => {
-  const { addClient } = useApp();
+  const { state, addClient } = useApp();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -31,14 +31,19 @@ const FormCliente: React.FC = () => {
     navigate('/clientes');
   };
 
-  const labelClass = "text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2.5 block ml-1";
-  const inputClass = "w-full bg-white/[0.04] border border-white/10 rounded-xl py-4 px-5 text-sm font-semibold text-white placeholder:text-slate-800 focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/[0.02] transition-all";
+  const labelClass = `text-[10px] font-black uppercase tracking-widest mb-2.5 block ml-1 ${
+    state.theme === 'light' ? 'text-slate-600' : 'text-white'
+  }`;
+  
+  const inputClass = `w-full bg-white/[0.04] border border-white/10 rounded-xl py-4 px-5 text-sm font-semibold placeholder:text-slate-800 focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/[0.02] transition-all ${
+    state.theme === 'light' ? 'text-slate-900 border-slate-200 bg-slate-50' : 'text-white'
+  }`;
 
   return (
     <div className="space-y-12 py-6 max-w-2xl mx-auto page-enter">
       <div className="flex items-center justify-between border-b border-white/5 pb-8">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black text-white italic uppercase tracking-tighter">Novo Cliente</h1>
+          <h1 className={`text-3xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>Novo Cliente</h1>
           <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">Cadastro de Entidade</p>
         </div>
         <button 
@@ -49,7 +54,7 @@ const FormCliente: React.FC = () => {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-10 bg-white/[0.01] p-10 rounded-[3rem] border border-white/5 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-10 glass-card p-10 rounded-[3rem] shadow-2xl">
         <div className="space-y-8">
           <div className="grid grid-cols-2 gap-2 p-1 bg-white/[0.02] rounded-xl border border-white/5">
             <button type="button" onClick={() => setFormData({...formData, type: 'PF', document: ''})} className={`py-3 rounded-lg text-[10px] font-black uppercase transition-all ${formData.type === 'PF' ? 'bg-emerald-500 text-black' : 'text-slate-600'}`}>Pessoa Física</button>

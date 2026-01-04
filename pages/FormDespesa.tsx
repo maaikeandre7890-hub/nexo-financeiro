@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 
 const FormDespesa: React.FC = () => {
-  const { addExpense, formatNumber } = useApp();
+  const { state, addExpense, formatNumber } = useApp();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ description: '', amount: '', date: '', category: 'Outros' });
 
@@ -22,14 +22,19 @@ const FormDespesa: React.FC = () => {
     navigate('/despesas-extras');
   };
 
-  const labelClass = "text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2.5 block ml-1";
-  const inputClass = "w-full bg-white/[0.04] border border-white/10 rounded-xl py-4 px-5 text-sm font-semibold text-white focus:outline-none focus:border-rose-500/50 transition-all";
+  const labelClass = `text-[10px] font-black uppercase tracking-widest mb-2.5 block ml-1 ${
+    state.theme === 'light' ? 'text-slate-600' : 'text-white'
+  }`;
+  
+  const inputClass = `w-full bg-white/[0.04] border border-white/10 rounded-xl py-4 px-5 text-sm font-semibold focus:outline-none focus:border-rose-500/50 transition-all ${
+    state.theme === 'light' ? 'text-slate-900 border-slate-200 bg-slate-50' : 'text-white'
+  }`;
 
   return (
     <div className="space-y-12 py-6 max-w-2xl mx-auto page-enter">
       <div className="flex items-center justify-between border-b border-white/5 pb-8">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black text-white italic uppercase tracking-tighter">Nova Despesa</h1>
+          <h1 className={`text-3xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>Nova Despesa</h1>
           <p className="text-[9px] font-black text-rose-500 uppercase tracking-[0.4em]">Saída de Fluxo</p>
         </div>
         <button 
@@ -40,7 +45,7 @@ const FormDespesa: React.FC = () => {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-10 bg-white/[0.01] p-10 rounded-[3rem] border border-white/5 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-10 glass-card p-10 rounded-[3rem] shadow-2xl">
         <div className="space-y-8">
           <div>
             <label className={labelClass}>Descrição do Gasto</label>

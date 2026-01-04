@@ -22,7 +22,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-colors duration-500 border-r border-[var(--border-subtle)] shadow-2xl overflow-hidden ${state.theme === 'light' ? 'bg-[#FFFFFF]' : 'bg-[#000000]'}`}>
+    <aside className={`w-full md:w-72 flex flex-col h-full z-20 relative transition-colors duration-500 border-r border-[var(--border-subtle)] shadow-2xl overflow-hidden ${state.theme === 'light' ? 'bg-white' : 'bg-[#020608]'}`}>
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
       <div className="pt-14 pb-12 px-8 flex flex-col items-start">

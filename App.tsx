@@ -59,7 +59,13 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className={`flex h-screen w-full transition-colors duration-500 font-['Inter'] overflow-hidden ${state.theme === 'light' ? 'light-theme bg-[#E2E8F0] text-[#0F172A]' : 'bg-transparent text-slate-300'}`}>
+    <div 
+      className={`flex h-screen w-full transition-colors duration-500 font-['Inter'] overflow-hidden ${
+        state.theme === 'light' 
+          ? 'light-theme bg-[#E2E8F0] text-[#0F172A]' 
+          : 'bg-[#020608] text-slate-300'
+      }`}
+    >
       {/* Sidebar Mobile Overlay */}
       <div 
         className={`fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[100] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
