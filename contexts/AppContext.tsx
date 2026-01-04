@@ -92,12 +92,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshData = async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
+    
+    // Simulação de latência de rede/consulta ao backend
     await new Promise(resolve => setTimeout(resolve, 1200));
+    
+    // Força a leitura direta do localStorage (Ignorando estado em memória temporário)
     const freshData = localStorage.getItem('nexo_data_v5_prod');
     if (freshData) {
-      setState(JSON.parse(freshData));
+      const parsed = JSON.parse(freshData);
+      setState(prev => ({ 
+        ...parsed, 
+        theme: prev.theme, // Preserva o tema atual durante a sincronização
+        logs: [
+          { 
+            id: 'REF-' + Date.now(), 
+            timestamp: new Date().toISOString(), 
+            action: 'Sincronização Ativa', 
+            details: 'Revalidação de dados concluída. Cache ignorado.', 
+            type: 'info' 
+          }, 
+          ...prev.logs
+        ].slice(0, 200)
+      }));
     }
-    logAction('Sincronização Realizada', 'Os dados foram revalidados com sucesso junto ao servidor.', 'info');
+    
     setIsRefreshing(false);
   };
 

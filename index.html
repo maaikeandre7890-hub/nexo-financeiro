@@ -30,15 +30,15 @@
 
       .light-theme {
         /* NEXO LIGHT PREMIUM - CONTRASTE REFINADO */
-        --bg-main: #E2E8F0; /* Off-white mais denso para criar profundidade */
-        --bg-card: #FFFFFF; /* Branco puro para os cards se destacarem */
+        --bg-main: #E2E8F0; 
+        --bg-card: #FFFFFF; 
         --bg-sidebar: #FFFFFF;
         --bg-header: rgba(226, 232, 240, 0.95);
         --text-main: #0F172A;
-        --text-muted: #334155; /* Slate-700 para melhor leitura */
+        --text-muted: #334155; 
         --text-deep: #64748B;
         --border-subtle: rgba(16, 185, 129, 0.12);
-        --border-accent: rgba(16, 185, 129, 0.5); /* Aumentada a presença para o gradiente */
+        --border-accent: rgba(16, 185, 129, 0.5); 
         --track-bg: #CBD5E1;
       }
       
@@ -109,6 +109,14 @@
       @keyframes revealPage {
         from { opacity: 0; transform: translateY(10px); filter: blur(4px); }
         to { opacity: 1; transform: translateY(0); filter: blur(0); }
+      }
+
+      /* GLASS CARD BASE (MODO ESCURO) */
+      .glass-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border-subtle);
+        transition: all 0.4s ease;
       }
 
       /* GLASS CARD OVERRIDES FOR LIGHT THEME */
