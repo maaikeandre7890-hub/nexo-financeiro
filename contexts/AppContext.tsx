@@ -46,11 +46,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     
     return {
-      onboardingCompleted: false,
+      onboardingCompleted: true, // Forçado true para acesso direto
       theme: 'dark',
-      userName: '',
-      companyName: '',
-      businessType: '',
+      userName: 'Gestor Nexo',
+      companyName: 'Nexo Enterprise',
+      businessType: 'SaaS B2B',
       clients: [],
       receivables: [],
       expenses: [],
@@ -130,8 +130,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         dueDate: dueDate.toISOString().split('T')[0],
         status: 'Pendente',
         category: 'Mensalidade',
-        // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
-        paymentMethod: 'PIX' // Default
+        paymentMethod: 'PIX'
       });
     }
 
@@ -169,7 +168,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           dueDate: dueDate.toISOString().split('T')[0],
           status: 'Pendente',
           category: 'Mensalidade',
-          // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
           paymentMethod: 'PIX'
         });
       }
@@ -215,7 +213,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           dueDate: dueDate.toISOString().split('T')[0],
           status: 'Pendente',
           category: 'Renegociação',
-          // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
           paymentMethod: 'PIX'
         });
       }
@@ -254,7 +251,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
   };
 
-  // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
   const markAsPaid = (id: string, method: Receivable['paymentMethod'] = 'PIX') => {
     const rec = state.receivables.find(r => r.id === id);
     setState(prev => ({
@@ -291,7 +287,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const today = now.toISOString().split('T')[0];
     const currentMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     
-    // FILTRO MENSAL OBRIGATÓRIO PARA O DASHBOARD
     const paid = state.receivables.filter(r => 
       r.status === 'Pago' && 
       (r.paidAt?.startsWith(currentMonthPrefix) || r.dueDate.startsWith(currentMonthPrefix))

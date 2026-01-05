@@ -6,6 +6,7 @@ import Header from './components/Header';
 import NotificationPanel from './components/NotificationPanel';
 import AIInsightsPanel from './components/AIInsightsPanel';
 import CommandBar from './components/CommandBar';
+import BottomNav from './components/BottomNav';
 import Onboarding from './components/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Clientes from './pages/Clientes';
@@ -55,10 +56,6 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleGlobalKeys);
   }, []);
 
-  if (!state.onboardingCompleted) {
-    return <Onboarding />;
-  }
-
   return (
     <div 
       className={`flex h-screen w-full transition-colors duration-300 overflow-hidden ${
@@ -73,7 +70,7 @@ const App: React.FC = () => {
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      {/* Sidebar Wrapper */}
+      {/* Sidebar Wrapper (Hidden on mobile by default) */}
       <div className={`fixed inset-y-0 left-0 z-[110] transform transition-all duration-500 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-[280px]' : '-translate-x-full md:w-[72px]'}`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
@@ -88,7 +85,7 @@ const App: React.FC = () => {
         
         <main 
           ref={mainRef}
-          className="flex-1 overflow-y-auto p-6 md:p-10 lg:p-12 relative custom-scrollbar pb-24"
+          className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 lg:p-12 relative custom-scrollbar pb-32 md:pb-24"
         >
           <div className="max-w-[1440px] mx-auto page-enter">
             <Routes>
@@ -110,20 +107,23 @@ const App: React.FC = () => {
               <Route path="/sistema" element={<Sistema />} />
               <Route path="/configuracoes" element={<Configuracoes />} />
               <Route path="/tutorial" element={<Tutorial />} />
+              <Route path="/onboarding" element={<Onboarding />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </main>
+
+        <BottomNav />
 
         <NotificationPanel isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
         <AIInsightsPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      <div className="fixed bottom-8 right-8 z-50">
+      <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className={`w-12 h-12 rounded-full shadow-2xl transition-all flex items-center justify-center border ${
+          className={`w-12 h-12 md:w-14 md:h-14 rounded-full shadow-2xl transition-all flex items-center justify-center border ${
             state.theme === 'light' 
               ? 'bg-emerald-500 border-emerald-600 text-white' 
               : 'bg-emerald-500/10 backdrop-blur-md border-emerald-500/20 text-emerald-400'
