@@ -45,8 +45,9 @@
         font-family: 'Space Grotesk', sans-serif;
         overflow: hidden;
         -webkit-tap-highlight-color: transparent;
-        position: fixed; /* Previne scroll elástico em navegadores mobile */
+        position: fixed;
         overscroll-behavior-y: none;
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       #root {
@@ -57,7 +58,6 @@
         flex-direction: column;
       }
 
-      /* Suporte a Safe Areas */
       .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
       .pt-safe { padding-top: env(safe-area-inset-top); }
 
@@ -89,15 +89,13 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
-      /* Previne zoom automático em inputs no iOS */
       input, select, textarea {
         font-size: 16px !important;
       }
       
-      /* Mobile optimization for buttons */
       @media (max-width: 768px) {
         button, .btn {
-          min-height: 44px; /* Apple Human Interface Guidelines */
+          min-height: 44px;
         }
       }
     </style>

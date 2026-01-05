@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -61,20 +60,14 @@ const App: React.FC = () => {
   }
 
   return (
-    <div 
-      className={`flex h-screen w-full transition-colors duration-300 overflow-hidden ${
-        state.theme === 'light' 
-          ? 'light-theme bg-[var(--bg-main)] text-[var(--text-main)]' 
-          : 'bg-[#0B0D10] text-[var(--text-muted)]'
-      }`}
-    >
+    <div className="flex h-screen w-full transition-colors duration-300 overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)]">
       {/* Mobile Sidebar Overlay */}
       <div 
         className={`fixed inset-0 bg-black/60 backdrop-blur-md z-[110] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      {/* Sidebar Container - Removido md:hover:w para controle via componente */}
+      {/* Sidebar Container */}
       <div className={`fixed inset-y-0 left-0 z-[120] transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-[280px]' : '-translate-x-full md:w-auto'}`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
@@ -127,11 +120,7 @@ const App: React.FC = () => {
       <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-[90]">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className={`w-12 h-12 md:w-14 md:h-14 rounded-full shadow-2xl transition-all flex items-center justify-center border ${
-            state.theme === 'light' 
-              ? 'bg-emerald-500 border-emerald-600 text-white' 
-              : 'bg-emerald-500/20 backdrop-blur-xl border-emerald-500/30 text-emerald-400'
-          } hover:scale-110 active:scale-95`}
+          className="w-12 h-12 md:w-14 md:h-14 rounded-full shadow-2xl transition-all flex items-center justify-center border bg-emerald-500/20 backdrop-blur-xl border-emerald-500/30 text-emerald-400 hover:scale-110 active:scale-95"
         >
           <i className="fa-solid fa-sparkles text-lg"></i>
         </button>

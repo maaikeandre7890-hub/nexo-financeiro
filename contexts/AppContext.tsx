@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Client, Receivable, Expense, AuditLog, AppState } from '../types';
 
@@ -46,7 +45,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     
     return {
-      onboardingCompleted: true, // Forçado true para acesso direto
+      onboardingCompleted: true,
       theme: 'dark',
       userName: 'Gestor Nexo',
       companyName: 'Nexo Enterprise',
@@ -64,10 +63,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   });
 
+  // Efeito para persistência e aplicação visual instantânea do tema
   useEffect(() => {
     localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
-    document.documentElement.className = state.theme === 'light' ? 'light-theme' : '';
-  }, [state]);
+    if (state.theme === 'light') {
+      document.documentElement.classList.add('light-theme');
+    } else {
+      document.documentElement.classList.remove('light-theme');
+    }
+  }, [state.theme, state.onboardingCompleted, state.userName, state.companyName, state.businessType]);
 
   const formatNumber = (num: number, precision: number = 2) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -96,7 +100,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const toggleTheme = () => {
-    setState(prev => ({ ...prev, theme: prev.theme === 'dark' ? 'light' : 'dark' }));
+    setState(prev => ({ 
+      ...prev, 
+      theme: prev.theme === 'dark' ? 'light' : 'dark' 
+    }));
   };
 
   const completeOnboarding = (userData: { userName: string, companyName: string, businessType: string }) => {
