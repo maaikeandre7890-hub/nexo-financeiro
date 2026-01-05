@@ -21,70 +21,70 @@ const Onboarding: React.FC = () => {
     completeOnboarding(formData);
   };
 
-  const inputClass = "w-full bg-[#141414] border border-white/[0.06] rounded-xl px-5 py-4 text-sm font-medium text-white focus:outline-none focus:border-white/20 focus:bg-[#1A1A1A] transition-all duration-300 placeholder:text-zinc-700";
-  const labelClass = "text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] mb-3 block ml-1";
-  const primaryButtonClass = "w-full py-5 bg-white text-black hover:bg-zinc-200 active:scale-[0.98] transition-all duration-500 rounded-xl font-bold uppercase tracking-[0.25em] text-[11px] flex items-center justify-center gap-2 shadow-[0_20px_50px_rgba(255,255,255,0.1)]";
+  const inputClass = "w-full bg-[#111111] border border-white/[0.04] rounded-xl px-5 py-4 text-sm font-medium text-white focus:outline-none focus:border-white/10 transition-all duration-300 placeholder:text-zinc-800";
+  const labelClass = "text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-3 block ml-1";
+  const primaryButtonClass = "w-full py-5.5 bg-white text-black hover:bg-zinc-200 active:scale-[0.98] transition-all duration-500 rounded-xl font-bold uppercase tracking-[0.25em] text-[11px] flex items-center justify-center gap-2 shadow-[0_20px_50px_rgba(255,255,255,0.08)]";
 
   return (
     <div className="fixed inset-0 z-[200] bg-[#000000] flex flex-col md:flex-row overflow-hidden font-['Space_Grotesk']">
       
-      {/* TEXTURA DE RUÍDO GLOBAL (O toque de $1M) */}
-      <div className="absolute inset-0 opacity-[0.025] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')] z-[50]"></div>
+      {/* TEXTURA DE RUÍDO GLOBAL */}
+      <div className="absolute inset-0 opacity-[0.015] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')] z-[50]"></div>
 
       {/* COLUNA ESQUERDA: LOGIN (40%) */}
-      <div className="w-full md:w-[40%] h-full flex items-center justify-center p-6 md:p-12 z-20 relative bg-[#000000]">
-        <div className="w-full max-w-[440px] animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
+      <div className="w-full md:w-[40%] h-full flex items-center justify-center p-6 md:p-8 z-20 relative bg-[#000000]">
+        <div className="w-full max-w-[420px] animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out">
           
-          {/* Card Flutuante Premium */}
-          <div className="bg-[#0A0A0A] p-10 md:py-16 md:px-14 rounded-[3rem] border border-white/[0.04] shadow-[0_80px_150px_-30px_rgba(0,0,0,1)] space-y-12 relative">
+          {/* Card de Login - Aumentado em altura e padding */}
+          <div className="bg-[#050505] py-16 px-10 md:py-24 md:px-14 rounded-[2.5rem] border border-white/[0.04] shadow-[0_100px_150px_-50px_rgba(0,0,0,1)] space-y-14 relative flex flex-col min-h-[580px] justify-center">
             
             {/* Header Brand */}
-            <div className="space-y-10">
-              <div className="flex justify-between items-center">
-                <BrandLogo className="w-10 h-10" />
-                <div className="text-[10px] font-bold text-zinc-800 uppercase tracking-[0.3em]">Secure Access</div>
+            <div className="space-y-12 text-center md:text-left">
+              <div className="flex justify-between items-center mb-4">
+                <BrandLogo className="w-9 h-9" />
+                <div className="text-[9px] font-black text-zinc-800 uppercase tracking-[0.4em]">Auth Protocol</div>
               </div>
 
-              <div className="space-y-3">
-                <h1 className="text-4xl font-bold text-white tracking-tighter">
-                  {step === 1 ? 'Bem-vindo' : step === 2 ? 'Identificação' : 'Acesso Liberto'}
+              <div className="space-y-4">
+                <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tighter">
+                  {step === 1 ? 'Bem-vindo ao NEXO' : step === 2 ? 'Identificação' : 'Acesso Liberto'}
                 </h1>
-                <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-[300px]">
-                  {step === 1 && 'Entre com suas credenciais para gerenciar sua operação.'}
-                  {step === 2 && 'Valide sua unidade de negócio para prosseguir.'}
-                  {step === 3 && 'Protocolo de segurança validado com sucesso.'}
+                <p className="text-xs text-zinc-500 font-medium leading-[1.8] max-w-[280px] mx-auto md:mx-0">
+                  {step === 1 && 'Gerencie sua operação com inteligência e precisão estratégica.'}
+                  {step === 2 && 'Valide sua unidade de negócio para prosseguir com segurança.'}
+                  {step === 3 && 'Protocolo de segurança validado com sucesso. Pronto para iniciar.'}
                 </p>
               </div>
             </div>
 
             {/* Formulário */}
-            <div className="space-y-8">
+            <div className="space-y-8 flex-1 flex flex-col justify-center">
               {step === 1 && (
-                <div className="space-y-8 animate-in fade-in duration-700">
+                <div className="space-y-10 animate-in fade-in duration-700">
                   <div className="space-y-6">
                     <div>
-                      <label className={labelClass}>E-mail</label>
+                      <label className={labelClass}>Acesso</label>
                       <input type="email" placeholder="nome@empresa.com" className={inputClass} />
                     </div>
                     <div>
-                      <label className={labelClass}>Senha</label>
+                      <label className={labelClass}>Chave</label>
                       <input type="password" placeholder="••••••••" className={inputClass} />
                     </div>
                   </div>
                   
                   <button onClick={handleNext} className={primaryButtonClass}>
-                    ENTRAR NA PLATAFORMA <i className="fa-solid fa-arrow-right-long ml-2 opacity-50"></i>
+                    INICIAR SESSÃO <i className="fa-solid fa-arrow-right-long ml-2 opacity-40"></i>
                   </button>
 
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest hover:text-white cursor-pointer transition-colors">Recuperar acesso</span>
-                    <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest hover:text-white cursor-pointer transition-colors">Criar conta</span>
+                  <div className="flex justify-center md:justify-between items-center pt-2 gap-8">
+                    <span className="text-[9px] font-black text-zinc-800 uppercase tracking-[0.2em] hover:text-white cursor-pointer transition-colors">Esqueci a senha</span>
+                    <span className="text-[9px] font-black text-zinc-800 uppercase tracking-[0.2em] hover:text-white cursor-pointer transition-colors">Nova conta</span>
                   </div>
                 </div>
               )}
 
               {step === 2 && (
-                <div className="space-y-8 animate-in fade-in duration-700">
+                <div className="space-y-10 animate-in fade-in duration-700">
                   <div className="space-y-6">
                     <div>
                       <label className={labelClass}>Gestor Responsável</label>
@@ -101,7 +101,7 @@ const Onboarding: React.FC = () => {
                       <label className={labelClass}>Organização</label>
                       <input 
                         type="text" 
-                        placeholder="Nome da Empresa"
+                        placeholder="Empresa"
                         className={inputClass}
                         value={formData.companyName}
                         onChange={e => setFormData({...formData, companyName: e.target.value})}
@@ -110,7 +110,7 @@ const Onboarding: React.FC = () => {
                   </div>
                   
                   <div className="flex gap-4">
-                    <button onClick={handleBack} className="flex-1 py-5 border border-white/[0.05] text-zinc-600 rounded-xl font-bold text-[10px] uppercase hover:text-white transition-all">
+                    <button onClick={handleBack} className="flex-1 py-5.5 border border-white/[0.04] text-zinc-600 rounded-xl font-bold text-[10px] uppercase hover:text-white transition-all">
                       Voltar
                     </button>
                     <button 
@@ -125,53 +125,53 @@ const Onboarding: React.FC = () => {
               )}
 
               {step === 3 && (
-                <div className="space-y-12 text-center animate-in zoom-in-95 duration-700 py-6">
-                  <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto text-black shadow-[0_0_60px_rgba(255,255,255,0.15)] relative overflow-hidden">
-                    <i className="fa-solid fa-check text-4xl relative z-10"></i>
+                <div className="space-y-14 text-center animate-in zoom-in-95 duration-700 py-6">
+                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto text-black shadow-[0_0_60px_rgba(255,255,255,0.1)] relative">
+                    <i className="fa-solid fa-check text-3xl"></i>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <p className="text-white font-bold text-2xl tracking-tight">{formData.companyName}</p>
-                    <p className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.5em]">Ambiente Criptografado</p>
+                    <p className="text-[9px] font-black text-zinc-700 uppercase tracking-[0.6em]">Terminal Validado</p>
                   </div>
                   <button onClick={handleFinish} className={primaryButtonClass}>
-                    ENTRAR NO DASHBOARD
+                    ACESSAR DASHBOARD
                   </button>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="mt-16 text-center">
-            <p className="text-[10px] font-bold text-zinc-900 uppercase tracking-[0.8em]">
-              NEXO TERMINAL — 2025
+          <div className="mt-12 text-center opacity-20">
+            <p className="text-[8px] font-black text-white uppercase tracking-[1em]">
+              NEXO — INTELLIGENCE UNIT
             </p>
           </div>
         </div>
       </div>
 
       {/* COLUNA DIREITA: BRANDING (60%) */}
-      <div className="hidden md:flex flex-1 bg-[#000000] relative items-center justify-start pl-32 overflow-hidden border-l border-white/[0.03]">
+      <div className="hidden md:flex flex-1 bg-[#000000] relative items-center justify-start pl-32 overflow-hidden border-l border-white/[0.02]">
         
-        {/* LUZES VOLUMÉTRICAS (Atmosfera Premium) */}
-        <div className="absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] bg-[#ff0055] opacity-[0.07] rounded-full blur-[250px] animate-pulse"></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[800px] h-[800px] bg-[#7000ff] opacity-[0.06] rounded-full blur-[220px] delay-1000 animate-pulse"></div>
-        <div className="absolute top-[40%] right-[10%] w-[400px] h-[400px] bg-white opacity-[0.02] rounded-full blur-[180px]"></div>
+        {/* GRADIENTE ATMOSFÉRICO (DESLOCADO DO CENTRO) */}
+        <div className="absolute top-[10%] right-[-15%] w-[900px] h-[900px] bg-[#7000ff] opacity-[0.06] rounded-full blur-[200px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[10%] w-[700px] h-[700px] bg-[#ff0055] opacity-[0.05] rounded-full blur-[180px] delay-1000 animate-pulse"></div>
+        <div className="absolute top-[40%] right-[-10%] w-[400px] h-[400px] bg-white opacity-[0.015] rounded-full blur-[150px]"></div>
         
-        {/* HEADLINE EDITORIAL (Alinhada à Esquerda) */}
-        <div className="relative z-10 space-y-10 max-w-5xl">
+        {/* HEADLINE EDITORIAL */}
+        <div className="relative z-10 space-y-4 max-w-5xl">
           <div className="space-y-0 text-left">
-            <h2 className="text-8xl lg:text-[160px] font-bold text-white tracking-tighter leading-[0.8] animate-in fade-in slide-in-from-bottom-12 duration-1000">
+            <h2 className="text-[100px] lg:text-[140px] font-semibold text-[#FFFFFF] tracking-tighter leading-[1] animate-in fade-in slide-in-from-bottom-8 duration-1000">
               Decisões claras.
             </h2>
-            <h2 className="text-7xl lg:text-[120px] font-light text-white/50 tracking-tighter leading-[0.8] animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
+            <h2 className="text-[85px] lg:text-[115px] font-normal text-white/60 tracking-tighter leading-[0.95] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
               Resultados reais.
             </h2>
           </div>
           
-          <div className="pt-16 animate-in fade-in duration-1000 delay-700 flex items-center gap-12">
-             <div className="w-24 h-[1px] bg-white/10"></div>
-             <p className="text-[12px] font-bold text-zinc-600 uppercase tracking-[0.9em] whitespace-nowrap">
-               The intelligence behind your capital
+          <div className="pt-12 animate-in fade-in duration-1000 delay-700 flex items-center gap-10 opacity-30">
+             <div className="w-16 h-[1px] bg-white/40"></div>
+             <p className="text-[10px] font-bold text-white uppercase tracking-[0.8em] whitespace-nowrap">
+               INTELLIGENCE BEHIND CAPITAL
              </p>
           </div>
         </div>

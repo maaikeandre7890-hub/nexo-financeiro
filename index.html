@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -12,22 +11,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
       :root {
-        /* NEXO ENTERPRISE REFINED THEME */
         --bg-main: #0B0D10;
         --bg-sidebar: #0B0D10;
         --bg-card: #15181D;
         --bg-header: rgba(11, 13, 16, 0.95);
-        
         --text-main: #FFFFFF;
         --text-muted: #B5B7BA;
         --text-deep: #8A8D91;
-        
         --border-subtle: rgba(255, 255, 255, 0.06);
         --emerald-primary: #10b981;
-        --emerald-hover: #059669;
-        
         --track-bg: #0B0D10;
-        --scrollbar-thumb: #10b981;
       }
 
       .light-theme {
@@ -35,67 +28,77 @@
         --bg-sidebar: #F4F7F9;
         --bg-card: #FFFFFF;
         --bg-header: rgba(244, 247, 249, 0.95);
-        
         --text-main: #1A1C21;
         --text-muted: #4B4E52;
         --text-deep: #7A7D81;
-        
         --border-subtle: rgba(16, 185, 129, 0.15);
         --track-bg: #E2E8F0;
       }
       
-      html {
-        scrollbar-gutter: stable;
-        background-color: var(--bg-main);
+      html, body {
         height: 100%;
         width: 100%;
-        overflow: hidden;
-      }
-
-      body {
         margin: 0;
         padding: 0;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        font-family: 'Space Grotesk', sans-serif;
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
+        position: fixed; /* Previne scroll elástico em navegadores mobile */
+        overscroll-behavior-y: none;
+      }
+
+      #root {
         height: 100%;
         width: 100%;
-        background-color: transparent;
-        color: var(--text-main);
-        font-family: 'Space Grotesk', 'Inter', sans-serif;
-        -webkit-font-smoothing: antialiased;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
+
+      /* Suporte a Safe Areas */
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+      .pt-safe { padding-top: env(safe-area-inset-top); }
 
       .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-      .custom-scrollbar::-webkit-scrollbar-track { background: var(--track-bg); }
-      .custom-scrollbar::-webkit-scrollbar-thumb { 
-        background: var(--emerald-primary); 
-        border-radius: 10px; 
-      }
-
-      .page-enter { animation: revealPage 0.3s ease-out; }
-      @keyframes revealPage {
-        from { opacity: 0; transform: translateY(2px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--emerald-primary); border-radius: 10px; }
 
       .glass-card {
         background: var(--bg-card);
         border: 1px solid var(--border-subtle);
-        border-radius: 8px;
-        transition: transform 0.2s ease;
+        border-radius: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      @media (max-width: 768px) {
+        .glass-card { border-radius: 16px; }
+        h1 { font-size: clamp(1.5rem, 7vw, 2.25rem); }
+        h2 { font-size: clamp(1.25rem, 6vw, 1.75rem); }
       }
 
       .mono { font-family: 'JetBrains Mono', monospace; }
       
-      h1, h2, h3, h4 { 
-        letter-spacing: -0.01em; 
-        color: var(--text-main);
+      .page-enter { 
+        animation: revealPage 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+        will-change: transform, opacity;
+      }
+
+      @keyframes revealPage {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Previne zoom automático em inputs no iOS */
+      input, select, textarea {
+        font-size: 16px !important;
       }
       
-      label {
-        color: var(--text-deep);
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+      /* Mobile optimization for buttons */
+      @media (max-width: 768px) {
+        button, .btn {
+          min-height: 44px; /* Apple Human Interface Guidelines */
+        }
       }
     </style>
     <script type="importmap">
@@ -116,7 +119,7 @@
 </script>
     <script type="module" src="./index.tsx"></script>
   </head>
-  <body>
+  <body class="pt-safe">
     <div id="root"></div>
   </body>
 </html>
