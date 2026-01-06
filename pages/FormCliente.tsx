@@ -1,11 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 
 const FormCliente: React.FC = () => {
-  const { state, addClient, maskCurrency, parseCurrency, logAction } = useApp();
+  const { state, addClient, maskCurrency, parseCurrency } = useApp();
   const navigate = useNavigate();
+  const nameInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
     name: '', 
@@ -26,11 +27,47 @@ const FormCliente: React.FC = () => {
     status: 'Ativo' as any
   });
 
+  const [cpfStatus, setCpfStatus] = useState<'valid' | 'invalid' | null>(null);
+
   const validateCPF = (cpf: string) => {
     const cleanCpf = cpf.replace(/\D/g, "");
     if (cleanCpf.length !== 11) return false;
     if (/^(\d)\1+$/.test(cleanCpf)) return false;
+    
+    let sum = 0;
+    let remainder;
+    for (let i = 1; i <= 9; i++) sum = sum + parseInt(cleanCpf.substring(i - 1, i)) * (11 - i);
+    remainder = (sum * 10) % 11;
+    if ((remainder === 10) || (remainder === 11)) remainder = 0;
+    if (remainder !== parseInt(cleanCpf.substring(9, 10))) return false;
+    
+    sum = 0;
+    for (let i = 1; i <= 10; i++) sum = sum + parseInt(cleanCpf.substring(i - 1, i)) * (12 - i);
+    remainder = (sum * 10) % 11;
+    if ((remainder === 10) || (remainder === 11)) remainder = 0;
+    if (remainder !== parseInt(cleanCpf.substring(10, 11))) return false;
+    
     return true;
+  };
+
+  const handleCPFKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Impede o envio do formulário ou navegação
+      
+      if (formData.type === 'PF') {
+        const isValid = validateCPF(formData.document);
+        if (isValid) {
+          setCpfStatus('valid');
+          // Mover foco para o campo Nome
+          setTimeout(() => nameInputRef.current?.focus(), 10);
+        } else {
+          setCpfStatus('invalid');
+        }
+      } else {
+        // Para CNPJ apenas move o foco
+        nameInputRef.current?.focus();
+      }
+    }
   };
 
   const maskDocument = (val: string, type: 'PF' | 'PJ') => {
@@ -53,7 +90,6 @@ const FormCliente: React.FC = () => {
     
     const rawValue = parseCurrency(formData.monthlyValue);
     
-    // Armazenar CPF mascarado no banco por padrão conforme regra de segurança
     const maskedDoc = formData.type === 'PF' 
       ? formData.document.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, "***.***.$3-$4")
       : formData.document;
@@ -105,8 +141,8 @@ const FormCliente: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-10 glass-card p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
         <div className="space-y-8">
           <div className="grid grid-cols-2 gap-2 p-1 bg-white/[0.02] rounded-xl border border-white/5">
-            <button type="button" onClick={() => setFormData({...formData, type: 'PF', document: ''})} className={`py-3 rounded-lg text-[10px] font-black uppercase transition-all ${formData.type === 'PF' ? 'bg-emerald-500 text-black' : 'text-slate-600'}`}>Pessoa Física</button>
-            <button type="button" onClick={() => setFormData({...formData, type: 'PJ', document: ''})} className={`py-3 rounded-lg text-[10px] font-black uppercase transition-all ${formData.type === 'PJ' ? 'bg-emerald-500 text-black' : 'text-slate-600'}`}>Pessoa Jurídica</button>
+            <button type="button" onClick={() => { setFormData({...formData, type: 'PF', document: ''}); setCpfStatus(null); }} className={`py-3 rounded-lg text-[10px] font-black uppercase transition-all ${formData.type === 'PF' ? 'bg-emerald-500 text-black' : 'text-slate-600'}`}>Pessoa Física</button>
+            <button type="button" onClick={() => { setFormData({...formData, type: 'PJ', document: ''}); setCpfStatus(null); }} className={`py-3 rounded-lg text-[10px] font-black uppercase transition-all ${formData.type === 'PJ' ? 'bg-emerald-500 text-black' : 'text-slate-600'}`}>Pessoa Jurídica</button>
           </div>
 
           <div className="space-y-6">
@@ -115,22 +151,45 @@ const FormCliente: React.FC = () => {
               <div className="relative">
                 <input 
                   required 
-                  className={inputClass} 
+                  className={`${inputClass} ${cpfStatus === 'invalid' ? 'border-rose-500/50' : cpfStatus === 'valid' ? 'border-emerald-500/50' : ''}`}
                   placeholder={formData.type === 'PF' ? "000.000.000-00" : "00.000.000/0000-00"} 
                   value={formData.document} 
-                  onChange={e => setFormData({...formData, document: maskDocument(e.target.value, formData.type)})} 
+                  onChange={e => {
+                    setFormData({...formData, document: maskDocument(e.target.value, formData.type)});
+                    if (cpfStatus) setCpfStatus(null);
+                  }}
+                  onKeyDown={handleCPFKeyDown}
                 />
               </div>
               {formData.type === 'PF' && (
-                <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mt-2 ml-1">
-                  Consulta automática será habilitada em breve.
-                </p>
+                <div className="mt-2 ml-1">
+                  {cpfStatus === 'valid' ? (
+                    <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest animate-in fade-in">
+                      CPF válido. Complete os dados do cliente.
+                    </p>
+                  ) : cpfStatus === 'invalid' ? (
+                    <p className="text-[9px] font-black text-rose-500 uppercase tracking-widest animate-in fade-in">
+                      CPF inválido. Verifique os dígitos.
+                    </p>
+                  ) : (
+                    <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest opacity-40">
+                      Pressione ENTER para validar.
+                    </p>
+                  )}
+                </div>
               )}
             </div>
 
             <div>
               <label className={labelClass}>Nome Completo / Razão Social</label>
-              <input required className={inputClass} placeholder="Ex: João da Padaria" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+              <input 
+                required 
+                ref={nameInputRef}
+                className={inputClass} 
+                placeholder="Ex: João da Padaria" 
+                value={formData.name} 
+                onChange={e => setFormData({...formData, name: e.target.value})} 
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

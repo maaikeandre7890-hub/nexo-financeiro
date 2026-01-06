@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
@@ -29,7 +28,19 @@ const Clientes: React.FC = () => {
   }, [state.receivables, viewingParcelas]);
 
   const handleWhatsAppCharge = (client: Client) => {
-    const message = `Olá ${client.name}! Gostaríamos de lembrar do seu pagamento recorrente de R$ ${formatNumber(client.monthlyValue)} com o NEXO. Como podemos ajudar?`;
+    const clientRecs = state.receivables
+      .filter(r => r.clientId === client.id)
+      .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+
+    if (clientRecs.length === 0) return;
+
+    const firstPending = clientRecs.find(r => r.status !== 'Pago') || clientRecs[clientRecs.length - 1];
+    const installmentNumber = clientRecs.indexOf(firstPending) + 1;
+    const totalInstallments = client.installments;
+    const statusLabel = firstPending.status === 'Atrasado' ? 'em atraso' : firstPending.status.toLowerCase();
+
+    const message = `Olá, ${client.name}!\n\nIdentificamos que sua parcela ${installmentNumber} de ${totalInstallments},\nno valor de R$ ${formatNumber(firstPending.amount)},\nencontra-se ${statusLabel}.\n\nCaso já tenha realizado o pagamento, desconsidere esta mensagem.\nSe precisar, é só falar com a gente para regularizar.\n\n${state.companyName}`;
+    
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/${client.phone.replace(/\D/g, '')}?text=${encoded}`, '_blank');
   };
@@ -56,7 +67,6 @@ const Clientes: React.FC = () => {
     if (payingRec) {
       markAsPaid(payingRec.id, method);
       setPayingRec(null);
-      // Opcional: recarregar a visualização de parcelas se estiver aberta
     }
   };
 

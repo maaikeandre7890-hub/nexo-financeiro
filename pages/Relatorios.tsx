@@ -1,5 +1,4 @@
-
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
 
 const Relatorios: React.FC = () => {
@@ -143,16 +142,61 @@ const Relatorios: React.FC = () => {
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
           <style>
             body { font-family: 'Inter', sans-serif; color: #020608; padding: 40px; margin: 0; background: #fff; line-height: 1.4; }
-            @media print { body { padding: 0; } .no-print { display: none; } }
+            .no-print-bar {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              background: #0B0D10;
+              padding: 16px 40px;
+              margin: -40px -40px 40px -40px;
+              position: sticky;
+              top: 0;
+              z-index: 1000;
+              border-bottom: 1px solid rgba(255,255,255,0.1);
+              color: white;
+            }
+            .btn-back {
+              background: #10b981;
+              color: #000;
+              border: none;
+              padding: 12px 24px;
+              border-radius: 12px;
+              font-weight: 900;
+              font-size: 11px;
+              text-transform: uppercase;
+              cursor: pointer;
+              letter-spacing: 1px;
+              transition: all 0.2s;
+            }
+            .btn-back:hover { background: #059669; }
+            @media print {
+              .no-print-bar { display: none !important; }
+              body { padding: 0; }
+            }
           </style>
         </head>
         <body>
+          <div class="no-print-bar">
+            <button class="btn-back" onclick="window.close()">← Voltar para o App</button>
+            <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #8A8D91;">
+              Visualização de Relatório • NEXO Intelligence
+            </div>
+          </div>
           ${header}
           ${content}
           <div style="margin-top: 50px; border-top: 1px solid #f1f5f9; padding-top: 20px; text-align: center; font-size: 9px; color: #cbd5e1; text-transform: uppercase; letter-spacing: 2px;">
             Documento Emitido em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')} • Sistema NEXO
           </div>
-          <script>window.onload = () => { window.print(); }</script>
+          <script>
+            window.onload = () => { 
+              setTimeout(() => {
+                window.print();
+              }, 500);
+            };
+            window.onafterprint = () => {
+              // Permite ao usuário manter a aba aberta se quiser, mas provê o botão de voltar.
+            };
+          </script>
         </body>
       </html>
     `;

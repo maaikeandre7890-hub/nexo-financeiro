@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../contexts/AppContext';
 
@@ -26,7 +25,16 @@ const Cobranca: React.FC = () => {
 
   const handleWhatsAppCharge = (item: any) => {
     const client = state.clients.find(c => c.id === item.clientId);
-    const message = `Olá! Tudo bem? Passando para lembrar do seu pagamento de R$ ${formatNumber(item.amount)} que vence dia ${new Date(item.dueDate).toLocaleDateString('pt-BR')}. Se já pagou, por favor desconsidere.`;
+    const clientRecs = state.receivables
+      .filter(r => r.clientId === item.clientId)
+      .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+
+    const installmentNumber = clientRecs.findIndex(r => r.id === item.id) + 1;
+    const totalInstallments = client?.installments || clientRecs.length;
+    const statusLabel = item.status === 'Atrasado' ? 'em atraso' : item.status.toLowerCase();
+
+    const message = `Olá, ${item.clientName}!\n\nIdentificamos que sua parcela ${installmentNumber} de ${totalInstallments},\nno valor de R$ ${formatNumber(item.amount)},\nencontra-se ${statusLabel}.\n\nCaso já tenha realizado o pagamento, desconsidere esta mensagem.\nSe precisar, é só falar com a gente para regularizar.\n\n${state.companyName}`;
+    
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/${client?.phone.replace(/\D/g, '')}?text=${encoded}`, '_blank');
   };
