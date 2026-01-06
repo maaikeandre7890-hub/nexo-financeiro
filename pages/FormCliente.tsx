@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 
 const FormCliente: React.FC = () => {
-  const { state, addClient } = useApp();
+  const { state, addClient, maskCurrency, parseCurrency } = useApp();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -33,17 +32,11 @@ const FormCliente: React.FC = () => {
     return val.substring(0, 11).replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
   };
 
-  const maskCurrency = (val: string) => {
-    val = val.replace(/\D/g, "");
-    const v = (Number(val) / 100).toFixed(2).replace(".", ",");
-    return v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.document || !formData.monthlyValue || !formData.phone) return;
     
-    const rawValue = Number(formData.monthlyValue.replace(/\./g, "").replace(",", "."));
+    const rawValue = parseCurrency(formData.monthlyValue);
     
     addClient({ 
       ...formData, 
@@ -112,7 +105,7 @@ const FormCliente: React.FC = () => {
               <label className={labelClass}>Valor mensal (R$)</label>
               <div className="relative">
                 <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-700 font-black text-[10px]">R$</span>
-                <input required className={`${inputClass} pl-12`} placeholder="Ex: 1200" value={formData.monthlyValue} onChange={e => setFormData({...formData, monthlyValue: maskCurrency(e.target.value)})} />
+                <input required className={`${inputClass} pl-12`} placeholder="0,00" value={formData.monthlyValue} onInput={(e) => e.currentTarget.value = maskCurrency(e.currentTarget.value)} onChange={e => setFormData({...formData, monthlyValue: e.target.value})} />
               </div>
             </div>
             <div>

@@ -1,31 +1,23 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 
 const FormRecebivel: React.FC = () => {
-  const { state, addReceivable, formatNumber } = useApp();
+  const { state, addReceivable, formatNumber, maskCurrency, parseCurrency } = useApp();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ 
     clientId: '', 
     amount: '', 
     dueDate: '', 
     category: 'Venda',
-    // Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts
     paymentMethod: 'PIX' 
   });
-
-  const maskCurrency = (val: string) => {
-    val = val.replace(/\D/g, "");
-    const v = (Number(val) / 100).toFixed(2).replace(".", ",");
-    return v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const client = state.clients.find(c => c.id === formData.clientId);
     if (!client || !formData.amount || !formData.dueDate) return;
-    const rawAmount = Number(formData.amount.replace(/\./g, "").replace(",", "."));
+    const rawAmount = parseCurrency(formData.amount);
     
     addReceivable({ 
       clientId: client.id, 
@@ -37,7 +29,6 @@ const FormRecebivel: React.FC = () => {
       paymentMethod: formData.paymentMethod as any
     });
     
-    // Redirecionamento obrigatório para Dashboard
     navigate('/dashboard');
   };
 
@@ -79,7 +70,7 @@ const FormRecebivel: React.FC = () => {
               <label className={labelClass}>Montante</label>
               <div className="relative">
                 <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-700 font-black text-[10px]">R$</span>
-                <input required className={`${inputClass} pl-12`} placeholder="0,00" value={formData.amount} onChange={e => setFormData({...formData, amount: maskCurrency(e.target.value)})} />
+                <input required className={`${inputClass} pl-12`} placeholder="0,00" value={formData.amount} onInput={(e) => e.currentTarget.value = maskCurrency(e.currentTarget.value)} onChange={e => setFormData({...formData, amount: e.target.value})} />
               </div>
             </div>
             <div>
@@ -91,7 +82,6 @@ const FormRecebivel: React.FC = () => {
           <div>
             <label className={labelClass}>Forma de Pagamento</label>
             <select required className={inputClass} value={formData.paymentMethod} onChange={e => setFormData({...formData, paymentMethod: e.target.value})}>
-              {/* Fix: Use 'PIX' instead of 'Pix' to match the type in types.ts */}
               <option value="PIX" className="bg-slate-950">Pix</option>
               <option value="Boleto" className="bg-slate-950">Boleto</option>
               <option value="Dinheiro" className="bg-slate-950">Dinheiro</option>

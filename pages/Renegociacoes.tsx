@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../contexts/AppContext';
 import { Receivable } from '../types';
@@ -146,18 +145,18 @@ const Renegociacoes: React.FC = () => {
         </table>
       </div>
 
-      {/* Modal Pagamento (Otimizado Mobile) */}
+      {/* Modal Pagamento - Centralização Absoluta Corrigida */}
       {payingRec && (
-        <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center p-0 md:p-6 animate-in fade-in">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6 animate-in fade-in">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setPayingRec(null)}></div>
-          <div className="relative w-full max-w-sm glass-card p-10 md:p-12 rounded-t-[2.5rem] md:rounded-[3.5rem] border-white/10 space-y-8 bg-[#0a151b] text-center shadow-2xl">
+          <div className="relative w-full max-w-sm glass-card p-10 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 space-y-8 bg-[#0a151b] text-center shadow-2xl animate-in zoom-in-95 duration-300">
              <div className="space-y-3">
                 <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Liquidando Acordo</p>
                 <h3 className="text-3xl md:text-4xl font-black text-white mono">R$ {formatNumber(payingRec.amount)}</h3>
                 <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{payingRec.clientName}</p>
              </div>
              <div className="grid grid-cols-2 gap-3">
-                {['PIX', 'Boleto', 'Cartão', 'Dinheiro'].map(m => (
+                {['PIX', 'Débito', 'Crédito', 'Dinheiro'].map(m => (
                   <button key={m} onClick={() => handlePayment(m as any)} className="py-4 rounded-xl bg-white/[0.03] border border-white/10 text-[10px] font-black text-white uppercase tracking-widest hover:bg-amber-500 hover:text-black transition-all">
                     {m}
                   </button>

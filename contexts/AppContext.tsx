@@ -19,6 +19,8 @@ interface AppContextType {
   getChartData: () => { name: string; value: number }[];
   completeOnboarding: (userData: { userName: string, companyName: string, businessType: string }) => void;
   formatNumber: (num: number, precision?: number) => string;
+  maskCurrency: (val: string) => string;
+  parseCurrency: (val: string) => number;
   refreshData: () => Promise<void>;
   toggleTheme: () => void;
   isRefreshing: boolean;
@@ -63,7 +65,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   });
 
-  // Efeito para persistência e aplicação visual instantânea do tema
   useEffect(() => {
     localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
     if (state.theme === 'light') {
@@ -78,6 +79,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       minimumFractionDigits: 2,
       maximumFractionDigits: precision,
     }).format(num);
+  };
+
+  const maskCurrency = (val: string) => {
+    const onlyDigits = val.replace(/\D/g, "");
+    if (!onlyDigits) return "0,00";
+    const amount = Number(onlyDigits) / 100;
+    return formatNumber(amount);
+  };
+
+  const parseCurrency = (val: string) => {
+    return Number(val.replace(/\D/g, "")) / 100;
   };
 
   const logAction = (action: string, details: string, type: AuditLog['type']) => {
@@ -193,6 +205,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const updatedRecs = prev.receivables.map(r => r.clientId === id ? { ...r, clientName: data.name || r.clientName } : r);
       return { ...prev, clients: updatedClients, receivables: updatedRecs };
     });
+    logAction('Alteração Cadastral', `Dados de cliente ${id} atualizados.`, 'info');
   };
 
   const renegotiateClient = (id: string, newValue: number, newInstallments: number) => {
@@ -348,7 +361,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       state, addClient, bulkAddClients, updateClient, deleteClient, renegotiateClient,
       addReceivable, updateReceivable, deleteReceivable, markAsPaid, 
       addExpense, deleteExpense, logAction, clearHistory,
-      getChartData, totals, completeOnboarding, formatNumber,
+      getChartData, totals, completeOnboarding, formatNumber, maskCurrency, parseCurrency,
       refreshData, isRefreshing, toggleTheme
     }}>
       {children}

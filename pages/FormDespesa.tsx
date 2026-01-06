@@ -1,23 +1,16 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 
 const FormDespesa: React.FC = () => {
-  const { state, addExpense, formatNumber } = useApp();
+  const { state, addExpense, formatNumber, maskCurrency, parseCurrency } = useApp();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ description: '', amount: '', date: '', category: 'Outros' });
-
-  const maskCurrency = (val: string) => {
-    val = val.replace(/\D/g, "");
-    const v = (Number(val) / 100).toFixed(2).replace(".", ",");
-    return v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.description || !formData.amount || !formData.date) return;
-    const rawAmount = Number(formData.amount.replace(/\./g, "").replace(",", "."));
+    const rawAmount = parseCurrency(formData.amount);
     addExpense({ ...formData, amount: rawAmount });
     navigate('/despesas-extras');
   };
@@ -57,7 +50,7 @@ const FormDespesa: React.FC = () => {
               <label className={labelClass}>Valor Efetivo</label>
               <div className="relative">
                 <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-700 font-black text-[10px]">R$</span>
-                <input required className={`${inputClass} pl-12`} placeholder="0,00" value={formData.amount} onChange={e => setFormData({...formData, amount: maskCurrency(e.target.value)})} />
+                <input required className={`${inputClass} pl-12`} placeholder="0,00" value={formData.amount} onInput={(e) => e.currentTarget.value = maskCurrency(e.currentTarget.value)} onChange={e => setFormData({...formData, amount: e.target.value})} />
               </div>
             </div>
             <div>
