@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -29,11 +28,47 @@
         --bg-sidebar: #F4F7F9;
         --bg-card: #FFFFFF;
         --bg-header: rgba(244, 247, 249, 0.95);
-        --text-main: #1A1C21;
-        --text-muted: #4B4E52;
-        --text-deep: #7A7D81;
-        --border-subtle: rgba(16, 185, 129, 0.15);
-        --track-bg: #E2E8F0;
+        --text-main: #0F172A; /* Títulos e Valores: Quase preto sólido */
+        --text-muted: #6B7280; /* Descrições: Cinza sólido */
+        --text-deep: #6B7280; /* Subtítulos: Cinza sólido */
+        --border-subtle: #E2E8F0;
+        --track-bg: #CBD5E1;
+      }
+      
+      /* Global overrides for light theme visibility */
+      .light-theme .text-white,
+      .light-theme .text-slate-200,
+      .light-theme .text-slate-300,
+      .light-theme .text-slate-400 {
+        color: #0F172A !important;
+        opacity: 1 !important;
+      }
+
+      .light-theme .text-slate-500,
+      .light-theme .text-zinc-500,
+      .light-theme .text-zinc-600 {
+        color: #6B7280 !important;
+        opacity: 1 !important;
+      }
+
+      .light-theme button:not(.bg-emerald-500):not(.bg-rose-500):not(.bg-amber-500),
+      .light-theme a {
+        color: #2563EB !important;
+        opacity: 1 !important;
+      }
+
+      .light-theme .opacity-80,
+      .light-theme .opacity-60,
+      .light-theme .opacity-40,
+      .light-theme .opacity-30 {
+        opacity: 1 !important;
+      }
+
+      /* Prevent hover text color disappearance */
+      .light-theme .group:hover .text-white,
+      .light-theme .group:hover .text-slate-400,
+      .light-theme button:hover .text-white {
+        color: inherit !important;
       }
       
       html, body {
@@ -57,7 +92,7 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        padding-top: 24px; /* Ajuste: Conteúdo não gruda no topo */
+        padding-top: 24px;
       }
 
       .pb-safe { padding-bottom: env(safe-area-inset-bottom); }

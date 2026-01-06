@@ -20,10 +20,10 @@ const Dashboard: React.FC = () => {
     <div className="space-y-8 md:space-y-12 page-enter">
       <section className="flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
         <div className="space-y-1.5">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--text-main)]">
+          <h1 className={`text-3xl sm:text-4xl font-bold tracking-tight ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'}`}>
             {greeting}, <span className="text-emerald-500">{firstName}</span>
           </h1>
-          <p className="text-sm font-medium text-[var(--text-muted)] opacity-80">Performance financeira em tempo real.</p>
+          <p className={`text-sm font-medium ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-[var(--text-deep)] opacity-80'}`}>Performance financeira em tempo real.</p>
         </div>
         <button 
           onClick={() => navigate('/clientes/novo')}
@@ -36,14 +36,14 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {[
           { label: 'Receitas no Mês', val: totals.paid, color: 'text-emerald-500', sub: 'Consolidado' },
-          { label: 'A Receber', val: totals.toReceive, color: 'text-[var(--text-main)]', sub: 'Pendente' },
+          { label: 'A Receber', val: totals.toReceive, color: state.theme === 'light' ? 'text-[#0F172A]' : 'text-white', sub: 'Pendente' },
           { label: 'Atraso Exposto', val: totals.overdue, color: 'text-rose-500', sub: 'Inadimplência' }
         ].map((kpi, idx) => (
           <div key={idx} className="glass-card p-6 flex flex-col justify-between h-32 sm:h-40 border-white/[0.04]">
-            <p className="text-[10px] font-black text-[var(--text-deep)] uppercase tracking-widest truncate">{kpi.label}</p>
+            <p className={`text-[10px] font-black uppercase tracking-widest truncate ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-[var(--text-deep)]'}`}>{kpi.label}</p>
             <div>
               <p className={`text-2xl sm:text-3xl font-bold ${kpi.color} mono tracking-tighter truncate mb-1`}>R$ {formatNumber(kpi.val)}</p>
-              <p className="text-[9px] text-[var(--text-deep)] font-black uppercase tracking-widest opacity-60">{kpi.sub}</p>
+              <p className={`text-[9px] font-black uppercase tracking-widest ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-[var(--text-deep)] opacity-60'}`}>{kpi.sub}</p>
             </div>
           </div>
         ))}
@@ -52,18 +52,18 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 glass-card p-8 flex flex-col justify-between min-h-[260px] sm:min-h-[340px]">
            <div className="space-y-6">
-              <span className="text-[11px] font-black text-[var(--text-deep)] uppercase tracking-widest">Base Mensal (MRR)</span>
+              <span className={`text-[11px] font-black uppercase tracking-widest ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-[var(--text-deep)]'}`}>Base Mensal (MRR)</span>
               <div className="space-y-2">
-                 <h2 className="text-3xl sm:text-4xl font-bold text-[var(--text-main)] mono leading-none">R$ {formatNumber(totals.monthlyRecurring)}</h2>
-                 <p className="text-xs font-medium text-[var(--text-muted)] leading-relaxed">Potencial bruto mensal recorrente projetado.</p>
+                 <h2 className={`text-3xl sm:text-4xl font-bold mono leading-none ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'}`}>R$ {formatNumber(totals.monthlyRecurring)}</h2>
+                 <p className={`text-xs font-medium leading-relaxed ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-[var(--text-deep)]'}`}>Potencial bruto mensal recorrente projetado.</p>
               </div>
            </div>
            <div className="pt-8">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-[10px] font-black text-[var(--text-deep)] uppercase tracking-widest">Saúde de Caixa</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-[var(--text-deep)]'}`}>Saúde de Caixa</span>
                 <span className="text-sm font-bold text-emerald-500 mono">{totals.cashHealth}%</span>
               </div>
-              <div className="h-1.5 bg-white/[0.03] rounded-full overflow-hidden">
+              <div className={`h-1.5 rounded-full overflow-hidden ${state.theme === 'light' ? 'bg-slate-100' : 'bg-white/[0.03]'}`}>
                  <div className="h-full bg-emerald-500 transition-all duration-1000 ease-out" style={{ width: `${totals.cashHealth}%` }}></div>
               </div>
            </div>
@@ -72,8 +72,8 @@ const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 glass-card p-8 h-[350px] sm:h-[480px] flex flex-col relative overflow-hidden">
           <div className="flex justify-between items-start mb-8 relative z-10">
             <div className="space-y-1.5">
-              <h3 className="text-xs sm:text-sm font-black uppercase tracking-widest text-[var(--text-main)]">Previsão Semestral</h3>
-              <p className="text-[10px] font-bold text-[var(--text-deep)] uppercase leading-relaxed max-w-[220px] sm:max-w-[300px]">
+              <h3 className={`text-xs sm:text-sm font-black uppercase tracking-widest ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'}`}>Previsão Semestral</h3>
+              <p className={`text-[10px] font-bold uppercase leading-relaxed max-w-[220px] sm:max-w-[300px] ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-[var(--text-deep)]'}`}>
                 Projeção estimada de fluxo de caixa baseada em contratos ativos.
               </p>
             </div>
@@ -88,20 +88,20 @@ const Dashboard: React.FC = () => {
                     <stop offset="100%" stopColor="#10b981" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.02)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={state.theme === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.02)'} />
                 <XAxis 
                   dataKey="name" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{fill: '#8A8D91', fontSize: 10, fontWeight: 700}} 
+                  tick={{fill: state.theme === 'light' ? '#6B7280' : '#8A8D91', fontSize: 10, fontWeight: 700}} 
                   dy={12} 
                 />
                 <YAxis hide domain={['auto', 'auto']} />
                 <Tooltip 
                   cursor={{ stroke: '#10b981', strokeWidth: 1.5, strokeDasharray: '4 4' }}
-                  contentStyle={{ backgroundColor: '#0B0D10', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
+                  contentStyle={{ backgroundColor: state.theme === 'light' ? '#FFFFFF' : '#0B0D10', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '16px', padding: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
                   itemStyle={{ color: '#10b981', fontSize: '13px', fontWeight: 'bold' }}
-                  labelStyle={{ color: '#8A8D91', fontSize: '10px', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '900', tracking: '0.1em' }}
+                  labelStyle={{ color: state.theme === 'light' ? '#6B7280' : '#8A8D91', fontSize: '10px', marginBottom: '6px', textTransform: 'uppercase', fontWeight: '900', tracking: '0.1em' }}
                   formatter={(value: number) => `R$ ${formatNumber(value)}`}
                 />
                 <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={3} fill="url(#chartGrad)" />

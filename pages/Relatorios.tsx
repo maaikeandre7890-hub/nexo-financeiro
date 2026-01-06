@@ -193,9 +193,6 @@ const Relatorios: React.FC = () => {
                 window.print();
               }, 500);
             };
-            window.onafterprint = () => {
-              // Permite ao usuário manter a aba aberta se quiser, mas provê o botão de voltar.
-            };
           </script>
         </body>
       </html>
@@ -205,7 +202,7 @@ const Relatorios: React.FC = () => {
     printWindow.document.close();
   };
 
-  const cardClass = "glass-card p-10 rounded-[3.5rem] border-white/5 flex flex-col justify-between hover:border-emerald-500/20 transition-all bg-[#020608] group min-h-[400px]";
+  const cardClass = `glass-card p-10 rounded-[3.5rem] flex flex-col justify-between transition-all group min-h-[400px] ${state.theme === 'light' ? 'bg-white border-slate-200 shadow-sm' : 'border-white/5 bg-[#020608]'}`;
   const btnClass = "w-full py-5 bg-white text-black font-black text-[11px] uppercase tracking-widest rounded-2xl hover:bg-emerald-500 transition-all active:scale-95 flex items-center justify-center gap-3 shadow-xl";
 
   return (
@@ -215,81 +212,46 @@ const Relatorios: React.FC = () => {
           <div className="flex items-center gap-3">
              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.5em]">Documentação Estratégica</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic uppercase leading-none">Relatórios<br/><span className="text-slate-600">Exportáveis.</span></h1>
+          <h1 className={`text-5xl md:text-7xl font-black tracking-tighter italic uppercase leading-none ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'}`}>Relatórios<br/><span className={`${state.theme === 'light' ? 'text-[#6B7280]' : 'text-slate-600'}`}>Exportáveis.</span></h1>
         </div>
 
-        <div className="flex items-center gap-2 bg-white/[0.02] p-2 rounded-2xl border border-white/5 shadow-inner">
+        <div className={`flex items-center gap-2 p-2 rounded-2xl border shadow-inner ${state.theme === 'light' ? 'bg-white border-slate-200' : 'bg-white/[0.02] border-white/5'}`}>
           <select 
             value={selectedMonth} 
             onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-            className="bg-transparent border-none text-[11px] font-black uppercase text-slate-400 focus:text-white outline-none cursor-pointer px-4"
+            className={`bg-transparent border-none text-[11px] font-black uppercase outline-none cursor-pointer px-4 ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-slate-500 focus:text-emerald-500'}`}
           >
-            {months.map((m, i) => <option key={i} value={i} className="bg-[#020608]">{m}</option>)}
+            {months.map((m, i) => <option key={i} value={i} className={state.theme === 'light' ? '' : 'bg-[#020608]'}>{m}</option>)}
           </select>
           <select 
             value={selectedYear} 
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="bg-transparent border-none text-[11px] font-black uppercase text-slate-400 focus:text-white outline-none cursor-pointer px-4"
+            className={`bg-transparent border-none text-[11px] font-black uppercase outline-none cursor-pointer px-4 ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-slate-500 focus:text-emerald-500'}`}
           >
-            {years.map(y => <option key={y} value={y} className="bg-[#020608]">{y}</option>)}
+            {years.map(y => <option key={y} value={y} className={state.theme === 'light' ? '' : 'bg-[#020608]'}>{y}</option>)}
           </select>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className={cardClass}>
-           <div className="space-y-6">
-              <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-white mb-8 border border-white/5 group-hover:bg-emerald-500 group-hover:text-black transition-all">
-                <i className="fa-solid fa-file-invoice text-xl"></i>
-              </div>
-              <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter">Relatório Simples</h3>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed italic">
-                Resumo rápido: Recebidos, Pendentes, Atrasados e Receita Prevista mensal.
-              </p>
-           </div>
-           <button onClick={() => generatePDF('Simples')} className={btnClass}>
-             <i className="fa-solid fa-print"></i> GERAR PDF
-           </button>
-        </div>
-
-        <div className={cardClass}>
-           <div className="space-y-6">
-              <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-white mb-8 border border-white/5 group-hover:bg-amber-500 group-hover:text-black transition-all">
-                <i className="fa-solid fa-briefcase text-xl"></i>
-              </div>
-              <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter">Relatório Executivo</h3>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed italic">
-                Visão de tomada de decisão: Inadimplência, Renegociações e Resumo Narrativo.
-              </p>
-           </div>
-           <button onClick={() => generatePDF('Executivo')} className={btnClass}>
-             <i className="fa-solid fa-print"></i> GERAR PDF
-           </button>
-        </div>
-
-        <div className={cardClass}>
-           <div className="space-y-6">
-              <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-white mb-8 border border-white/5 group-hover:bg-blue-500 group-hover:text-black transition-all">
-                <i className="fa-solid fa-database text-xl"></i>
-              </div>
-              <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter">Relatório Detalhado</h3>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed italic">
-                Controle contador: Lista completa com documentos, plano de parcelas e status por cliente.
-              </p>
-           </div>
-           <button onClick={() => generatePDF('Detalhado')} className={btnClass}>
-             <i className="fa-solid fa-print"></i> GERAR PDF
-           </button>
-        </div>
-      </div>
-
-      <div className="p-10 glass-card rounded-[3rem] border-white/5 bg-[#030d12] flex items-center gap-8">
-         <div className="w-14 h-14 rounded-2xl bg-white/[0.02] flex items-center justify-center text-slate-600 text-xl border border-white/5">
-            <i className="fa-solid fa-circle-info"></i>
-         </div>
-         <p className="text-xs text-slate-500 font-medium italic leading-relaxed">
-           <strong className="text-white uppercase tracking-widest text-[10px]">Auditado:</strong> Os relatórios gerados nesta seção são consolidados em tempo real a partir da sua base de dados segura. Os arquivos PDF são abertos em uma nova aba prontos para salvamento ou impressão direta.
-         </p>
+        {[
+          { type: 'Simples', icon: 'fa-file-invoice', desc: 'Resumo rápido: Recebidos, Pendentes, Atrasados e Receita Prevista mensal.' },
+          { type: 'Executivo', icon: 'fa-briefcase', desc: 'Visão de tomada de decisão: Inadimplência, Renegociações e Resumo Narrativo.' },
+          { type: 'Detalhado', icon: 'fa-database', desc: 'Controle contador: Lista completa com documentos, plano de parcelas e status por cliente.' }
+        ].map((rep) => (
+          <div key={rep.type} className={cardClass}>
+            <div className="space-y-6">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 border transition-all ${state.theme === 'light' ? 'bg-slate-50 border-slate-100 text-[#0F172A]' : 'bg-white/5 text-white border-white/5 group-hover:bg-emerald-500 group-hover:text-black'}`}>
+                  <i className={`fa-solid ${rep.icon} text-xl`}></i>
+                </div>
+                <h3 className={`text-2xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'}`}>Relatório {rep.type}</h3>
+                <p className={`text-sm font-medium leading-relaxed italic ${state.theme === 'light' ? 'text-[#6B7280]' : 'text-slate-500'}`}>{rep.desc}</p>
+            </div>
+            <button onClick={() => generatePDF(rep.type as any)} className={`${btnClass} ${state.theme === 'light' ? 'border border-slate-200 bg-slate-50' : ''}`}>
+              <i className="fa-solid fa-print"></i> GERAR PDF
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

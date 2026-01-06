@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -24,6 +25,9 @@ import Sistema from './pages/Sistema';
 import Configuracoes from './pages/Configuracoes';
 import Tutorial from './pages/Tutorial';
 import Renegociacoes from './pages/Renegociacoes';
+import BoletosNF from './pages/BoletosNF';
+import GerarBoleto from './pages/GerarBoleto';
+import GerarNF from './pages/GerarNF';
 import NotFound from './pages/NotFound';
 import { useApp } from './contexts/AppContext';
 
@@ -95,6 +99,9 @@ const App: React.FC = () => {
               <Route path="/recebiveis" element={<Recebiveis />} />
               <Route path="/recebiveis/novo" element={<FormRecebivel />} />
               <Route path="/parcelas-atraso" element={<Atraso />} />
+              <Route path="/boletos-nf" element={<BoletosNF />} />
+              <Route path="/boletos-nf/boleto" element={<GerarBoleto />} />
+              <Route path="/boletos-nf/nf" element={<GerarNF />} />
               <Route path="/historico" element={<Historico />} />
               <Route path="/relatorios" element={<Relatorios />} />
               <Route path="/faturamento-liquido" element={<FaturamentoLiquido />} />

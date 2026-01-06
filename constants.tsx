@@ -22,6 +22,7 @@ export const NAVIGATION: NavItem[] = [
   { label: 'Contas a Receber', path: '/recebiveis', icon: 'fa-file-invoice-dollar' },
   { label: 'Contas em Atraso', path: '/parcelas-atraso', icon: 'fa-triangle-exclamation' },
   { label: 'Histórico de Ações', path: '/historico', icon: 'fa-clock-rotate-left' },
+  { label: '🧾 Boletos & NF', path: '/boletos-nf', icon: 'fa-file-invoice' },
   { label: 'Relatórios', path: '/relatorios', icon: 'fa-file-contract' },
   { label: 'Lucro do Mês', path: '/faturamento-liquido', icon: 'fa-scale-balanced' },
   { label: 'Minhas Despesas', path: '/despesas-extras', icon: 'fa-receipt' },
