@@ -1,16 +1,18 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import { Client, Receivable } from '../types';
 
 const Clientes: React.FC = () => {
-  const { state, formatNumber, deleteClient, updateReceivable, updateClient, maskCurrency, parseCurrency } = useApp();
+  const { state, formatNumber, deleteClient, updateReceivable, updateClient, maskCurrency, parseCurrency, markAsPaid } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   const [viewingParcelas, setViewingParcelas] = useState<Client | null>(null);
   const [editingReceivable, setEditingReceivable] = useState<Receivable | null>(null);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const [payingRec, setPayingRec] = useState<Receivable | null>(null);
 
   const filteredClients = useMemo(() => {
     return state.clients.filter(client => 
@@ -40,8 +42,25 @@ const Clientes: React.FC = () => {
     }
   };
 
-  const tableHeaderClass = "px-6 py-4 text-[10px] font-black text-[var(--text-deep)] uppercase tracking-widest";
+  const getMethodBadgeColor = (method: string) => {
+    switch(method) {
+      case 'PIX': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      case 'Crédito': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+      case 'Débito': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+      case 'Dinheiro': return 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20';
+      default: return 'bg-white/5 text-zinc-600 border-white/10';
+    }
+  };
 
+  const handlePayment = (method: Receivable['paymentMethod']) => {
+    if (payingRec) {
+      markAsPaid(payingRec.id, method);
+      setPayingRec(null);
+      // Opcional: recarregar a visualização de parcelas se estiver aberta
+    }
+  };
+
+  const tableHeaderClass = "px-6 py-4 text-[10px] font-black text-[var(--text-deep)] uppercase tracking-widest";
   const inputClass = `w-full bg-white/[0.04] border border-white/10 rounded-xl py-4 px-5 text-sm font-semibold placeholder:text-slate-800 focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/[0.02] transition-all text-white`;
 
   return (
@@ -71,7 +90,6 @@ const Clientes: React.FC = () => {
         </div>
       </div>
 
-      {/* Desktop Table View */}
       <div className="hidden md:block glass-card overflow-hidden">
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left">
@@ -120,7 +138,6 @@ const Clientes: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         {filteredClients.map((client) => (
           <div key={client.id} className="glass-card p-5 space-y-5 animate-in fade-in slide-in-from-bottom-2">
@@ -141,46 +158,20 @@ const Clientes: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-4 gap-2">
-              <button 
-                onClick={() => setEditingClient(client)}
-                className="flex flex-col items-center justify-center py-3 bg-white/[0.03] border border-white/5 rounded-xl text-zinc-400 hover:text-white"
-              >
-                <i className="fa-solid fa-pen-to-square mb-1 text-xs"></i>
-                <span className="text-[7px] font-black uppercase tracking-widest">Editar</span>
-              </button>
-              <button 
-                onClick={() => setViewingParcelas(client)}
-                className="flex flex-col items-center justify-center py-3 bg-white/[0.03] border border-white/5 rounded-xl text-zinc-400 hover:text-white"
-              >
-                <i className="fa-solid fa-list-check mb-1 text-xs"></i>
-                <span className="text-[7px] font-black uppercase tracking-widest">Parcelas</span>
-              </button>
-              <button 
-                onClick={() => handleWhatsAppCharge(client)}
-                className="flex flex-col items-center justify-center py-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl text-emerald-500"
-              >
-                <i className="fa-brands fa-whatsapp mb-1 text-xs"></i>
-                <span className="text-[7px] font-black uppercase tracking-widest">Cobrar</span>
-              </button>
-              <button 
-                onClick={() => { if(confirm('Excluir?')) deleteClient(client.id) }}
-                className="flex flex-col items-center justify-center py-3 bg-rose-500/5 border border-rose-500/10 rounded-xl text-rose-500"
-              >
-                <i className="fa-solid fa-trash-can mb-1 text-xs"></i>
-                <span className="text-[7px] font-black uppercase tracking-widest">Sair</span>
-              </button>
+              <button onClick={() => setEditingClient(client)} className="flex flex-col items-center justify-center py-3 bg-white/[0.03] border border-white/5 rounded-xl text-zinc-400 hover:text-white"><i className="fa-solid fa-pen-to-square mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Editar</span></button>
+              <button onClick={() => setViewingParcelas(client)} className="flex flex-col items-center justify-center py-3 bg-white/[0.03] border border-white/5 rounded-xl text-zinc-400 hover:text-white"><i className="fa-solid fa-list-check mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Parcelas</span></button>
+              <button onClick={() => handleWhatsAppCharge(client)} className="flex flex-col items-center justify-center py-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl text-emerald-500"><i className="fa-brands fa-whatsapp mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Cobrar</span></button>
+              <button onClick={() => { if(confirm('Excluir?')) deleteClient(client.id) }} className="flex flex-col items-center justify-center py-3 bg-rose-500/5 border border-rose-500/10 rounded-xl text-rose-500"><i className="fa-solid fa-trash-can mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Sair</span></button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Modais - Centralização Vertical e Horizontal Garantida */}
-      
-      {/* Drawer Parcelas */}
+      {/* Drawer Parcelas - Ajuste de Respiro (mb-3/12px) */}
       {viewingParcelas && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setViewingParcelas(null)}></div>
-          <div className="relative w-full max-w-xl max-h-[90vh] bg-[#0B0D10] border border-white/[0.08] shadow-2xl rounded-3xl animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden">
+          <div className="relative w-full max-w-xl max-h-[85vh] bg-[#0B0D10] border border-white/[0.08] shadow-2xl rounded-3xl animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden">
             <div className="p-6 sm:p-8 border-b border-white/5 flex items-center justify-between shrink-0">
                 <div>
                   <h2 className="text-lg sm:text-xl font-black text-white mb-1">{viewingParcelas.name}</h2>
@@ -193,24 +184,41 @@ const Clientes: React.FC = () => {
 
             <div className="flex-1 overflow-y-auto p-6 space-y-3 custom-scrollbar">
               {clientParcelas.map((rec, idx) => (
-                <div key={rec.id} className="p-4 rounded-2xl border border-white/5 flex items-center justify-between bg-white/[0.01] hover:bg-white/[0.03] transition-all group">
+                <div key={rec.id} className="p-5 mb-3 rounded-2xl border border-white/5 flex items-center justify-between bg-white/[0.01] hover:bg-white/[0.03] transition-all group">
                   <div className="flex items-center gap-4">
                     <div className="text-[9px] font-black text-zinc-700 mono w-6">#{idx + 1}</div>
                     <div>
-                      <p className="text-sm font-black text-white mono">R$ {formatNumber(rec.amount)}</p>
-                      <p className="text-[9px] font-bold text-zinc-600">Venc: {new Date(rec.dueDate).toLocaleDateString('pt-BR')}</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-sm font-black text-white mono">R$ {formatNumber(rec.amount)}</p>
+                        {rec.paymentMethod && (
+                          <span className={`px-2 py-0.5 rounded-md text-[7px] font-black uppercase border tracking-widest ${getMethodBadgeColor(rec.paymentMethod)}`}>
+                            {rec.paymentMethod}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[9px] font-bold text-zinc-600 uppercase">Venc: {new Date(rec.dueDate).toLocaleDateString('pt-BR')}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`px-2.5 py-1 rounded-full text-[8px] font-black uppercase border tracking-widest ${getStatusColor(rec.status)}`}>
+                    <span className={`px-3 py-1.5 rounded-full text-[8px] font-black uppercase border tracking-widest ${getStatusColor(rec.status)}`}>
                       {rec.status}
                     </span>
-                    <button 
-                      onClick={() => setEditingReceivable(rec)}
-                      className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center text-zinc-500 hover:text-white"
-                    >
-                      <i className="fa-solid fa-pen text-[10px]"></i>
-                    </button>
+                    <div className="flex gap-1.5">
+                      {rec.status !== 'Pago' && (
+                        <button 
+                          onClick={() => setPayingRec(rec)}
+                          className="w-9 h-9 rounded-lg bg-emerald-500 text-black flex items-center justify-center hover:bg-emerald-400 shadow-lg shadow-emerald-500/10"
+                        >
+                          <i className="fa-solid fa-check text-[10px]"></i>
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => setEditingReceivable(rec)}
+                        className="w-9 h-9 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center text-zinc-500 hover:text-white"
+                      >
+                        <i className="fa-solid fa-pen text-[10px]"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -219,11 +227,33 @@ const Clientes: React.FC = () => {
         </div>
       )}
 
-      {/* Editar Cliente Modal */}
+      {/* Pagamento Parcela Modal - Centralização */}
+      {payingRec && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setPayingRec(null)}></div>
+          <div className="relative w-full max-w-sm glass-card p-10 rounded-[2.5rem] border-white/10 space-y-8 bg-[#0a151b] text-center shadow-2xl animate-in zoom-in-95 duration-300">
+             <div className="space-y-3">
+                <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Liquidando Parcela</p>
+                <h3 className="text-3xl font-black text-white mono">R$ {formatNumber(payingRec.amount)}</h3>
+                <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{payingRec.clientName}</p>
+             </div>
+             <div className="grid grid-cols-2 gap-3">
+                {['PIX', 'Débito', 'Crédito', 'Dinheiro'].map(m => (
+                  <button key={m} onClick={() => handlePayment(m as any)} className="py-4 rounded-xl bg-white/[0.03] border border-white/10 text-[10px] font-black text-white uppercase tracking-widest hover:bg-emerald-500 hover:text-black transition-all">
+                    {m}
+                  </button>
+                ))}
+             </div>
+             <button onClick={() => setPayingRec(null)} className="text-[10px] font-black text-slate-600 uppercase tracking-widest hover:text-white transition-colors block w-full">Cancelar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Editar Cliente Modal - Centralização e Máscara Monetária */}
       {editingClient && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={() => setEditingClient(null)}></div>
-          <div className="relative w-full max-w-xl glass-card p-8 md:p-12 bg-[#0B0D10] border-white/10 animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto custom-scrollbar">
+          <div className="relative w-full max-w-xl glass-card p-10 bg-[#0B0D10] border-white/10 animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto custom-scrollbar">
              <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
                 <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">Editar Cadastro</h3>
                 <button onClick={() => setEditingClient(null)} className="text-zinc-600 hover:text-white"><i className="fa-solid fa-xmark"></i></button>
@@ -232,32 +262,17 @@ const Clientes: React.FC = () => {
              <div className="space-y-6">
                 <div className="space-y-2">
                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Nome / Fantasia</label>
-                   <input 
-                      type="text" 
-                      className={inputClass}
-                      value={editingClient.name}
-                      onChange={e => setEditingClient({...editingClient, name: e.target.value})}
-                   />
+                   <input type="text" className={inputClass} value={editingClient.name} onChange={e => setEditingClient({...editingClient, name: e.target.value})}/>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                    <div className="space-y-2">
                       <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Documento</label>
-                      <input 
-                        type="text" 
-                        disabled
-                        className={`${inputClass} opacity-50 cursor-not-allowed`}
-                        value={editingClient.document}
-                      />
+                      <input type="text" disabled className={`${inputClass} opacity-50 cursor-not-allowed`} value={editingClient.document}/>
                    </div>
                    <div className="space-y-2">
                       <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">WhatsApp</label>
-                      <input 
-                        type="text" 
-                        className={inputClass}
-                        value={editingClient.phone}
-                        onChange={e => setEditingClient({...editingClient, phone: e.target.value})}
-                      />
+                      <input type="text" className={inputClass} value={editingClient.phone} onChange={e => setEditingClient({...editingClient, phone: e.target.value})}/>
                    </div>
                 </div>
 
@@ -266,81 +281,45 @@ const Clientes: React.FC = () => {
                       <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Mensalidade (R$)</label>
                       <input 
                         type="text" 
-                        className={inputClass}
-                        value={formatNumber(editingClient.monthlyValue)}
-                        onChange={e => setEditingClient({...editingClient, monthlyValue: parseCurrency(e.target.value)})}
-                        onBlur={e => e.target.value = formatNumber(editingClient.monthlyValue)}
-                        onFocus={e => e.target.value = editingClient.monthlyValue.toString().replace('.', ',')}
+                        className={inputClass} 
+                        value={formatNumber(editingClient.monthlyValue)} 
                         onInput={e => (e.currentTarget.value = maskCurrency(e.currentTarget.value))}
+                        onChange={e => setEditingClient({...editingClient, monthlyValue: parseCurrency(e.target.value)})}
                       />
                    </div>
                    <div className="space-y-2">
                       <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Dia Vencimento</label>
-                      <input 
-                        type="number" 
-                        min="1" max="31"
-                        className={inputClass}
-                        value={editingClient.dueDay}
-                        onChange={e => setEditingClient({...editingClient, dueDay: Number(e.target.value)})}
-                      />
+                      <input type="number" min="1" max="31" className={inputClass} value={editingClient.dueDay} onChange={e => setEditingClient({...editingClient, dueDay: Number(e.target.value)})}/>
                    </div>
                 </div>
 
                 <div className="flex gap-4 pt-8">
-                   <button 
-                      onClick={() => setEditingClient(null)}
-                      className="flex-1 py-4 bg-white/5 border border-white/5 text-zinc-600 font-black text-[10px] uppercase rounded-xl tracking-widest hover:text-white"
-                   >
-                     Cancelar
-                   </button>
-                   <button 
-                      onClick={() => {
-                        updateClient(editingClient.id, editingClient);
-                        setEditingClient(null);
-                      }}
-                      className="flex-[2] py-4 bg-emerald-500 text-black font-black text-[10px] uppercase rounded-xl tracking-widest hover:bg-emerald-400 shadow-xl"
-                   >
-                     Salvar Alterações
-                   </button>
+                   <button onClick={() => setEditingClient(null)} className="flex-1 py-4 bg-white/5 border border-white/5 text-zinc-600 font-black text-[10px] uppercase rounded-xl tracking-widest hover:text-white">Cancelar</button>
+                   <button onClick={() => { updateClient(editingClient.id, editingClient); setEditingClient(null); }} className="flex-[2] py-4 bg-emerald-500 text-black font-black text-[10px] uppercase rounded-xl tracking-widest hover:bg-emerald-400 shadow-xl">Salvar Alterações</button>
                 </div>
              </div>
           </div>
         </div>
       )}
 
-      {/* Edit Receivable Modal */}
+      {/* Edit Receivable Modal - Centralização e Máscara Monetária */}
       {editingReceivable && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setEditingReceivable(null)}></div>
-          <div className="relative w-full max-w-md glass-card p-8 sm:p-10 bg-[#0B0D10] border-white/10 animate-in zoom-in-95 duration-300">
+          <div className="relative w-full max-w-md glass-card p-10 bg-[#0B0D10] border-white/10 animate-in zoom-in-95 duration-300">
             <h3 className="text-lg font-black text-white mb-8 border-b border-white/5 pb-4 uppercase italic">Ajustar Título</h3>
             <div className="space-y-6">
               <div className="space-y-2">
                 <label className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Data de Vencimento</label>
-                <input 
-                  type="date" 
-                  className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-4 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-all"
-                  value={editingReceivable.dueDate}
-                  onChange={(e) => setEditingReceivable({...editingReceivable, dueDate: e.target.value})}
-                />
+                <input type="date" className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-4 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-all" value={editingReceivable.dueDate} onChange={(e) => setEditingReceivable({...editingReceivable, dueDate: e.target.value})}/>
               </div>
               <div className="space-y-2">
                 <label className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Valor da Parcela (R$)</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-4 text-sm text-white focus:outline-none mono"
-                  value={formatNumber(editingReceivable.amount)}
-                  onInput={(e) => e.currentTarget.value = maskCurrency(e.currentTarget.value)}
-                  onChange={(e) => setEditingReceivable({...editingReceivable, amount: parseCurrency(e.target.value)})}
-                />
+                <input type="text" className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-4 text-sm text-white focus:outline-none mono" value={formatNumber(editingReceivable.amount)} onInput={(e) => e.currentTarget.value = maskCurrency(e.currentTarget.value)} onChange={(e) => setEditingReceivable({...editingReceivable, amount: parseCurrency(e.target.value)})}/>
               </div>
               <div className="space-y-2">
                 <label className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Status Operacional</label>
-                <select 
-                  className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-4 text-sm text-white focus:outline-none appearance-none"
-                  value={editingReceivable.status}
-                  onChange={(e) => setEditingReceivable({...editingReceivable, status: e.target.value as any})}
-                >
+                <select className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-4 py-4 text-sm text-white focus:outline-none appearance-none" value={editingReceivable.status} onChange={(e) => setEditingReceivable({...editingReceivable, status: e.target.value as any})}>
                   <option value="Pendente" className="bg-[#0B0D10]">Pendente</option>
                   <option value="Pago" className="bg-[#0B0D10]">Pago</option>
                   <option value="Atrasado" className="bg-[#0B0D10]">Atrasado</option>
@@ -348,22 +327,8 @@ const Clientes: React.FC = () => {
               </div>
 
               <div className="flex gap-4 pt-6">
-                <button 
-                  onClick={() => setEditingReceivable(null)}
-                  className="flex-1 py-4 bg-white/5 border border-white/5 text-zinc-500 font-black text-[10px] uppercase rounded-xl tracking-widest hover:text-white transition-all"
-                >
-                  Sair
-                </button>
-                <button 
-                  onClick={() => {
-                    updateReceivable(editingReceivable.id, editingReceivable);
-                    setEditingReceivable(null);
-                    setViewingParcelas(null);
-                  }}
-                  className="flex-[2] py-4 bg-emerald-500 text-black font-black text-[10px] uppercase rounded-xl tracking-widest hover:bg-emerald-400 shadow-xl transition-all"
-                >
-                  Confirmar
-                </button>
+                <button onClick={() => setEditingReceivable(null)} className="flex-1 py-4 bg-white/5 border border-white/5 text-zinc-500 font-black text-[10px] uppercase rounded-xl tracking-widest hover:text-white transition-all">Sair</button>
+                <button onClick={() => { updateReceivable(editingReceivable.id, editingReceivable); setEditingReceivable(null); setViewingParcelas(null); }} className="flex-[2] py-4 bg-emerald-500 text-black font-black text-[10px] uppercase rounded-xl tracking-widest hover:bg-emerald-400 shadow-xl transition-all">Confirmar</button>
               </div>
             </div>
           </div>

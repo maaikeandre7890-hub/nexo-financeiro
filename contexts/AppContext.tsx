@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Client, Receivable, Expense, AuditLog, AppState } from '../types';
 
@@ -84,12 +85,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const maskCurrency = (val: string) => {
     const onlyDigits = val.replace(/\D/g, "");
     if (!onlyDigits) return "0,00";
-    const amount = Number(onlyDigits) / 100;
+    // Regra: Digita 1 -> 1,00 | Digita 12 -> 12,00 | Digita 1200 -> 1.200,00
+    // Interpretamos os dígitos como o valor inteiro para essa máscara específica solicitada.
+    const amount = Number(onlyDigits);
     return formatNumber(amount);
   };
 
   const parseCurrency = (val: string) => {
-    return Number(val.replace(/\D/g, "")) / 100;
+    const clean = val.replace(/\./g, "").replace(",", ".");
+    const num = Number(clean.replace(/[^\d.]/g, ""));
+    return isNaN(num) ? 0 : num;
   };
 
   const logAction = (action: string, details: string, type: AuditLog['type']) => {

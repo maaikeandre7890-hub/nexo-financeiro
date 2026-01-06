@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../contexts/AppContext';
 import { Receivable } from '../types';
@@ -67,10 +68,10 @@ const Renegociacoes: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Card List */}
+      {/* Mobile Card List - Ajuste de Respiro mb-3 */}
       <div className="md:hidden space-y-4 px-1">
         {activeRenegotiations.map(rec => (
-          <div key={rec.id} className="glass-card p-5 space-y-5 border-amber-500/10">
+          <div key={rec.id} className="glass-card p-6 mb-3 space-y-5 border-amber-500/10 transition-all">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-black text-sm">
@@ -83,15 +84,20 @@ const Renegociacoes: React.FC = () => {
               </div>
               <div className="text-right">
                 <p className="text-lg font-black text-white mono">R$ {formatNumber(rec.amount)}</p>
-                <span className={`text-[8px] font-black px-2 py-0.5 rounded-full border ${
-                   rec.status === 'Pago' ? 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5' : 'text-amber-500 border-amber-500/20 bg-amber-500/5'
-                }`}>{rec.status}</span>
+                <div className="flex flex-col items-end gap-1.5 mt-1">
+                   <span className={`text-[8px] font-black px-2 py-0.5 rounded-full border ${
+                      rec.status === 'Pago' ? 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5' : 'text-amber-500 border-amber-500/20 bg-amber-500/5'
+                   }`}>{rec.status}</span>
+                   {rec.paymentMethod && (
+                     <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest px-1.5 py-0.5 bg-white/5 rounded border border-white/10">{rec.paymentMethod}</span>
+                   )}
+                </div>
               </div>
             </div>
             {rec.status !== 'Pago' && (
               <button 
                 onClick={() => setPayingRec(rec)}
-                className="w-full py-3.5 bg-amber-500 text-black font-black text-[10px] uppercase rounded-xl tracking-[0.2em] shadow-lg shadow-amber-500/10"
+                className="w-full py-4 bg-amber-500 text-black font-black text-[10px] uppercase rounded-xl tracking-[0.2em] shadow-lg shadow-amber-500/10"
               >
                 Registrar Recebimento
               </button>
@@ -120,7 +126,10 @@ const Renegociacoes: React.FC = () => {
                     <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center font-black text-amber-500 text-lg">
                       {rec.clientName.substring(0, 1).toUpperCase()}
                     </div>
-                    <p className="font-black text-white text-lg tracking-tight">{rec.clientName}</p>
+                    <div>
+                      <p className="font-black text-white text-lg tracking-tight">{rec.clientName}</p>
+                      {rec.paymentMethod && <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">{rec.paymentMethod}</span>}
+                    </div>
                   </div>
                 </td>
                 <td className="px-12 py-10">
@@ -149,10 +158,10 @@ const Renegociacoes: React.FC = () => {
       {payingRec && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6 animate-in fade-in">
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setPayingRec(null)}></div>
-          <div className="relative w-full max-w-sm glass-card p-10 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border-white/10 space-y-8 bg-[#0a151b] text-center shadow-2xl animate-in zoom-in-95 duration-300">
+          <div className="relative w-full max-w-sm glass-card p-10 rounded-[3rem] border-white/10 space-y-8 bg-[#0a151b] text-center shadow-2xl animate-in zoom-in-95 duration-300">
              <div className="space-y-3">
                 <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Liquidando Acordo</p>
-                <h3 className="text-3xl md:text-4xl font-black text-white mono">R$ {formatNumber(payingRec.amount)}</h3>
+                <h3 className="text-3xl font-black text-white mono">R$ {formatNumber(payingRec.amount)}</h3>
                 <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{payingRec.clientName}</p>
              </div>
              <div className="grid grid-cols-2 gap-3">

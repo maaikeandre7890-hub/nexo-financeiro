@@ -20,6 +20,15 @@ export interface Client {
   dueDay: number;
   score: number;
   createdAt: string;
+  birthDate?: string;
+  address?: {
+    street?: string;
+    number?: string;
+    district?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+  };
 }
 
 export interface Receivable {
@@ -30,7 +39,7 @@ export interface Receivable {
   dueDate: string;
   status: 'Pago' | 'Pendente' | 'Atrasado';
   category: string;
-  paymentMethod?: 'PIX' | 'Boleto' | 'Dinheiro' | 'Transferência';
+  paymentMethod?: 'PIX' | 'Boleto' | 'Dinheiro' | 'Transferência' | 'Débito' | 'Crédito';
   paidAt?: string;
 }
 
