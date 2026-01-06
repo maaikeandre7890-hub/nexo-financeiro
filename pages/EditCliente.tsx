@@ -10,32 +10,45 @@ const EditCliente: React.FC = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState<Partial<Client>>({});
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    const client = state.clients.find(c => c.id === id);
-    if (client) {
-      setFormData({ ...client });
-    } else {
-      navigate('/clientes');
-    }
+    // Busca real do cliente no banco (state) pelo ID
+    const loadClient = () => {
+      setIsLoading(true);
+      const client = state.clients.find(c => c.id === id);
+      if (client) {
+        setFormData({ ...client });
+      } else {
+        // Fallback se o ID não existir
+        navigate('/clientes');
+      }
+      setIsLoading(false);
+    };
+
+    loadClient();
   }, [id, state.clients, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !id) return;
+    if (!formData.name || !formData.phone || !id) {
+      alert('Preencha os campos obrigatórios.');
+      return;
+    }
     
     setIsSaving(true);
     
-    // Simula salvamento para UX premium
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // Simula persistência no banco para UX
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     updateClient(id, formData);
     
     setIsSaving(false);
     setShowSuccess(true);
     
+    // Sucesso visual e atualização automática da lista via Context
     setTimeout(() => {
       navigate('/clientes');
     }, 1500);
@@ -59,18 +72,27 @@ const EditCliente: React.FC = () => {
       : 'text-white border-white/10 bg-white/[0.04] placeholder:text-slate-800'
   }`;
 
-  if (!formData.name) return null;
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center py-20">
+        <div className="flex flex-col items-center gap-4">
+          <i className="fa-solid fa-circle-notch animate-spin text-4xl text-emerald-500"></i>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Carregando Perfil...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-12 py-6 max-w-2xl mx-auto page-enter">
       <div className="flex items-center justify-between border-b border-white/5 pb-8">
         <div className="space-y-1">
           <h1 className={`text-3xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'}`}>Editar Cliente</h1>
-          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">Atualização Cadastral e Financeira</p>
+          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">Ação: Edição de Registro #{id}</p>
         </div>
         <button 
           onClick={() => navigate('/clientes')}
-          className={`px-6 py-3 bg-transparent border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${state.theme === 'light' ? 'border-slate-200 text-[#6B7280]' : 'border-white/10 text-slate-500 hover:text-white'}`}
+          className={`px-6 py-3 bg-transparent border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${state.theme === 'light' ? 'border-slate-200 text-[#6B7280] hover:text-[#0F172A]' : 'border-white/10 text-slate-500 hover:text-white'}`}
         >
           <i className="fa-solid fa-arrow-left mr-2"></i> Cancelar
         </button>
@@ -80,8 +102,8 @@ const EditCliente: React.FC = () => {
         {showSuccess && (
           <div className="absolute inset-0 bg-emerald-500 z-50 flex flex-col items-center justify-center text-black animate-in fade-in duration-500">
              <i className="fa-solid fa-check-circle text-6xl mb-4"></i>
-             <h3 className="text-2xl font-black uppercase italic tracking-tighter">Alterações Salvas</h3>
-             <p className="text-xs font-bold uppercase tracking-widest mt-2">Retornando à lista...</p>
+             <h3 className="text-2xl font-black uppercase italic tracking-tighter">Dados Atualizados</h3>
+             <p className="text-xs font-bold uppercase tracking-widest mt-2">Sincronizando com a base...</p>
           </div>
         )}
 
@@ -106,7 +128,7 @@ const EditCliente: React.FC = () => {
               />
             </div>
             <div>
-              <label className={labelClass}>Status da Conta</label>
+              <label className={labelClass}>Status Operacional</label>
               <select 
                 className={inputClass} 
                 value={formData.status || 'Ativo'} 
@@ -140,10 +162,10 @@ const EditCliente: React.FC = () => {
           </div>
 
           <div className="pt-8 border-t border-white/5 space-y-6">
-              <span className={`text-[10px] font-black uppercase tracking-[0.4em] mb-4 block italic ${state.theme === 'light' ? 'text-slate-400' : 'text-zinc-700'}`}>Condições de Cobrança</span>
+              <span className={`text-[10px] font-black uppercase tracking-[0.4em] mb-4 block italic ${state.theme === 'light' ? 'text-slate-400' : 'text-zinc-700'}`}>Condições Financeiras</span>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className={labelClass}>Valor Mensal (R$)</label>
+                  <label className={labelClass}>Valor Mensal Atual (R$)</label>
                   <input 
                     required 
                     className={inputClass} 
@@ -164,22 +186,34 @@ const EditCliente: React.FC = () => {
                 </div>
               </div>
           </div>
+
+          <div>
+             <label className={labelClass}>Observações Internas (Opcional)</label>
+             <textarea 
+               className={`${inputClass} min-h-[120px] resize-none`}
+               placeholder="Notas sobre o cliente, acordos verbais ou histórico..."
+               value={formData.notes || ''}
+               onChange={e => setFormData({...formData, notes: e.target.value})}
+             />
+          </div>
         </div>
 
-        <button 
-          type="submit" 
-          disabled={isSaving}
-          className="w-full bg-emerald-500 text-black font-black py-6 rounded-2xl transition-all shadow-2xl hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] mt-6 flex items-center justify-center gap-3 disabled:opacity-50"
-        >
-          {isSaving ? (
-            <>
-              <i className="fa-solid fa-circle-notch animate-spin"></i>
-              PROCESSANDO...
-            </>
-          ) : (
-            'CONFIRMAR ALTERAÇÕES'
-          )}
-        </button>
+        <div className="pt-6">
+          <button 
+            type="submit" 
+            disabled={isSaving}
+            className="w-full bg-emerald-500 text-black font-black py-6 rounded-2xl transition-all shadow-2xl hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-3 disabled:opacity-50"
+          >
+            {isSaving ? (
+              <>
+                <i className="fa-solid fa-circle-notch animate-spin"></i>
+                PERSISTINDO DADOS...
+              </>
+            ) : (
+              'SALVAR ALTERAÇÕES'
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );

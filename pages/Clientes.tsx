@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import { Client, Receivable } from '../types';
 import * as XLSX from 'xlsx';
@@ -52,7 +52,8 @@ const Clientes: React.FC = () => {
           'Dia Vencimento': c.dueDay,
           'Data Cadastro': new Date(c.createdAt).toLocaleDateString('pt-BR'),
           'Cidade': c.address?.city || 'N/A',
-          'Estado': c.address?.state || 'N/A'
+          'Estado': c.address?.state || 'N/A',
+          'Observações': c.notes || ''
         }));
 
         const ws = XLSX.utils.json_to_sheet(data);
@@ -197,7 +198,13 @@ const Clientes: React.FC = () => {
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex items-center justify-center gap-2">
-                      <button onClick={() => navigate(`/clientes/editar/${client.id}`)} className={`w-8 h-8 rounded-lg border transition-colors ${state.theme === 'light' ? 'border-slate-200 text-[#6B7280] hover:text-[#2563EB]' : 'bg-white/[0.02] text-[var(--text-deep)] hover:text-emerald-500 border-[var(--border-subtle)]'}`} title="Editar"><i className="fa-solid fa-pen-to-square"></i></button>
+                      <Link 
+                        to={`/clientes/editar/${client.id}`} 
+                        className={`w-8 h-8 rounded-lg border transition-colors flex items-center justify-center ${state.theme === 'light' ? 'border-slate-200 text-[#6B7280] hover:text-[#2563EB]' : 'bg-white/[0.02] text-[var(--text-deep)] hover:text-emerald-500 border-[var(--border-subtle)]'}`} 
+                        title="Editar"
+                      >
+                        <i className="fa-solid fa-pen-to-square"></i>
+                      </Link>
                       <button onClick={() => setViewingParcelas(client)} className={`w-8 h-8 rounded-lg border transition-colors ${state.theme === 'light' ? 'border-slate-200 text-[#6B7280] hover:text-[#2563EB]' : 'bg-white/[0.02] text-[var(--text-deep)] hover:text-emerald-500 border-[var(--border-subtle)]'}`} title="Parcelas"><i className="fa-solid fa-list-ul"></i></button>
                       <button onClick={() => handleWhatsAppCharge(client)} className="w-8 h-8 rounded-lg bg-emerald-500/5 text-emerald-500 hover:bg-emerald-500 hover:text-black border border-emerald-500/10 transition-colors" title="Cobrar"><i className="fa-brands fa-whatsapp"></i></button>
                       <button onClick={() => { if(confirm('Excluir?')) deleteClient(client.id) }} className="w-8 h-8 rounded-lg bg-rose-500/5 text-rose-500 hover:bg-rose-500 hover:text-white border border-rose-500/10 transition-colors" title="Excluir"><i className="fa-solid fa-trash-can"></i></button>
@@ -230,7 +237,13 @@ const Clientes: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-4 gap-2">
-              <button onClick={() => navigate(`/clientes/editar/${client.id}`)} className={`flex flex-col items-center justify-center py-3 border rounded-xl transition-colors ${state.theme === 'light' ? 'bg-slate-50 border-slate-100 text-[#6B7280]' : 'bg-white/[0.03] border-white/5 text-zinc-400'}`}><i className="fa-solid fa-pen-to-square mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Editar</span></button>
+              <Link 
+                to={`/clientes/editar/${client.id}`} 
+                className={`flex flex-col items-center justify-center py-3 border rounded-xl transition-colors ${state.theme === 'light' ? 'bg-slate-50 border-slate-100 text-[#6B7280]' : 'bg-white/[0.03] border-white/5 text-zinc-400'}`}
+              >
+                <i className="fa-solid fa-pen-to-square mb-1 text-xs"></i>
+                <span className="text-[7px] font-black uppercase tracking-widest">Editar</span>
+              </Link>
               <button onClick={() => setViewingParcelas(client)} className={`flex flex-col items-center justify-center py-3 border rounded-xl transition-colors ${state.theme === 'light' ? 'bg-slate-50 border-slate-100 text-[#6B7280]' : 'bg-white/[0.03] border-white/5 text-zinc-400'}`}><i className="fa-solid fa-list-check mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Parcelas</span></button>
               <button onClick={() => handleWhatsAppCharge(client)} className="flex flex-col items-center justify-center py-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl text-emerald-500"><i className="fa-brands fa-whatsapp mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Cobrar</span></button>
               <button onClick={() => { if(confirm('Excluir?')) deleteClient(client.id) }} className="flex flex-col items-center justify-center py-3 bg-rose-500/5 border border-rose-500/10 rounded-xl text-rose-500"><i className="fa-solid fa-trash-can mb-1 text-xs"></i><span className="text-[7px] font-black uppercase tracking-widest">Sair</span></button>

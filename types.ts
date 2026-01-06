@@ -21,6 +21,7 @@ export interface Client {
   score: number;
   createdAt: string;
   birthDate?: string;
+  notes?: string;
   address?: {
     street?: string;
     number?: string;
