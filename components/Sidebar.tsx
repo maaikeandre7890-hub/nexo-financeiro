@@ -1,9 +1,8 @@
-
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { NAVIGATION } from '../constants';
-import BrandLogo from './BrandLogo';
-import { useApp } from '../contexts/AppContext';
+import { NAVIGATION } from '../constants.tsx';
+import BrandLogo from './BrandLogo.tsx';
+import { useApp } from '../contexts/AppContext.tsx';
 
 interface Props {
   onClose?: () => void;
@@ -12,101 +11,98 @@ interface Props {
 const Sidebar: React.FC<Props> = ({ onClose }) => {
   const { state } = useApp();
   const [isHovered, setIsHovered] = useState(false);
-  // Fix: Replaced NodeJS.Timeout with ReturnType<typeof setTimeout> to resolve "Cannot find namespace 'NodeJS'" error in browser environment.
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sections = [
-    { title: 'Operacional', items: NAVIGATION.slice(0, 5) },
+    { title: 'Operação', items: NAVIGATION.slice(0, 5) },
     { title: 'Análise', items: NAVIGATION.slice(5, 9) },
-    { title: 'Gestão', items: NAVIGATION.slice(9) },
+    { title: 'Nexo Unit', items: NAVIGATION.slice(9) },
   ];
 
-  const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  };
-
-  // Lógica de Hover Estável para Desktop
   const handleMouseEnter = () => {
-    if (window.innerWidth < 768) return; // Ignora no mobile
+    if (window.innerWidth < 768) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
-    if (window.innerWidth < 768) return; // Ignora no mobile
+    if (window.innerWidth < 768) return;
     timeoutRef.current = setTimeout(() => {
       setIsHovered(false);
-    }, 300); // Delay para evitar fechar ao passar por frestas
+    }, 200);
   };
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  // Determina se deve mostrar o conteúdo expandido
-  // No mobile, sempre expandido (pois o App.tsx controla a visibilidade da sidebar inteira)
-  // No desktop, depende do hover
   const showFull = isHovered || window.innerWidth < 768;
 
   return (
     <aside 
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`flex flex-col h-full bg-[var(--bg-sidebar)] border-r border-[var(--border-subtle)] transition-all duration-500 ease-in-out overflow-hidden shadow-2xl md:shadow-none ${
-        isHovered ? 'md:w-[280px]' : 'md:w-[72px]'
+      className={`flex flex-col h-full bg-[#000000] border-r border-white/[0.04] transition-all duration-500 ease-in-out z-[150] shadow-[10px_0_40px_rgba(0,0,0,0.4)] ${
+        isHovered ? 'md:w-[280px]' : 'md:w-[85px]'
       } w-full`}
     >
-      
-      {/* Brand Header */}
-      <div className="h-14 md:h-20 flex items-center px-6 overflow-hidden shrink-0">
-        <div className="flex items-center gap-4 min-w-max">
-           <BrandLogo className="w-7 h-7 md:w-8 md:h-8 shrink-0" />
-           <span className={`text-base font-bold tracking-tight text-[var(--text-main)] transition-opacity duration-300 whitespace-nowrap ${
-             showFull ? 'opacity-100' : 'opacity-0'
+      {/* BRANDING HEADER */}
+      <div className="h-24 flex items-center px-6 overflow-hidden shrink-0 border-b border-white/[0.02] bg-gradient-to-b from-white/[0.01] to-transparent">
+        <div className="flex items-center gap-5 min-w-max">
+           <BrandLogo className="w-8 h-8 shrink-0" />
+           <span className={`text-2xl font-bold italic tracking-tighter text-white transition-all duration-300 ${
+             showFull ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
            }`}>
              NEXO<span className="text-emerald-500">.</span>
            </span>
         </div>
+        
+        {/* BOTÃO FECHAR MOBILE */}
+        <button 
+          onClick={onClose}
+          className="md:hidden ml-auto w-10 h-10 flex items-center justify-center text-zinc-600 hover:text-white"
+        >
+          <i className="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 py-4 overflow-y-auto overflow-x-hidden custom-scrollbar">
+      {/* NAVIGATION SCROLL AREA */}
+      <nav className="flex-1 py-10 overflow-y-auto overflow-x-hidden custom-scrollbar">
         {sections.map((section, idx) => (
-          <div key={idx} className="mb-4">
-            <h3 className={`px-6 text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-deep)] transition-opacity duration-300 whitespace-nowrap mb-2 ${
-              showFull ? 'opacity-40' : 'opacity-0'
+          <div key={idx} className="mb-10">
+            <h3 className={`px-8 text-[9px] font-black uppercase tracking-[0.5em] text-zinc-800 transition-opacity duration-300 whitespace-nowrap mb-6 ${
+              showFull ? 'opacity-100' : 'opacity-0'
             }`}>
               {section.title}
             </h3>
-            <div className="space-y-1">
+            <div className="space-y-0.5 px-3">
               {section.items.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    `flex items-center h-12 px-6 transition-all duration-200 relative group/item ${
+                    `flex items-center h-11 px-5 transition-all duration-300 relative group/item rounded-xl overflow-hidden ${
                       isActive
-                        ? 'bg-emerald-500/10 text-emerald-400'
-                        : 'text-[var(--text-muted)] hover:bg-white/[0.03] hover:text-[var(--text-main)]'
+                        ? 'text-white bg-emerald-500/5 border border-emerald-500/10'
+                        : 'text-zinc-500 hover:text-white hover:bg-white/[0.03] border border-transparent'
                     }`
                   }
                 >
                   {({ isActive }) => (
                     <>
+                      {/* INDICADOR LATERAL */}
                       {isActive && (
-                        <div className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full" />
+                        <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_#10b981]" />
                       )}
                       
-                      <div className={`flex items-center justify-center w-[24px] shrink-0 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
-                        <i className={`fa-solid ${item.icon} text-[18px]`}></i>
+                      {/* ÍCONE */}
+                      <div className={`flex items-center justify-center w-6 shrink-0 transition-all duration-300 ${
+                        isActive ? 'text-emerald-400' : 'text-inherit group-hover/item:text-white'
+                      }`}>
+                        <i className={`fa-solid ${item.icon} text-base`}></i>
                       </div>
 
-                      <span className={`ml-5 text-[14px] font-bold tracking-tight whitespace-nowrap transition-all duration-300 ${
-                        showFull ? 'opacity-100' : 'opacity-0'
-                      } ${isActive ? 'text-emerald-400' : 'text-[var(--text-muted)]'}`}>
+                      {/* LABEL TEXT */}
+                      <span className={`ml-5 text-[11px] font-bold uppercase tracking-[0.15em] whitespace-nowrap transition-all duration-300 ${
+                        showFull ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                      }`}>
                         {item.label}
                       </span>
                     </>
@@ -118,19 +114,19 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
         ))}
       </nav>
 
-      {/* User Profile Section */}
-      <div className="p-4 shrink-0 overflow-hidden mb-safe">
-        <div className="flex items-center gap-4 px-2 h-12">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shrink-0 shadow-lg shadow-emerald-500/20">
-            {getInitials(state.userName || 'AD')}
+      {/* USER PROFILE FOOTER */}
+      <div className="p-6 shrink-0 border-t border-white/[0.02] bg-[#000000]">
+        <div className="flex items-center gap-4 px-2 h-14 bg-white/[0.01] rounded-2xl border border-white/[0.02] group/user cursor-pointer hover:border-emerald-500/10 transition-all overflow-hidden">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500 text-black flex items-center justify-center font-black text-[10px] shrink-0 shadow-lg shadow-emerald-500/10 group-hover/user:scale-105 transition-transform">
+            {state.userName ? state.userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'AD'}
           </div>
-          <div className={`flex flex-col min-w-0 transition-opacity duration-300 ${
-            showFull ? 'opacity-100' : 'opacity-0'
+          <div className={`flex flex-col min-w-0 transition-all duration-300 ${
+            showFull ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
           }`}>
-            <p className="text-xs font-bold truncate text-[var(--text-main)] leading-none">
+            <p className="text-xs font-bold truncate text-white leading-none tracking-tight">
               {state.userName || 'User'}
             </p>
-            <p className="text-[9px] font-black text-[var(--text-deep)] truncate uppercase tracking-tighter leading-none mt-1.5 opacity-60">
+            <p className="text-[9px] font-black text-emerald-500/40 truncate uppercase tracking-[0.2em] leading-none mt-2">
               {state.companyName}
             </p>
           </div>

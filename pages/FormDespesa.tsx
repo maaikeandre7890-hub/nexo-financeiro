@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApp } from '../contexts/AppContext';
+import { useApp } from '../contexts/AppContext.tsx';
 
 const FormDespesa: React.FC = () => {
   const { state, addExpense, formatNumber, maskCurrency, parseCurrency } = useApp();

@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApp } from '../contexts/AppContext';
+import { useApp } from '../contexts/AppContext.tsx';
 
 const DespesasExtras: React.FC = () => {
   const { state, totals, deleteExpense, formatNumber } = useApp();

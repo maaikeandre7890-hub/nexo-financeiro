@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApp } from '../contexts/AppContext';
+import { useApp } from '../contexts/AppContext.tsx';
 
 const GerarNF: React.FC = () => {
   const { state, maskCurrency, parseCurrency } = useApp();

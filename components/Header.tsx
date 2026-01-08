@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useApp } from '../contexts/AppContext';
+import { useApp } from '../contexts/AppContext.tsx';
 
 interface Props {
   onOpenNotifications: () => void;
@@ -13,30 +13,30 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
   const { state, refreshData, isRefreshing, toggleTheme } = useApp();
 
   return (
-    <header className="h-14 md:h-16 px-4 md:px-8 flex items-center justify-between sticky top-0 z-[90] bg-[var(--bg-header)] border-b border-[var(--border-subtle)] backdrop-blur-md">
-      <div className="flex items-center gap-3">
+    <header className="h-20 md:h-24 px-8 md:px-12 flex items-center justify-between sticky top-0 z-[90] bg-[#020608]/80 border-b border-white/[0.02] backdrop-blur-xl">
+      <div className="flex items-center gap-6">
         <button 
           onClick={onToggleSidebar} 
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-[var(--border-subtle)] text-[var(--text-muted)] md:hidden active:bg-white/5 transition-colors"
-          aria-label="Abrir Menu"
+          className="w-11 h-11 flex items-center justify-center rounded-2xl border border-white/[0.04] text-zinc-600 md:hidden active:bg-white/5 transition-colors"
+          aria-label="Menu"
         >
           <i className="fa-solid fa-bars-staggered text-sm"></i>
         </button>
         
         <div 
           onClick={onOpenSearch} 
-          className="hidden md:flex items-center gap-3 px-4 py-2 rounded-xl border border-[var(--border-subtle)] cursor-pointer hover:border-emerald-500/30 transition-all w-64"
+          className="hidden md:flex items-center gap-4 px-6 py-2.5 rounded-2xl border border-white/[0.04] cursor-pointer hover:border-emerald-500/20 transition-all w-72 bg-white/[0.01]"
         >
-          <i className="fa-solid fa-magnifying-glass text-[10px] text-[var(--text-deep)]"></i>
-          <span className="text-[10px] font-bold text-[var(--text-deep)] uppercase tracking-widest">Buscar Operação</span>
+          <i className="fa-solid fa-magnifying-glass text-[10px] text-zinc-700"></i>
+          <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em]">Pesquisa Avançada</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <button 
           onClick={toggleTheme} 
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-[var(--border-subtle)] text-[var(--text-deep)] hover:text-emerald-500 transition-all active:scale-95"
-          title="Alternar Tema"
+          className="w-11 h-11 flex items-center justify-center rounded-2xl border border-white/[0.04] text-zinc-700 hover:text-emerald-500 transition-all hover:bg-white/5"
+          title="Tema"
         >
           <i className={`fa-solid ${state.theme === 'dark' ? 'fa-sun' : 'fa-moon'} text-xs`}></i>
         </button>
@@ -44,7 +44,7 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
         <button 
           onClick={refreshData} 
           disabled={isRefreshing}
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-[var(--border-subtle)] text-[var(--text-deep)] hover:text-emerald-500 transition-all active:scale-95"
+          className="w-11 h-11 flex items-center justify-center rounded-2xl border border-white/[0.04] text-zinc-700 hover:text-emerald-500 transition-all hover:bg-white/5 disabled:opacity-30"
           title="Sincronizar"
         >
           <i className={`fa-solid fa-rotate text-xs ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`}></i>
@@ -52,11 +52,11 @@ const Header: React.FC<Props> = ({ onOpenNotifications, onOpenAI, onOpenSearch, 
 
         <button 
           onClick={onOpenNotifications} 
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-[var(--border-subtle)] text-[var(--text-deep)] relative active:scale-95"
-          aria-label="Notificações"
+          className="w-11 h-11 flex items-center justify-center rounded-2xl border border-white/[0.04] text-zinc-700 relative hover:text-white transition-all hover:bg-white/5"
+          aria-label="Alertas"
         >
           <i className="fa-solid fa-bell text-xs"></i>
-          <span className="absolute top-3 right-3 w-1.5 h-1.5 bg-rose-500 rounded-full border border-[var(--bg-main)]"></span>
+          <span className="absolute top-4 right-4 w-1.5 h-1.5 bg-rose-500 rounded-full border border-[#020608]"></span>
         </button>
       </div>
     </header>

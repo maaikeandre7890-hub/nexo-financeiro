@@ -1,8 +1,7 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useApp } from '../contexts/AppContext';
-import { Client, Receivable } from '../types';
+import { useApp } from '../contexts/AppContext.tsx';
+import { Client, Receivable } from '../types.ts';
 import * as XLSX from 'xlsx';
 
 const Clientes: React.FC = () => {

@@ -1,7 +1,6 @@
-
 import React, { useState, useMemo } from 'react';
-import { useApp } from '../contexts/AppContext';
-import { Receivable } from '../types';
+import { useApp } from '../contexts/AppContext.tsx';
+import { Receivable } from '../types.ts';
 
 const Renegociacoes: React.FC = () => {
   const { state, totals, formatNumber, markAsPaid } = useApp();

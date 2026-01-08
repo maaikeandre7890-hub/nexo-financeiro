@@ -1,36 +1,35 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import NotificationPanel from './components/NotificationPanel';
-import AIInsightsPanel from './components/AIInsightsPanel';
-import CommandBar from './components/CommandBar';
-import BottomNav from './components/BottomNav';
-import Onboarding from './components/Onboarding';
-import Dashboard from './pages/Dashboard';
-import Clientes from './pages/Clientes';
-import FormCliente from './pages/FormCliente';
-import EditCliente from './pages/EditCliente';
-import ImportarClientes from './pages/ImportarClientes';
-import Recebiveis from './pages/Recebiveis';
-import FormRecebivel from './pages/FormRecebivel';
-import Atraso from './pages/Atraso';
-import Historico from './pages/Historico';
-import Relatorios from './pages/Relatorios';
-import FaturamentoLiquido from './pages/FaturamentoLiquido';
-import DespesasExtras from './pages/DespesasExtras';
-import FormDespesa from './pages/FormDespesa';
-import Cobranca from './pages/Cobranca';
-import Sistema from './pages/Sistema';
-import Configuracoes from './pages/Configuracoes';
-import Tutorial from './pages/Tutorial';
-import Renegociacoes from './pages/Renegociacoes';
-import BoletosNF from './pages/BoletosNF';
-import GerarBoleto from './pages/GerarBoleto';
-import GerarNF from './pages/GerarNF';
-import NotFound from './pages/NotFound';
-import { useApp } from './contexts/AppContext';
+import Sidebar from './components/Sidebar.tsx';
+import Header from './components/Header.tsx';
+import NotificationPanel from './components/NotificationPanel.tsx';
+import AIInsightsPanel from './components/AIInsightsPanel.tsx';
+import CommandBar from './components/CommandBar.tsx';
+import Onboarding from './components/Onboarding.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import Clientes from './pages/Clientes.tsx';
+import FormCliente from './pages/FormCliente.tsx';
+import EditCliente from './pages/EditCliente.tsx';
+import ImportarClientes from './pages/ImportarClientes.tsx';
+import Recebiveis from './pages/Recebiveis.tsx';
+import FormRecebivel from './pages/FormRecebivel.tsx';
+import Atraso from './pages/Atraso.tsx';
+import Historico from './pages/Historico.tsx';
+import Relatorios from './pages/Relatorios.tsx';
+import FaturamentoLiquido from './pages/FaturamentoLiquido.tsx';
+import DespesasExtras from './pages/DespesasExtras.tsx';
+import FormDespesa from './pages/FormDespesa.tsx';
+import Cobranca from './pages/Cobranca.tsx';
+import Sistema from './pages/Sistema.tsx';
+import Configuracoes from './pages/Configuracoes.tsx';
+import Tutorial from './pages/Tutorial.tsx';
+import Renegociacoes from './pages/Renegociacoes.tsx';
+import BoletosNF from './pages/BoletosNF.tsx';
+import GerarBoleto from './pages/GerarBoleto.tsx';
+import GerarNF from './pages/GerarNF.tsx';
+import NotFound from './pages/NotFound.tsx';
+import OracleIcon from './components/OracleIcon.tsx';
+import { useApp } from './contexts/AppContext.tsx';
 
 const App: React.FC = () => {
   const { state } = useApp();
@@ -66,14 +65,14 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen w-full transition-colors duration-300 overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)]">
-      {/* Mobile Sidebar Overlay */}
+      {/* Overlay do Sidebar Mobile */}
       <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-md z-[110] transition-opacity duration-500 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        className={`fixed inset-0 bg-black/90 backdrop-blur-md z-[110] transition-opacity duration-700 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      {/* Sidebar Container */}
-      <div className={`fixed inset-y-0 left-0 z-[120] transform transition-transform duration-500 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-[280px]' : '-translate-x-full md:w-auto'}`}>
+      {/* Sidebar - Desktop e Mobile (Collapsible) */}
+      <div className={`fixed inset-y-0 left-0 z-[120] transform transition-transform duration-700 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-[280px]' : '-translate-x-full md:w-auto'}`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
       
@@ -87,9 +86,9 @@ const App: React.FC = () => {
         
         <main 
           ref={mainRef}
-          className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 md:px-12 relative custom-scrollbar pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-12"
+          className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 md:px-12 relative custom-scrollbar pb-24 md:pb-12"
         >
-          <div className="max-w-[1440px] mx-auto page-enter">
+          <div className="max-w-7xl mx-auto page-enter">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -119,19 +118,21 @@ const App: React.FC = () => {
           </div>
         </main>
 
-        <BottomNav />
-
         <NotificationPanel isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
         <AIInsightsPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-[90]">
+      {/* Botão Flutuante NEXO IA - Minimalista 'N' */}
+      <div className="fixed bottom-6 right-6 z-[100]">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className="w-12 h-12 md:w-14 md:h-14 rounded-full shadow-2xl transition-all flex items-center justify-center border bg-emerald-500/20 backdrop-blur-xl border-emerald-500/30 text-emerald-400 hover:scale-110 active:scale-95"
+          className="w-14 h-14 md:w-16 md:h-16 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.6)] transition-all flex items-center justify-center border border-white/[0.04] bg-[#000000]/90 backdrop-blur-xl hover:scale-105 active:scale-95 group overflow-hidden"
         >
-          <i className="fa-solid fa-sparkles text-lg"></i>
+          <div className="absolute inset-0 bg-emerald-500/[0.03] group-hover:bg-emerald-500/[0.08] transition-colors"></div>
+          <OracleIcon className="w-7 h-7 md:w-8 md:h-8 relative z-10" />
+          {/* Luz Atmosférica Discreta */}
+          <div className="absolute inset-0 rounded-2xl border border-white/[0.05] pointer-events-none"></div>
         </button>
       </div>
     </div>

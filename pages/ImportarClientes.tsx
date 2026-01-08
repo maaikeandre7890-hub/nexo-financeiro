@@ -1,7 +1,6 @@
-
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApp } from '../contexts/AppContext';
+import { useApp } from '../contexts/AppContext.tsx';
 
 interface ImportRecord {
   name: string;

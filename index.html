@@ -1,154 +1,111 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>NEXO | Intelligence & Capital</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
       :root {
-        --bg-main: #0B0D10;
-        --bg-sidebar: #0B0D10;
-        --bg-card: #15181D;
-        --bg-header: rgba(11, 13, 16, 0.95);
-        --text-main: #FFFFFF;
-        --text-muted: #B5B7BA;
-        --text-deep: #8A8D91;
-        --border-subtle: rgba(255, 255, 255, 0.06);
-        --emerald-primary: #10b981;
-        --track-bg: #0B0D10;
+        --bg-main: #020608;
+        --bg-sidebar: #000000;
+        --accent: #10b981;
+        --text-main: #F8FAFC;
+        --border-subtle: rgba(255, 255, 255, 0.05);
       }
 
-      .light-theme {
-        --bg-main: #F4F7F9;
-        --bg-sidebar: #F4F7F9;
-        --bg-card: #FFFFFF;
-        --bg-header: rgba(244, 247, 249, 0.95);
-        --text-main: #0F172A; /* Títulos e Valores: Quase preto sólido */
-        --text-muted: #6B7280; /* Descrições: Cinza sólido */
-        --text-deep: #6B7280; /* Subtítulos: Cinza sólido */
-        --border-subtle: #E2E8F0;
-        --track-bg: #CBD5E1;
-      }
-      
-      /* Global overrides for light theme visibility */
-      .light-theme .text-white,
-      .light-theme .text-slate-200,
-      .light-theme .text-slate-300,
-      .light-theme .text-slate-400 {
-        color: #0F172A !important;
-        opacity: 1 !important;
-      }
-
-      .light-theme .text-slate-500,
-      .light-theme .text-zinc-500,
-      .light-theme .text-zinc-600 {
-        color: #6B7280 !important;
-        opacity: 1 !important;
-      }
-
-      .light-theme button:not(.bg-emerald-500):not(.bg-rose-500):not(.bg-amber-500),
-      .light-theme a {
-        color: #2563EB !important;
-        opacity: 1 !important;
-      }
-
-      .light-theme .opacity-80,
-      .light-theme .opacity-60,
-      .light-theme .opacity-40,
-      .light-theme .opacity-30 {
-        opacity: 1 !important;
-      }
-
-      /* Prevent hover text color disappearance */
-      .light-theme .group:hover .text-white,
-      .light-theme .group:hover .text-slate-400,
-      .light-theme button:hover .text-white {
-        color: inherit !important;
-      }
-      
-      html, body {
-        height: 100%;
-        width: 100%;
+      body {
         margin: 0;
-        padding: 0;
+        font-family: 'Space Grotesk', sans-serif;
         background-color: var(--bg-main);
         color: var(--text-main);
-        font-family: 'Space Grotesk', sans-serif;
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-        position: fixed;
-        overscroll-behavior-y: none;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        letter-spacing: -0.02em;
       }
 
-      #root {
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        padding-top: 24px;
+      input, button, select, textarea, span, p, h1, h2, h3, h4 {
+        font-family: 'Space Grotesk', sans-serif !important;
       }
-
-      .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-      .pt-safe { padding-top: env(safe-area-inset-top); }
-
-      .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--emerald-primary); border-radius: 10px; }
 
       .glass-card {
-        background: var(--bg-card);
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--border-subtle);
-        border-radius: 20px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      @media (max-width: 768px) {
-        .glass-card { border-radius: 16px; }
-        h1 { font-size: clamp(1.5rem, 7vw, 2.25rem); }
-        h2 { font-size: clamp(1.25rem, 6vw, 1.75rem); }
+      .glass-card:hover {
+        border-color: rgba(16, 185, 129, 0.3);
+        background: rgba(255, 255, 255, 0.04);
+        transform: translateY(-2px);
       }
 
-      .mono { font-family: 'JetBrains Mono', monospace; }
-      
-      .page-enter { 
-        animation: revealPage 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
-        will-change: transform, opacity;
+      .text-gradient-white {
+        background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.6) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
-      @keyframes revealPage {
-        from { opacity: 0; transform: translateY(12px); }
+      .text-gradient-emerald {
+        background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .text-glow-emerald {
+        text-shadow: 0 0 30px rgba(16, 185, 129, 0.25);
+      }
+
+      @keyframes page-enter {
+        from { opacity: 0; transform: translateY(15px); }
         to { opacity: 1; transform: translateY(0); }
       }
-
-      input, select, textarea {
-        font-size: 16px !important;
+      .page-enter {
+        animation: page-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
+
+      .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 10px; }
       
-      @media (max-width: 768px) {
-        button, .btn {
-          min-height: 44px;
-        }
+      /* Light Mode Overrides for High Contrast */
+      .light-theme {
+        --bg-main: #F8FAFC;
+        --text-main: #0F172A;
+        --border-subtle: rgba(15, 23, 42, 0.08);
+      }
+      .light-theme .glass-card {
+        background: #FFFFFF;
+        box-shadow: 0 10px 40px rgba(15, 23, 42, 0.03);
+      }
+      .light-theme .glass-card:hover {
+        box-shadow: 0 20px 60px rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.4);
       }
     </style>
+
     <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@19.0.0",
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "recharts": "https://esm.sh/recharts@2.15.0?deps=react@19.0.0,react-dom@19.0.0",
     "react-router-dom": "https://esm.sh/react-router-dom@7.1.0?deps=react@19.0.0,react-dom@19.0.0",
+    "recharts": "https://esm.sh/recharts@2.15.0?deps=react@19.0.0,react-dom@19.0.0",
     "@google/genai": "https://esm.sh/@google/genai@1.34.0",
     "xlsx": "https://esm.sh/xlsx@0.18.5",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "vite": "https://esm.sh/vite@^7.3.0",
+    "vite": "https://esm.sh/vite@^7.3.1",
     "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }

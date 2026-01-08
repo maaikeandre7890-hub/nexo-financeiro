@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useApp } from '../contexts/AppContext';
-import { Client } from '../types';
+import { useApp } from '../contexts/AppContext.tsx';
+import { Client } from '../types.ts';
 
 const EditCliente: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,14 +14,12 @@ const EditCliente: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    // Busca real do cliente no banco (state) pelo ID
     const loadClient = () => {
       setIsLoading(true);
       const client = state.clients.find(c => c.id === id);
       if (client) {
         setFormData({ ...client });
       } else {
-        // Fallback se o ID não existir
         navigate('/clientes');
       }
       setIsLoading(false);
@@ -33,22 +30,18 @@ const EditCliente: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !id) {
-      alert('Preencha os campos obrigatórios.');
-      return;
-    }
+    if (!formData.name || !formData.phone || !id) return;
     
     setIsSaving(true);
     
-    // Simula persistência no banco para UX
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Feedback visual premium de persistência
+    await new Promise(resolve => setTimeout(resolve, 800));
     
     updateClient(id, formData);
     
     setIsSaving(false);
     setShowSuccess(true);
     
-    // Sucesso visual e atualização automática da lista via Context
     setTimeout(() => {
       navigate('/clientes');
     }, 1500);
@@ -66,15 +59,13 @@ const EditCliente: React.FC = () => {
     state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'
   }`;
   
-  const inputClass = `w-full border rounded-xl py-4 px-5 text-sm font-semibold focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/[0.02] transition-all ${
-    state.theme === 'light' 
-      ? 'text-[#0F172A] border-slate-200 bg-white placeholder:text-slate-300' 
-      : 'text-white border-white/10 bg-white/[0.04] placeholder:text-slate-800'
+  const inputClass = `w-full border rounded-xl py-4 px-5 text-sm font-semibold focus:outline-none focus:border-emerald-500/50 transition-all ${
+    state.theme === 'light' ? 'text-[#0F172A] border-slate-200 bg-white' : 'text-white border-white/10 bg-white/[0.04]'
   }`;
 
   if (isLoading) {
     return (
-      <div className="h-full flex items-center justify-center py-20">
+      <div className="h-full flex items-center justify-center py-24">
         <div className="flex flex-col items-center gap-4">
           <i className="fa-solid fa-circle-notch animate-spin text-4xl text-emerald-500"></i>
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Carregando Perfil...</p>
@@ -85,16 +76,21 @@ const EditCliente: React.FC = () => {
 
   return (
     <div className="space-y-12 py-6 max-w-2xl mx-auto page-enter">
+      {/* Header idêntico ao de referência */}
       <div className="flex items-center justify-between border-b border-white/5 pb-8">
         <div className="space-y-1">
-          <h1 className={`text-3xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'}`}>Editar Cliente</h1>
-          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">Ação: Edição de Registro #{id}</p>
+          <h1 className={`text-3xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-[#2563EB]' : 'text-white'}`}>
+            Editar Cliente
+          </h1>
+          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">
+            Atualização de Registro Ativo
+          </p>
         </div>
         <button 
           onClick={() => navigate('/clientes')}
-          className={`px-6 py-3 bg-transparent border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${state.theme === 'light' ? 'border-slate-200 text-[#6B7280] hover:text-[#0F172A]' : 'border-white/10 text-slate-500 hover:text-white'}`}
+          className={`px-6 py-3 bg-transparent border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${state.theme === 'light' ? 'border-slate-200 text-slate-500 hover:text-emerald-500 hover:border-emerald-500' : 'border-white/10 text-slate-500 hover:text-white hover:border-white/20'}`}
         >
-          <i className="fa-solid fa-arrow-left mr-2"></i> Cancelar
+          <i className="fa-solid fa-arrow-left mr-2"></i> Voltar
         </button>
       </div>
 
@@ -103,7 +99,7 @@ const EditCliente: React.FC = () => {
           <div className="absolute inset-0 bg-emerald-500 z-50 flex flex-col items-center justify-center text-black animate-in fade-in duration-500">
              <i className="fa-solid fa-check-circle text-6xl mb-4"></i>
              <h3 className="text-2xl font-black uppercase italic tracking-tighter">Dados Atualizados</h3>
-             <p className="text-xs font-bold uppercase tracking-widest mt-2">Sincronizando com a base...</p>
+             <p className="text-xs font-bold uppercase tracking-widest mt-2 text-black/60">Sincronizando com a base...</p>
           </div>
         )}
 
@@ -161,34 +157,46 @@ const EditCliente: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-8 border-t border-white/5 space-y-6">
-              <span className={`text-[10px] font-black uppercase tracking-[0.4em] mb-4 block italic ${state.theme === 'light' ? 'text-slate-400' : 'text-zinc-700'}`}>Condições Financeiras</span>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className={labelClass}>Valor Mensal Atual (R$)</label>
-                  <input 
-                    required 
-                    className={inputClass} 
-                    value={formData.monthlyValue ? formatNumber(formData.monthlyValue) : '0,00'} 
-                    onInput={e => e.currentTarget.value = maskCurrency(e.currentTarget.value)}
-                    onChange={e => setFormData({...formData, monthlyValue: parseCurrency(e.target.value)})} 
-                  />
-                </div>
-                <div>
-                  <label className={labelClass}>Dia de Vencimento</label>
-                  <select 
-                    className={inputClass} 
-                    value={formData.dueDay || 10} 
-                    onChange={e => setFormData({...formData, dueDay: Number(e.target.value)})}
-                  >
-                    {[...Array(31)].map((_, i) => <option key={i+1} value={i+1} className={state.theme === 'light' ? '' : 'bg-slate-950'}>Dia {i+1}</option>)}
-                  </select>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className={labelClass}>Valor Mensal (R$)</label>
+              <div className="relative">
+                <span className={`absolute left-5 top-1/2 -translate-y-1/2 font-black text-[10px] ${state.theme === 'light' ? 'text-slate-400' : 'text-slate-700'}`}>R$</span>
+                <input 
+                  required 
+                  className={`${inputClass} pl-12`} 
+                  value={formData.monthlyValue ? formatNumber(formData.monthlyValue) : '0,00'} 
+                  onInput={e => e.currentTarget.value = maskCurrency(e.currentTarget.value)}
+                  onChange={e => setFormData({...formData, monthlyValue: parseCurrency(e.target.value)})} 
+                />
               </div>
+            </div>
+            <div>
+              <label className={labelClass}>Total de Parcelas</label>
+              <input 
+                required 
+                type="number"
+                min="1"
+                className={inputClass} 
+                value={formData.installments || 12} 
+                onChange={e => setFormData({...formData, installments: Number(e.target.value)})} 
+              />
+            </div>
           </div>
 
           <div>
-             <label className={labelClass}>Observações Internas (Opcional)</label>
+            <label className={labelClass}>Dia de Vencimento</label>
+            <select 
+              className={inputClass} 
+              value={formData.dueDay || 10} 
+              onChange={e => setFormData({...formData, dueDay: Number(e.target.value)})}
+            >
+              {[...Array(31)].map((_, i) => <option key={i+1} value={i+1} className={state.theme === 'light' ? '' : 'bg-slate-950'}>Dia {i+1}</option>)}
+            </select>
+          </div>
+
+          <div>
+             <label className={labelClass}>Observações Internas</label>
              <textarea 
                className={`${inputClass} min-h-[120px] resize-none`}
                placeholder="Notas sobre o cliente, acordos verbais ou histórico..."
@@ -198,22 +206,21 @@ const EditCliente: React.FC = () => {
           </div>
         </div>
 
-        <div className="pt-6">
-          <button 
-            type="submit" 
-            disabled={isSaving}
-            className="w-full bg-emerald-500 text-black font-black py-6 rounded-2xl transition-all shadow-2xl hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-3 disabled:opacity-50"
-          >
-            {isSaving ? (
-              <>
-                <i className="fa-solid fa-circle-notch animate-spin"></i>
-                PERSISTINDO DADOS...
-              </>
-            ) : (
-              'SALVAR ALTERAÇÕES'
-            )}
-          </button>
-        </div>
+        {/* Botão de submit idêntico ao de referência */}
+        <button 
+          type="submit" 
+          disabled={isSaving}
+          className="w-full bg-emerald-500 text-black font-black py-6 rounded-2xl transition-all shadow-2xl hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] mt-10 border border-white/10 flex items-center justify-center gap-3 disabled:opacity-50"
+        >
+          {isSaving ? (
+            <>
+              <i className="fa-solid fa-circle-notch animate-spin"></i>
+              PROCESSANDO...
+            </>
+          ) : (
+            'SALVAR ALTERAÇÕES E ATUALIZAR BASE'
+          )}
+        </button>
       </form>
     </div>
   );

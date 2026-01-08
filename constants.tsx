@@ -1,5 +1,4 @@
-
-import { NavItem } from './types';
+import { NavItem } from './types.ts';
 
 export const COLORS = {
   background: '#020608',
