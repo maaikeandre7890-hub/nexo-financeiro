@@ -4,6 +4,8 @@ import { HashRouter } from 'react-router-dom';
 import App from './App.tsx';
 import { AppProvider } from './contexts/AppContext.tsx';
 
+alert('INDEX.TSX OK - TESTE 002');
+
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Não foi possível encontrar o elemento root.");
