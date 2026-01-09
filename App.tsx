@@ -65,14 +65,14 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen w-full transition-colors duration-300 overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)]">
-      {/* Overlay do Sidebar Mobile */}
+      {/* OVERLAY MOBILE SIDEBAR */}
       <div 
         className={`fixed inset-0 bg-black/90 backdrop-blur-md z-[110] transition-opacity duration-700 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={() => setIsSidebarOpen(false)}
       />
       
-      {/* Sidebar - Desktop e Mobile (Collapsible) */}
-      <div className={`fixed inset-y-0 left-0 z-[120] transform transition-transform duration-700 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-[280px]' : '-translate-x-full md:w-auto'}`}>
+      {/* SIDEBAR CONTAINER */}
+      <div className={`fixed inset-y-0 left-0 z-[120] transform transition-transform duration-700 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-full sm:w-[280px]' : '-translate-x-full md:w-auto'}`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
       
@@ -123,16 +123,17 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      {/* Botão Flutuante NEXO IA - Minimalista 'N' */}
+      {/* NEXO IA FLOATING ACTION BUTTON */}
       <div className="fixed bottom-6 right-6 z-[100]">
         <button 
           onClick={() => setIsAIPanelOpen(true)}
-          className="w-14 h-14 md:w-16 md:h-16 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.6)] transition-all flex items-center justify-center border border-white/[0.04] bg-[#000000]/90 backdrop-blur-xl hover:scale-105 active:scale-95 group overflow-hidden"
+          className="w-14 h-14 md:w-16 md:h-16 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.6)] transition-all flex items-center justify-center border border-white/[0.04] bg-[#000000]/95 backdrop-blur-2xl hover:scale-105 active:scale-95 group overflow-hidden"
         >
-          <div className="absolute inset-0 bg-emerald-500/[0.03] group-hover:bg-emerald-500/[0.08] transition-colors"></div>
+          <div className="absolute inset-0 bg-emerald-500/[0.03] group-hover:bg-emerald-500/[0.1] transition-colors"></div>
           <OracleIcon className="w-7 h-7 md:w-8 md:h-8 relative z-10" />
-          {/* Luz Atmosférica Discreta */}
           <div className="absolute inset-0 rounded-2xl border border-white/[0.05] pointer-events-none"></div>
+          {/* SUTIL INDICADOR DE STATUS */}
+          <div className="absolute top-3 right-3 w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]"></div>
         </button>
       </div>
     </div>
