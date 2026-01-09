@@ -1,35 +1,38 @@
 import React, { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Sidebar from './components/Sidebar.tsx';
-import Header from './components/Header.tsx';
-import NotificationPanel from './components/NotificationPanel.tsx';
-import AIInsightsPanel from './components/AIInsightsPanel.tsx';
-import CommandBar from './components/CommandBar.tsx';
-import Onboarding from './components/Onboarding.tsx';
-import Dashboard from './pages/Dashboard.tsx';
-import Clientes from './pages/Clientes.tsx';
-import FormCliente from './pages/FormCliente.tsx';
-import EditCliente from './pages/EditCliente.tsx';
-import ImportarClientes from './pages/ImportarClientes.tsx';
-import Recebiveis from './pages/Recebiveis.tsx';
-import FormRecebivel from './pages/FormRecebivel.tsx';
-import Atraso from './pages/Atraso.tsx';
-import Historico from './pages/Historico.tsx';
-import Relatorios from './pages/Relatorios.tsx';
-import FaturamentoLiquido from './pages/FaturamentoLiquido.tsx';
-import DespesasExtras from './pages/DespesasExtras.tsx';
-import FormDespesa from './pages/FormDespesa.tsx';
-import Cobranca from './pages/Cobranca.tsx';
-import Sistema from './pages/Sistema.tsx';
-import Configuracoes from './pages/Configuracoes.tsx';
-import Tutorial from './pages/Tutorial.tsx';
-import Renegociacoes from './pages/Renegociacoes.tsx';
-import BoletosNF from './pages/BoletosNF.tsx';
-import GerarBoleto from './pages/GerarBoleto.tsx';
-import GerarNF from './pages/GerarNF.tsx';
-import NotFound from './pages/NotFound.tsx';
-import OracleIcon from './components/OracleIcon.tsx';
-import { useApp } from './contexts/AppContext.tsx';
+
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import NotificationPanel from './components/NotificationPanel';
+import AIInsightsPanel from './components/AIInsightsPanel';
+import CommandBar from './components/CommandBar';
+import Onboarding from './components/Onboarding';
+import OracleIcon from './components/OracleIcon';
+
+import Dashboard from './pages/Dashboard';
+import Clientes from './pages/Clientes';
+import FormCliente from './pages/FormCliente';
+import EditCliente from './pages/EditCliente';
+import ImportarClientes from './pages/ImportarClientes';
+import Recebiveis from './pages/Recebiveis';
+import FormRecebivel from './pages/FormRecebivel';
+import Atraso from './pages/Atraso';
+import Historico from './pages/Historico';
+import Relatorios from './pages/Relatorios';
+import FaturamentoLiquido from './pages/FaturamentoLiquido';
+import DespesasExtras from './pages/DespesasExtras';
+import FormDespesa from './pages/FormDespesa';
+import Cobranca from './pages/Cobranca';
+import Sistema from './pages/Sistema';
+import Configuracoes from './pages/Configuracoes';
+import Tutorial from './pages/Tutorial';
+import Renegociacoes from './pages/Renegociacoes';
+import BoletosNF from './pages/BoletosNF';
+import GerarBoleto from './pages/GerarBoleto';
+import GerarNF from './pages/GerarNF';
+import NotFound from './pages/NotFound';
+
+import { useApp } from './contexts/AppContext';
 
 const App: React.FC = () => {
   const { state } = useApp();
@@ -66,25 +69,31 @@ const App: React.FC = () => {
   return (
     <div className="flex h-screen w-full transition-colors duration-300 overflow-hidden bg-[var(--bg-main)] text-[var(--text-main)]">
       {/* OVERLAY MOBILE SIDEBAR */}
-      <div 
-        className={`fixed inset-0 bg-black/90 backdrop-blur-md z-[110] transition-opacity duration-700 md:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+      <div
+        className={`fixed inset-0 bg-black/90 backdrop-blur-md z-[110] transition-opacity duration-700 md:hidden ${
+          isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         onClick={() => setIsSidebarOpen(false)}
       />
-      
-      {/* SIDEBAR CONTAINER */}
-      <div className={`fixed inset-y-0 left-0 z-[120] transform transition-transform duration-700 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0 w-full sm:w-[280px]' : '-translate-x-full md:w-auto'}`}>
+
+      {/* SIDEBAR */}
+      <div
+        className={`fixed inset-y-0 left-0 z-[120] transform transition-transform duration-700 ease-in-out md:relative md:translate-x-0 ${
+          isSidebarOpen ? 'translate-x-0 w-full sm:w-[280px]' : '-translate-x-full md:w-auto'
+        }`}
+      >
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
-      
+
       <div className="flex-1 flex flex-col min-w-0 h-full relative">
-        <Header 
-          onOpenNotifications={() => setIsNotificationsOpen(true)} 
+        <Header
+          onOpenNotifications={() => setIsNotificationsOpen(true)}
           onOpenAI={() => setIsAIPanelOpen(true)}
           onOpenSearch={() => setIsCommandBarOpen(true)}
           onToggleSidebar={() => setIsSidebarOpen(true)}
         />
-        
-        <main 
+
+        <main
           ref={mainRef}
           className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 md:px-12 relative custom-scrollbar pb-24 md:pb-12"
         >
@@ -123,16 +132,15 @@ const App: React.FC = () => {
         <CommandBar isOpen={isCommandBarOpen} onClose={() => setIsCommandBarOpen(false)} />
       </div>
 
-      {/* NEXO IA FLOATING ACTION BUTTON */}
+      {/* FLOATING NEXO IA */}
       <div className="fixed bottom-6 right-6 z-[100]">
-        <button 
+        <button
           onClick={() => setIsAIPanelOpen(true)}
-          className="w-14 h-14 md:w-16 md:h-16 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.6)] transition-all flex items-center justify-center border border-white/[0.04] bg-[#000000]/95 backdrop-blur-2xl hover:scale-105 active:scale-95 group overflow-hidden"
+          className="w-14 h-14 md:w-16 md:h-16 rounded-2xl shadow-[0_20px_40px_rgba(0_0_0_0.6)] transition-all flex items-center justify-center border border-white/[0.04] bg-[#000000]/95 backdrop-blur-2xl hover:scale-105 active:scale-95 group overflow-hidden"
         >
           <div className="absolute inset-0 bg-emerald-500/[0.03] group-hover:bg-emerald-500/[0.1] transition-colors"></div>
           <OracleIcon className="w-7 h-7 md:w-8 md:h-8 relative z-10" />
           <div className="absolute inset-0 rounded-2xl border border-white/[0.05] pointer-events-none"></div>
-          {/* SUTIL INDICADOR DE STATUS */}
           <div className="absolute top-3 right-3 w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]"></div>
         </button>
       </div>
