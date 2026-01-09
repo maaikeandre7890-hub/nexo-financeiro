@@ -87,13 +87,9 @@ const FormCliente: React.FC = () => {
     
     const rawValue = parseCurrency(formData.monthlyValue);
     
-    const maskedDoc = formData.type === 'PF' 
-      ? formData.document.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, "***.***.$3-$4")
-      : formData.document;
-
     addClient({ 
       ...formData, 
-      document: maskedDoc,
+      document: formData.document,
       monthlyValue: rawValue, 
       installments: Number(formData.installments),
       dueDay: Number(formData.dueDay),
@@ -112,70 +108,51 @@ const FormCliente: React.FC = () => {
     navigate('/dashboard');
   };
 
-  const labelClass = `text-[10px] font-black uppercase tracking-widest mb-2.5 block ml-1 ${
-    state.theme === 'light' ? 'text-[#0F172A]' : 'text-white'
+  const labelClass = `text-[9px] font-black uppercase tracking-[0.2em] mb-2.5 block ml-1 ${
+    state.theme === 'light' ? 'text-slate-500' : 'text-zinc-600'
   }`;
   
-  const inputClass = `w-full border rounded-xl py-4 px-5 text-sm font-semibold focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/[0.02] transition-all ${
+  const inputClass = `w-full border rounded-xl py-4 px-5 text-sm font-semibold focus:outline-none transition-all duration-300 ${
     state.theme === 'light' 
-      ? 'text-[#0F172A] border-slate-200 bg-white placeholder:text-slate-300' 
-      : 'text-white border-white/10 bg-white/[0.04] placeholder:text-slate-800'
+      ? 'text-slate-900 border-slate-200 bg-white placeholder:text-slate-300 focus:border-emerald-500/30' 
+      : 'text-white border-white/5 bg-white/[0.02] placeholder:text-zinc-800 focus:border-emerald-500/20 focus:bg-white/[0.04]'
   }`;
 
   return (
-    <div className="space-y-12 py-6 max-w-2xl mx-auto page-enter">
-      <div className="flex items-center justify-between border-b border-white/5 pb-8">
+    <div className="space-y-10 py-6 max-w-2xl mx-auto page-enter">
+      <div className="flex items-center justify-between pb-8">
         <div className="space-y-1">
-          <h1 className={`text-3xl font-black italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-[#2563EB]' : 'text-white'}`}>Novo Cliente</h1>
-          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.4em]">Cadastro de Venda e Contato</p>
+          <h1 className={`text-2xl font-bold italic uppercase tracking-tighter ${state.theme === 'light' ? 'text-slate-900' : 'text-white'}`}>Novo Cliente</h1>
+          <p className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.4em]">Protocolo de Inserção de Ativos</p>
         </div>
         <button 
           onClick={() => navigate('/clientes')}
-          className={`px-6 py-3 bg-transparent border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${state.theme === 'light' ? 'border-slate-200 text-slate-500 hover:text-emerald-500 hover:border-emerald-500' : 'border-white/10 text-slate-500 hover:text-white hover:border-white/20 hover:bg-white/5'}`}
+          className={`px-5 py-2.5 bg-transparent border rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${state.theme === 'light' ? 'border-slate-200 text-slate-500 hover:text-emerald-500' : 'border-white/5 text-zinc-500 hover:text-white'}`}
         >
           <i className="fa-solid fa-arrow-left mr-2"></i> Voltar
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className={`space-y-10 glass-card p-10 rounded-[3rem] shadow-2xl relative overflow-hidden ${state.theme === 'light' ? 'bg-white' : ''}`}>
-        <div className="space-y-8">
-          <div className={`grid grid-cols-2 gap-2 p-1 rounded-xl border ${state.theme === 'light' ? 'bg-slate-50 border-slate-100' : 'bg-white/[0.02] border-white/5'}`}>
-            <button type="button" onClick={() => { setFormData({...formData, type: 'PF', document: ''}); setCpfStatus(null); }} className={`py-3 rounded-lg text-[10px] font-black uppercase transition-all ${formData.type === 'PF' ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'text-slate-500 hover:text-emerald-500'}`}>Pessoa Física</button>
-            <button type="button" onClick={() => { setFormData({...formData, type: 'PJ', document: ''}); setCpfStatus(null); }} className={`py-3 rounded-lg text-[10px] font-black uppercase transition-all ${formData.type === 'PJ' ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'text-slate-500 hover:text-emerald-500'}`}>Pessoa Jurídica</button>
+      <form onSubmit={handleSubmit} className={`space-y-8 glass-card p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden ${state.theme === 'light' ? 'bg-white' : ''}`}>
+        <div className="space-y-6">
+          <div className={`grid grid-cols-2 gap-2 p-1 rounded-xl border ${state.theme === 'light' ? 'bg-slate-50 border-slate-100' : 'bg-white/[0.01] border-white/5'}`}>
+            <button type="button" onClick={() => { setFormData({...formData, type: 'PF', document: ''}); setCpfStatus(null); }} className={`py-2.5 rounded-lg text-[9px] font-black uppercase transition-all ${formData.type === 'PF' ? 'bg-emerald-500 text-black shadow-lg' : 'text-zinc-600 hover:text-emerald-500'}`}>Pessoa Física</button>
+            <button type="button" onClick={() => { setFormData({...formData, type: 'PJ', document: ''}); setCpfStatus(null); }} className={`py-2.5 rounded-lg text-[9px] font-black uppercase transition-all ${formData.type === 'PJ' ? 'bg-emerald-500 text-black shadow-lg' : 'text-zinc-600 hover:text-emerald-500'}`}>Pessoa Jurídica</button>
           </div>
 
           <div className="space-y-6">
             <div>
               <label className={labelClass}>{formData.type === 'PF' ? 'CPF' : 'CNPJ'}</label>
-              <div className="relative">
-                <input 
-                  required 
-                  className={`${inputClass} ${cpfStatus === 'invalid' ? 'border-rose-500/50' : cpfStatus === 'valid' ? 'border-emerald-500/50' : ''}`}
-                  placeholder={formData.type === 'PF' ? "000.000.000-00" : "00.000.000/0000-00"} 
-                  value={formData.document} 
-                  onChange={e => {
-                    setFormData({...formData, document: maskDocument(e.target.value, formData.type)});
-                    if (cpfStatus) setCpfStatus(null);
-                  }}
-                  onKeyDown={handleCPFKeyDown}
-                />
-              </div>
-              {formData.type === 'PF' && (
-                <div className="mt-2 ml-1">
-                  {cpfStatus === 'valid' ? (
-                    <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest animate-in fade-in">
-                      CPF válido. Complete os dados do cliente.
-                    </p>
-                  ) : cpfStatus === 'invalid' ? (
-                    <p className="text-[9px] font-black text-rose-500 uppercase tracking-widest animate-in fade-in">
-                      CPF inválido. Verifique os dígitos.
-                    </p>
-                  ) : (
-                    <p className={`text-[9px] font-black uppercase tracking-widest opacity-40 ${state.theme === 'light' ? 'text-slate-400' : 'text-zinc-600'}`}>
-                      Pressione ENTER para validar.
-                    </p>
-                  )}
-                </div>
+              <input 
+                required 
+                className={`${inputClass} ${cpfStatus === 'invalid' ? 'border-rose-500/30' : cpfStatus === 'valid' ? 'border-emerald-500/30' : ''}`}
+                placeholder={formData.type === 'PF' ? "000.000.000-00" : "00.000.000/0000-00"} 
+                value={formData.document} 
+                onChange={e => setFormData({...formData, document: maskDocument(e.target.value, formData.type)})}
+                onKeyDown={handleCPFKeyDown}
+              />
+              {formData.type === 'PF' && cpfStatus === 'invalid' && (
+                <p className="mt-2 text-[8px] font-bold text-rose-500 uppercase tracking-widest">Documento inválido no protocolo nacional.</p>
               )}
             </div>
 
@@ -185,7 +162,7 @@ const FormCliente: React.FC = () => {
                 required 
                 ref={nameInputRef}
                 className={inputClass} 
-                placeholder="Ex: João da Padaria" 
+                placeholder="Ex: NEXO Capital Holding" 
                 value={formData.name} 
                 onChange={e => setFormData({...formData, name: e.target.value})} 
               />
@@ -193,50 +170,44 @@ const FormCliente: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className={labelClass}>E-mail</label>
-                <input className={inputClass} placeholder="cliente@exemplo.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                <label className={labelClass}>E-mail Institucional</label>
+                <input className={inputClass} type="email" placeholder="contato@empresa.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
               </div>
               <div>
-                <label className={labelClass}>WhatsApp / Celular</label>
+                <label className={labelClass}>WhatsApp Operacional</label>
                 <input required className={inputClass} placeholder="(00) 00000-0000" value={formData.phone} onChange={e => setFormData({...formData, phone: maskPhone(e.target.value)})} />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 space-y-8">
-           <div className="space-y-6">
-              <span className={`text-[10px] font-black uppercase tracking-[0.4em] mb-4 block italic ${state.theme === 'light' ? 'text-slate-400' : 'text-zinc-700'}`}>Informações de Fluxo</span>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className={labelClass}>Valor mensal (R$)</label>
-                  <div className="relative">
-                    <span className={`absolute left-5 top-1/2 -translate-y-1/2 font-black text-[10px] ${state.theme === 'light' ? 'text-slate-400' : 'text-slate-700'}`}>R$</span>
-                    <input 
-                      required 
-                      className={`${inputClass} pl-12`} 
-                      placeholder="0,00" 
-                      value={formData.monthlyValue} 
-                      onInput={(e) => e.currentTarget.value = maskCurrency(e.currentTarget.value)} 
-                      onChange={e => setFormData({...formData, monthlyValue: e.target.value})} 
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className={labelClass}>Vencimento & Ciclo</label>
-                  <div className="flex gap-4">
-                    <select className={`${inputClass} appearance-none cursor-pointer flex-1 ${state.theme === 'light' ? '' : 'bg-slate-950 text-white'}`} value={formData.dueDay} onChange={e => setFormData({...formData, dueDay: e.target.value})}>
-                      {[...Array(31)].map((_, i) => <option key={i+1} value={i+1} className={state.theme === 'light' ? '' : 'bg-slate-950 text-white font-bold italic'}>Dia {i+1}</option>)}
-                    </select>
-                    <input required type="number" min="1" className={`${inputClass} w-24 text-center`} placeholder="Parcelas" value={formData.installments} onChange={e => setFormData({...formData, installments: e.target.value})} />
-                  </div>
+        <div className="pt-8 border-t border-white/5">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={labelClass}>Valor mensal (R$)</label>
+                <input 
+                  required 
+                  className={inputClass} 
+                  placeholder="0,00" 
+                  value={formData.monthlyValue} 
+                  onInput={(e) => e.currentTarget.value = maskCurrency(e.currentTarget.value)} 
+                  onChange={e => setFormData({...formData, monthlyValue: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Vencimento & Parcelas</label>
+                <div className="flex gap-2">
+                  <select className={`${inputClass} flex-1 appearance-none`} value={formData.dueDay} onChange={e => setFormData({...formData, dueDay: e.target.value})}>
+                    {[...Array(31)].map((_, i) => <option key={i+1} value={i+1} className="bg-black text-white">Dia {i+1}</option>)}
+                  </select>
+                  <input required type="number" min="1" className={`${inputClass} w-24 text-center`} placeholder="12x" value={formData.installments} onChange={e => setFormData({...formData, installments: e.target.value})} />
                 </div>
               </div>
            </div>
         </div>
 
-        <button type="submit" className="w-full bg-emerald-500 text-black font-black py-6 rounded-2xl transition-all shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)] hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.3em] text-[11px] mt-6 border border-white/10">
-          CONSOLIDAR CADASTRO
+        <button type="submit" className="w-full bg-emerald-500 text-black font-black py-5 rounded-2xl transition-all shadow-xl hover:bg-emerald-400 active:scale-[0.98] uppercase tracking-[0.2em] text-[10px] mt-6">
+          VALIDAR E REGISTRAR CLIENTE
         </button>
       </form>
     </div>
