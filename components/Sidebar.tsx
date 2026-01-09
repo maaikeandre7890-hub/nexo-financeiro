@@ -38,7 +38,7 @@ const Sidebar: React.FC<Props> = ({ onClose }) => {
     <aside
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`flex flex-col h-full bg-[#000000] border-r border-white/[0.02] transition-all duration-500 ease-in-out z-[150] shadow-[20px_0_60px_rgba(0,0,0,0.5)] ${
+      className={`flex flex-col h-full bg-[#000000] border-r border-white/[0.02] transition-all duration-500 ease-in-out z-[150] shadow-[20px_0_60px_rgba(0_0_0_0.5)] ${
         isHovered ? 'md:w-[260px]' : 'md:w-[80px]'
       } w-full`}
     >
