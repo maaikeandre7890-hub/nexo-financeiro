@@ -1,5 +1,7 @@
 import { NavItem } from './types.ts';
 
+export const APP_VERSION = "1.0.1";
+
 export const COLORS = {
   background: '#020608',
   sidebar: '#000000',

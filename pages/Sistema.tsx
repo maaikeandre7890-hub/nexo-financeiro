@@ -1,7 +1,10 @@
-
 import React from 'react';
+import { useApp } from '../contexts/AppContext.tsx';
+import { APP_VERSION } from '../constants.tsx';
 
 const Sistema: React.FC = () => {
+  const { hardReset } = useApp();
+
   return (
     <div className="space-y-10 py-2 page-enter">
       <div>
@@ -56,8 +59,22 @@ const Sistema: React.FC = () => {
         </div>
       </div>
       
-      <div className="glass-card p-8 rounded-[2.5rem] border-white/5 text-center">
-         <p className="text-xs text-slate-500 font-bold uppercase tracking-widest italic">NEXO Intelligence — Versão 1.0.0 "Lançamento"</p>
+      <div className="glass-card p-10 rounded-[3rem] border-white/5 space-y-8">
+         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+               <p className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-2">Build de Produção</p>
+               <h3 className="text-2xl font-black text-white italic">NEXO Intelligence v{APP_VERSION}</h3>
+               <p className="text-xs text-slate-500 font-medium italic mt-2">
+                 Se o código no GitHub divergir desta versão, limpe o cache forçadamente.
+               </p>
+            </div>
+            <button 
+              onClick={hardReset}
+              className="px-8 py-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-rose-500 hover:text-white transition-all active:scale-95"
+            >
+              Forçar Rebuild do Sistema (Hard Reset)
+            </button>
+         </div>
       </div>
     </div>
   );

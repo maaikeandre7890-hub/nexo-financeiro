@@ -1,6 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Client, Receivable, Expense, AuditLog, AppState } from '../types';
+import { APP_VERSION } from '../constants';
 
 interface AppContextType {
   state: AppState;
@@ -24,6 +24,7 @@ interface AppContextType {
   parseCurrency: (val: string) => number;
   refreshData: () => Promise<void>;
   toggleTheme: () => void;
+  hardReset: () => void;
   isRefreshing: boolean;
   totals: {
     toReceive: number;
@@ -38,14 +39,19 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const STORAGE_KEY = `nexo_data_${APP_VERSION}_prod`;
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [state, setState] = useState<AppState>(() => {
-    const saved = localStorage.getItem('nexo_data_v5_prod');
+    const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
       return { ...parsed, theme: parsed.theme || 'dark' };
     }
+    
+    // Fallback para versões anteriores caso queira migrar (opcional)
+    // Aqui estamos iniciando limpo na versão nova para garantir integridade.
     
     return {
       onboardingCompleted: true,
@@ -60,20 +66,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         id: 'L-INIT', 
         timestamp: new Date().toISOString(), 
         action: 'NEXO Terminal Ativo', 
-        details: 'Pronto para processamento de capital.', 
+        details: `Versão ${APP_VERSION} estabelecida com sucesso.`, 
         type: 'info' 
       }]
     };
   });
 
   useEffect(() => {
-    localStorage.setItem('nexo_data_v5_prod', JSON.stringify(state));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     if (state.theme === 'light') {
       document.documentElement.classList.add('light-theme');
     } else {
       document.documentElement.classList.remove('light-theme');
     }
-  }, [state.theme, state.onboardingCompleted, state.userName, state.companyName, state.businessType]);
+  }, [state, state.theme]);
+
+  const hardReset = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
 
   const formatNumber = (num: number, precision: number = 2) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -85,8 +96,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const maskCurrency = (val: string) => {
     const onlyDigits = val.replace(/\D/g, "");
     if (!onlyDigits) return "0,00";
-    // Regra: Digita 1 -> 1,00 | Digita 12 -> 12,00 | Digita 1200 -> 1.200,00
-    // Interpretamos os dígitos como o valor inteiro para essa máscara específica solicitada.
     const amount = Number(onlyDigits);
     return formatNumber(amount);
   };
@@ -111,8 +120,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshData = async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
+    // Força revalidação contra o storage
+    const latest = localStorage.getItem(STORAGE_KEY);
+    if (latest) {
+      setState(JSON.parse(latest));
+    }
     await new Promise(resolve => setTimeout(resolve, 800));
-    logAction('Sincronização', 'Base de dados mensal validada.', 'info');
+    logAction('Sincronização', 'Estado global sincronizado com persistência local.', 'info');
     setIsRefreshing(false);
   };
 
@@ -367,7 +381,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       addReceivable, updateReceivable, deleteReceivable, markAsPaid, 
       addExpense, deleteExpense, logAction, clearHistory,
       getChartData, totals, completeOnboarding, formatNumber, maskCurrency, parseCurrency,
-      refreshData, isRefreshing, toggleTheme
+      refreshData, isRefreshing, toggleTheme, hardReset
     }}>
       {children}
     </AppContext.Provider>
